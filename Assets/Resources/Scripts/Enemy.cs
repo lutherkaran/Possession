@@ -7,7 +7,7 @@ public class Enemy : Entity, IPossessible
     Rigidbody rb;
     IPossessible possessed;
     private Vector3 moveInput;
-    private float speed =10;
+    private float speed = 10;
 
     void Awake()
     {
@@ -16,7 +16,7 @@ public class Enemy : Entity, IPossessible
 
     public void Update()
     {
-        if (PossessionManager.currentlyPossessed == possessed)
+        if (PossessionManager.currentlyPossessed == this.possessed)
         {
             PlayerControlling();
         }
@@ -37,7 +37,7 @@ public class Enemy : Entity, IPossessible
 
     public override void Attack()
     {
-    
+
     }
 
     public override bool IsAlive()
@@ -47,7 +47,7 @@ public class Enemy : Entity, IPossessible
 
     public override void Jump()
     {
-       
+
     }
 
     public override void Movement()
@@ -59,12 +59,12 @@ public class Enemy : Entity, IPossessible
 
     public void Possessed()
     {
-        possessed = PossessionManager.Possessing(this, this.gameObject);
+        possessed = PossessionManager.Possessing(this);
     }
 
     public void UnPossessed()
     {
         PossessionManager.UnPossessing();
-        PossessionManager.Possessing(FindAnyObjectByType<Player>(), FindAnyObjectByType<Player>().gameObject);
+        FindAnyObjectByType<Player>().Possessed();
     }
 }

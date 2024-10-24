@@ -24,6 +24,7 @@ public class NPC : Entity, IPossessible
         Jump();
         Movement();
         Attack();
+
         if (Input.GetKeyDown(KeyCode.R))
         {
             UnPossessed();
@@ -55,12 +56,12 @@ public class NPC : Entity, IPossessible
 
     public void Possessed()
     {
-        possessed = PossessionManager.Possessing(this, this.gameObject);
+        possessed = PossessionManager.Possessing(this);
     }
 
     public void UnPossessed()
     {
         PossessionManager.UnPossessing();
-        PossessionManager.Possessing(FindAnyObjectByType<Player>(), FindAnyObjectByType<Player>().gameObject);
+        FindAnyObjectByType<Player>().Possessed();
     }
 }

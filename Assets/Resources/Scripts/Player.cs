@@ -1,84 +1,87 @@
 using System;
 using UnityEngine;
 
-public class Player : Entity, IPossessible
+public class Player : Entity, IPossessible, IInputHandler
 {
     [SerializeField] float speed;
     [SerializeField] bool isAlive = true;
 
-    private Vector3 moveInput;
-    public IPossessible possessed;
+    //private Vector3 moveInput;
+    private CharacterController characterController;
+    private bool isGrounded = true;
+    private Vector3 PlayerVelocity;
 
+    public IPossessible currentPossession;
+    public IPossessible PlayerPossessed;
+    public float gravity = -9.8f;
+    public float jumpHeight = 1.5f;
     public static event Action OnPossessionChanged;
 
     private void Awake()
     {
         isAlive = true;
-        possessed = PossessionManager.Possessing(this, this.gameObject);
+        characterController = GetComponent<CharacterController>();
+        PlayerPossessed = currentPossession = PossessionManager.Possessing(this);
+
     }
 
     public void Update()
     {
-        if (PossessionManager.currentlyPossessed != possessed) { return; }
-
-        moveInput = Vector3.zero;
-        moveInput = new Vector3(Input.GetAxisRaw("Horizontal"), .0f, Input.GetAxisRaw("Vertical")).normalized;
+        if (PossessionManager.currentlyPossessed != this.currentPossession) { return; }
+        isGrounded = characterController.isGrounded;
+        //Using a new Input System on Player
+        //moveInput = Vector3.zero;
+        //moveInput = new Vector3(Input.GetAxisRaw("Horizontal"), .0f, Input.GetAxisRaw("Vertical")).normalized;
 
         if (Input.GetKeyDown(KeyCode.G))
         {
-            ChangePossession();
+            PossessEntities();
         }
     }
 
-    private void ChangePossession()
+    public void ProcessMove(Vector2 Input)
     {
-        RaycastHit hit;
-        if (Physics.Raycast(transform.position + Vector3.up * .5f, transform.forward, out hit, 5f))
+        Vector3 moveDirection = Vector3.zero;
+        moveDirection.x = Input.x;
+        moveDirection.z = Input.y;
+        characterController.Move(transform.TransformDirection(moveDirection) * speed * Time.deltaTime);
+        PlayerVelocity.y += gravity * Time.deltaTime;
+
+        if (isGrounded && PlayerVelocity.y < 0)
         {
-            Debug.Log("FOUND");
-            Debug.DrawRay(transform.position + Vector3.up * .5f, transform.forward, Color.yellow);
-            var v = hit.transform.gameObject.GetComponent<IPossessible>();
-            if (v != null)
-            {
-                v.Possessed();
-                OnPossessionChanged?.Invoke();
-            }
+            PlayerVelocity.y = -2f;
         }
-        else
-        {
-            Debug.Log("NOT FOUND");
-        }
+
+        characterController.Move(PlayerVelocity * Time.deltaTime);
     }
 
-    private void FixedUpdate()
+    public void ProcessJump()
     {
-        if (PossessionManager.currentlyPossessed != possessed) { return; }
+        if (currentPossession==null) { return; }
+        if (isGrounded)
         {
-            Movement();
-            Jump();
-            Attack();
+            PlayerVelocity.y = Mathf.Sqrt(jumpHeight * -3f * gravity);
         }
-
     }
 
     public override void Movement()
     {
-        transform.Translate(moveInput * speed * Time.deltaTime);
+        //transform.Translate(moveInput * speed * Time.deltaTime);
     }
 
     public override void Jump()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Debug.Log("Jumped" + this.name);
-        }
+        //if (Input.GetKeyDown(KeyCode.Space))
+        //{
+        //    Debug.Log("Jumped" + this.name);
+        //}
     }
 
     public override void Attack()
     {
         if (Input.GetKeyDown(KeyCode.A))
         {
-            Debug.Log("Attacked" + this.name);
+            //Debug.Log("Attacked" + this.name);
         }
     }
 
@@ -87,9 +90,30 @@ public class Player : Entity, IPossessible
         return isAlive;
     }
 
+    private void PossessEntities()
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position + Vector3.up * .5f, transform.forward, out hit, 5f))
+        {
+            Debug.DrawRay(transform.position + Vector3.up * .5f, transform.forward, Color.yellow);
+            var v = hit.transform.gameObject.GetComponent<IPossessible>();
+            if (v != null)
+            {
+                v.Possessed();
+                currentPossession = null;
+                //OnPossessionChanged?.Invoke();
+            }
+        }
+        else
+        {
+
+        }
+    }
+
     public void Possessed()
     {
-        possessed = PossessionManager.Possessing(this, this.gameObject);
+        currentPossession = PlayerPossessed;
+        PossessionManager.Possessing(currentPossession);
     }
 
     public void UnPossessed()

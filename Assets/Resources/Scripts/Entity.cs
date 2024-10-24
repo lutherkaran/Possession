@@ -8,5 +8,4 @@ public abstract class Entity : MonoBehaviour
     public abstract void Jump();
     public abstract void Attack();
     public abstract bool IsAlive();
-
 }
