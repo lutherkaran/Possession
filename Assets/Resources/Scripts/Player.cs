@@ -17,7 +17,6 @@ public class Player : Entity, IPossessible
         possessed = PossessionManager.Possessing(this, this.gameObject);
     }
 
-
     public void Update()
     {
         if (PossessionManager.currentlyPossessed != possessed) { return; }

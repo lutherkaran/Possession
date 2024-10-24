@@ -32,6 +32,7 @@ public class NPC : Entity, IPossessible
 
     public override void Attack()
     {
+
     }
 
     public override bool IsAlive()
@@ -49,6 +50,7 @@ public class NPC : Entity, IPossessible
 
     public override void Movement()
     {
+
     }
 
     public void Possessed()

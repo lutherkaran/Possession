@@ -28,6 +28,7 @@ public class Enemy : Entity, IPossessible
         Jump();
         Movement();
         Attack();
+
         if (Input.GetKeyDown(KeyCode.R))
         {
             UnPossessed();
@@ -37,7 +38,6 @@ public class Enemy : Entity, IPossessible
     public override void Attack()
     {
     
-
     }
 
     public override bool IsAlive()
@@ -52,7 +52,6 @@ public class Enemy : Entity, IPossessible
 
     public override void Movement()
     {
-
         moveInput = Vector3.zero;
         moveInput = new Vector3(Input.GetAxisRaw("Horizontal"), .0f, Input.GetAxisRaw("Vertical")).normalized;
         transform.Translate(moveInput * speed * Time.deltaTime);
