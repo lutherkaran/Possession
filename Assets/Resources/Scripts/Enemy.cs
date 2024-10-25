@@ -52,14 +52,13 @@ public class Enemy : Entity, IPossessible
         transform.Translate(moveInput * speed * Time.deltaTime);
     }
 
-    public void Possessed()
+    public void Possess()
     {
-
         Debug.Log("Possessing..." + this.gameObject);
-        possessed = PossessionManager.Possessing(this);
+        possessed = PossessionManager.ToPossess(this);
     }
 
-    public void UnPossessed()
+    public void UnPossess()
     {
         Debug.Log("Un-Possessing..." + this.gameObject);
         //PossessionManager.UnPossessing();

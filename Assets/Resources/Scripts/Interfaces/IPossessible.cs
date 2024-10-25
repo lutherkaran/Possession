@@ -1,6 +1,6 @@
 
 public interface IPossessible
 {
-    void Possessed();
-    void UnPossessed();
+    void Possess();
+    void UnPossess();
 }

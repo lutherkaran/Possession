@@ -9,7 +9,10 @@ public class Player : Entity, IPossessible, IInputHandler
     //private Vector3 moveInput;
     private CharacterController characterController;
     private bool isGrounded = true;
-    private Vector3 PlayerVelocity;
+    private bool sprinting = false; // To be able to sprint after pressing LShift button.
+    private bool Crouching = false;
+    private bool canPossess = true; // It's a player that's currently possessed and it can possess other Entity.
+    private Vector3 PlayerVelocity; 
 
     public IPossessible currentPossession;
     public IPossessible PlayerPossessed;
@@ -21,24 +24,28 @@ public class Player : Entity, IPossessible, IInputHandler
     {
         isAlive = true;
         characterController = GetComponent<CharacterController>();
-        PlayerPossessed = currentPossession = PossessionManager.Possessing(this);
-
+        PlayerPossessed = currentPossession = PossessionManager.ToPossess(this);
     }
 
     public void Update()
     {
         if (PossessionManager.currentlyPossessed != this.currentPossession) { return; }
         isGrounded = characterController.isGrounded;
+
         //Using a new Input System on Player
         //moveInput = Vector3.zero;
         //moveInput = new Vector3(Input.GetAxisRaw("Horizontal"), .0f, Input.GetAxisRaw("Vertical")).normalized;
-
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            PossessEntities();
-        }
     }
 
+    // To sprint the player.
+    public void Sprint()
+    {
+        sprinting = !sprinting;
+        if (sprinting) speed = 25f;
+        else speed = 5f;
+    }
+
+    // To move the player.
     public void ProcessMove(Vector2 Input)
     {
         Vector3 moveDirection = Vector3.zero;
@@ -55,6 +62,7 @@ public class Player : Entity, IPossessible, IInputHandler
         characterController.Move(PlayerVelocity * Time.deltaTime);
     }
 
+    // To jump the player.
     public void ProcessJump()
     {
         if (currentPossession == null) { return; }
@@ -64,6 +72,7 @@ public class Player : Entity, IPossessible, IInputHandler
         }
     }
 
+    #region InheritedFunctionsNotBeingUsed
     public override void Movement()
     {
         //transform.Translate(moveInput * speed * Time.deltaTime);
@@ -79,46 +88,58 @@ public class Player : Entity, IPossessible, IInputHandler
 
     public override void Attack()
     {
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            //Debug.Log("Attacked" + this.name);
-        }
+        //if (Input.GetKeyDown(KeyCode.A))
+        //{
+        //    Debug.Log("Attacked" + this.name);
+        //}
     }
+    #endregion
 
     public override bool IsAlive()
     {
         return isAlive;
     }
 
+    // To possess the entities by shooting a raycast.
     public void PossessEntities()
     {
-        RaycastHit hit;
-        if (Physics.Raycast(transform.position + Vector3.up * .5f, transform.forward, out hit, 5f))
+        if (canPossess) 
         {
-            Debug.DrawRay(transform.position + Vector3.up * .5f, transform.forward, Color.yellow);
-            var v = hit.transform.gameObject.GetComponent<IPossessible>();
-            if (v != null)
+            RaycastHit hit;
+            if (Physics.Raycast(transform.position + Vector3.up * .5f, transform.forward, out hit, 5f))
             {
-                v.Possessed();
-                currentPossession = null;
-                //OnPossessionChanged?.Invoke();
+                var entity = hit.transform.gameObject.GetComponent<IPossessible>();
+                if (entity != null)
+                {
+                    entity.Possess();
+                    currentPossession = null;
+                    canPossess = !canPossess;
+                    //OnPossessionChanged?.Invoke();
+                }
+            }
+
+            else
+            {
+
             }
         }
+
         else
         {
-
+            canPossess = true;
+            UnPossess();
         }
     }
 
-    public void Possessed()
+    public void Possess()
     {
         currentPossession = PlayerPossessed;
-        PossessionManager.Possessing(currentPossession);
+        PossessionManager.ToPossess(currentPossession);
     }
 
-    public void UnPossessed()
+    public void UnPossess()
     {
-        PossessionManager.UnPossessing();
-        Possessed();
+        PossessionManager.UnPossessEntity();
+        Possess(); 
     }
 }

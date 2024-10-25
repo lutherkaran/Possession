@@ -6,17 +6,20 @@ using UnityEngine;
 public class InputManager : MonoBehaviour
 {
     private PlayerInput playerInput;
-    private PlayerInput.OnFootActions OnFootActions;
+    public PlayerInput.OnFootActions OnFootActions;
     private Player player;
+    private PlayerLook look;
 
     private void Awake()
     {
         playerInput = new PlayerInput();
         OnFootActions = playerInput.OnFoot;
         player = GetComponent<Player>();
+        look = GetComponent<PlayerLook>();
+
         OnFootActions.Jump.performed += ctx => player.ProcessJump();
+        OnFootActions.Sprint.performed += ctx => player.Sprint();
         OnFootActions.Possession.performed += ctx => player.PossessEntities();
-        OnFootActions.UnPossession.performed += ctx => player.UnPossessed();
     }
 
     private void FixedUpdate()
@@ -24,6 +27,14 @@ public class InputManager : MonoBehaviour
         if (player.currentPossession != null)
         {
             player.ProcessMove(OnFootActions.Movement.ReadValue<Vector2>());
+        }
+    }
+
+    private void LateUpdate()
+    {
+        if (player.currentPossession != null)
+        {
+            look.ProcessLook(OnFootActions.Look.ReadValue<Vector2>());
         }
     }
 
