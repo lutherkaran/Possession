@@ -57,7 +57,7 @@ public class Player : Entity, IPossessible, IInputHandler
 
     public void ProcessJump()
     {
-        if (currentPossession==null) { return; }
+        if (currentPossession == null) { return; }
         if (isGrounded)
         {
             PlayerVelocity.y = Mathf.Sqrt(jumpHeight * -3f * gravity);
@@ -90,7 +90,7 @@ public class Player : Entity, IPossessible, IInputHandler
         return isAlive;
     }
 
-    private void PossessEntities()
+    public void PossessEntities()
     {
         RaycastHit hit;
         if (Physics.Raycast(transform.position + Vector3.up * .5f, transform.forward, out hit, 5f))
@@ -119,5 +119,6 @@ public class Player : Entity, IPossessible, IInputHandler
     public void UnPossessed()
     {
         PossessionManager.UnPossessing();
+        Possessed();
     }
 }

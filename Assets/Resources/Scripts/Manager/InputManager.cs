@@ -15,7 +15,8 @@ public class InputManager : MonoBehaviour
         OnFootActions = playerInput.OnFoot;
         player = GetComponent<Player>();
         OnFootActions.Jump.performed += ctx => player.ProcessJump();
-
+        OnFootActions.Possession.performed += ctx => player.PossessEntities();
+        OnFootActions.UnPossession.performed += ctx => player.UnPossessed();
     }
 
     private void FixedUpdate()

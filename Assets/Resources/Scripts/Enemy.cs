@@ -28,11 +28,6 @@ public class Enemy : Entity, IPossessible
         Jump();
         Movement();
         Attack();
-
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            UnPossessed();
-        }
     }
 
     public override void Attack()
@@ -59,12 +54,15 @@ public class Enemy : Entity, IPossessible
 
     public void Possessed()
     {
+
+        Debug.Log("Possessing..." + this.gameObject);
         possessed = PossessionManager.Possessing(this);
     }
 
     public void UnPossessed()
     {
-        PossessionManager.UnPossessing();
-        FindAnyObjectByType<Player>().Possessed();
+        Debug.Log("Un-Possessing..." + this.gameObject);
+        //PossessionManager.UnPossessing();
+        //FindAnyObjectByType<Player>().Possessed();
     }
 }

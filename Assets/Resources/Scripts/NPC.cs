@@ -24,11 +24,6 @@ public class NPC : Entity, IPossessible
         Jump();
         Movement();
         Attack();
-
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            UnPossessed();
-        }
     }
 
     public override void Attack()
@@ -43,7 +38,7 @@ public class NPC : Entity, IPossessible
 
     public override void Jump()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Joystick1Button0))
         {
             rb.AddForce(Vector3.up * 10f, ForceMode.Impulse);
         }
@@ -56,12 +51,15 @@ public class NPC : Entity, IPossessible
 
     public void Possessed()
     {
+
+        Debug.Log("Possessing..." + this.gameObject);
         possessed = PossessionManager.Possessing(this);
     }
 
     public void UnPossessed()
     {
-        PossessionManager.UnPossessing();
-        FindAnyObjectByType<Player>().Possessed();
+        Debug.Log("Un-Possessing..." + this.gameObject);
+        //PossessionManager.UnPossessing();
+        //FindAnyObjectByType<Player>().Possessed();
     }
 }
