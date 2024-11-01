@@ -3,18 +3,17 @@ using UnityEngine.AI;
 
 public class Enemy : Entity, IPossessible
 {
-    IPossessible possessed;
+    public IPossessible playerPossessed;
 
     private Rigidbody rb;
     private NavMeshAgent agent;
     private StateMachine stateMachine;
-    private GameObject player;
 
+    private Vector3 lastKnownPos;
+
+    public Vector3 LastKnownPos { get => lastKnownPos; set => lastKnownPos = value; }
     public NavMeshAgent Agent { get => agent; }
-    public GameObject Player { get => player; }
-
-    private float speed = 10;
-    private Vector3 moveInput;
+    public GameObject Player { get => this.player.gameObject; }
 
     public EnemyPath enemyPath;
 
@@ -32,6 +31,8 @@ public class Enemy : Entity, IPossessible
     private string currentState;
     void Awake()
     {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
         rb = this.GetComponent<Rigidbody>();
     }
 
@@ -40,20 +41,13 @@ public class Enemy : Entity, IPossessible
         stateMachine = GetComponent<StateMachine>();
         agent = GetComponent<NavMeshAgent>();
         stateMachine.Initialise();
-        player = GameObject.FindGameObjectWithTag("Player");
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
     }
 
     private void Update()
     {
         CanSeePlayer();
         currentState = stateMachine.activeState.ToString();
-    }
-
-    private void PlayerControlling()
-    {
-        Jump();
-        Movement();
-        Attack();
     }
 
     public override void Attack()
@@ -66,35 +60,39 @@ public class Enemy : Entity, IPossessible
         return true;
     }
 
-    public override void Jump()
+    public override void ProcessMove(Vector2 Input)
     {
-
+        base.ProcessMove(Input);
+        transform.Translate(moveDirection * speed * Time.deltaTime);
     }
 
-    public override void Movement()
+    public override void ProcessJump()
     {
-        moveInput = Vector3.zero;
-        moveInput = new Vector3(Input.GetAxisRaw("Horizontal"), .0f, Input.GetAxisRaw("Vertical")).normalized;
-        transform.Translate(moveInput * speed * Time.deltaTime);
+        base.ProcessJump();
+    }
+
+    public override void Sprint()
+    {
+        base.Sprint();
     }
 
     public bool CanSeePlayer()
     {
-        if (player != null)
+        if (player.gameObject != null)
         {
-            if (Vector3.Distance(transform.position, player.transform.position) < sightDistance)
+            if (Vector3.Distance(transform.position, player.gameObject.transform.position) < sightDistance)
             {
-                Vector3 targetDirection = player.transform.position - transform.position - (Vector3.up * eyeHeight);
-                float angleToPlayer = Vector3.Angle(targetDirection, player.transform.position);
+                Vector3 targetDirection = player.gameObject.transform.position - transform.localPosition - (Vector3.up * eyeHeight);
+                float angleToPlayer = Vector3.Angle(targetDirection, player.gameObject.transform.position);
 
                 if (angleToPlayer >= -fieldOfView && angleToPlayer <= fieldOfView)
                 {
-                    Ray ray = new Ray(transform.position + (Vector3.up * eyeHeight), targetDirection);
+                    Ray ray = new Ray(gameObject.transform.position + (Vector3.up * eyeHeight), targetDirection);
                     RaycastHit hitInfo = new RaycastHit();
 
                     if (Physics.Raycast(ray, out hitInfo, sightDistance))
                     {
-                        if (hitInfo.transform.gameObject == player)
+                        if (hitInfo.transform.gameObject == player.gameObject)
                         {
                             Debug.DrawRay(ray.origin, ray.direction * sightDistance);
                             return true;
@@ -110,7 +108,7 @@ public class Enemy : Entity, IPossessible
     public void Possess()
     {
         Debug.Log("Possessing..." + this.gameObject);
-        possessed = PossessionManager.ToPossess(this);
+        playerPossessed = PossessionManager.ToPossess(this,this);
     }
 
     public void UnPossess()
@@ -119,4 +117,6 @@ public class Enemy : Entity, IPossessible
         //PossessionManager.UnPossessing();
         //FindAnyObjectByType<Player>().Possessed();
     }
+
+
 }

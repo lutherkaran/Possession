@@ -1,12 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class StateMachine : MonoBehaviour
 {
     public BaseState activeState;
 
-    public bool canPerform = true;
     public void Initialise()
     {
         ChangeState(new PatrolState());
@@ -14,7 +11,7 @@ public class StateMachine : MonoBehaviour
 
     public void Update()
     {
-        if (activeState != null)
+        if (activeState != null && PossessionManager.currentlyPossessed != activeState.enemy.playerPossessed)
         {
             activeState.Perform();
         }
@@ -26,13 +23,15 @@ public class StateMachine : MonoBehaviour
         {
             activeState.Exit();
         }
+
         activeState = newState;
 
         if (activeState != null)
         {
             activeState.stateMachine = this;
             activeState.enemy = GetComponent<Enemy>();
-            activeState.Enter();
+            if (PossessionManager.currentlyPossessed != activeState.enemy.playerPossessed)
+                activeState.Enter();
         }
     }
 }

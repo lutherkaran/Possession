@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class AttackState : BaseState
@@ -10,10 +8,14 @@ public class AttackState : BaseState
 
     public override void Enter()
     {
+
     }
 
     public override void Exit()
     {
+        moveTimer = 0;
+        losePlayerTimer = 0;
+        shotTimer = 0;
     }
 
     public override void Perform()
@@ -27,6 +29,10 @@ public class AttackState : BaseState
 
             enemy.transform.LookAt(enemy.Player.transform);
 
+            //Vector3 direction = enemy.Player.transform.position - enemy.transform.position;
+            //Quaternion targetRotation = Quaternion.LookRotation(direction);
+            //enemy.transform.localRotation = Quaternion.Slerp(enemy.transform.localRotation, targetRotation, Time.deltaTime * rotationSpeed);
+
             if (shotTimer > enemy.fireRate)
             {
                 Shoot();
@@ -37,14 +43,16 @@ public class AttackState : BaseState
                 enemy.Agent.SetDestination(enemy.transform.position + (Random.insideUnitSphere * 5));
                 moveTimer = 0;
             }
+            enemy.LastKnownPos = enemy.Player.transform.position;
         }
+
         else
         {
             losePlayerTimer += Time.deltaTime;
 
-            if (losePlayerTimer > 8)
+            if (losePlayerTimer > 5)
             {
-                stateMachine.ChangeState(new PatrolState());
+                stateMachine.ChangeState(new SearchState());
             }
         }
     }
@@ -54,8 +62,8 @@ public class AttackState : BaseState
         Transform gunBarrel = enemy.gunBarrel;
         GameObject bullet = GameObject.Instantiate(Resources.Load("Prefabs/Bullet") as GameObject, gunBarrel.position, enemy.transform.rotation);
         Vector3 shootDirection = (enemy.Player.transform.position - gunBarrel.transform.position).normalized;
-        bullet.GetComponent<Rigidbody>().velocity = Quaternion.AngleAxis(Random.Range(-3f, 3f), Vector3.up) * shootDirection * 40f;
-        Debug.Log("Shoot");
+        bullet.GetComponent<Rigidbody>().velocity = Quaternion.AngleAxis(Random.Range(-3f, 3f), Vector3.up) * shootDirection * 30f;
+        //Debug.Log("Shoot");
         shotTimer = 0;
     }
 }

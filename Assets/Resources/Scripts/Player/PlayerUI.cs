@@ -1,7 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+
 public class PlayerUI : MonoBehaviour
 {
     [SerializeField]
@@ -9,8 +8,14 @@ public class PlayerUI : MonoBehaviour
 
     void Start()
     {
-        
+
     }
+
+    private void Update()
+    {
+
+    }
+
     public void UpdateText(string promptMessage)
     {
         promptText.text = promptMessage;

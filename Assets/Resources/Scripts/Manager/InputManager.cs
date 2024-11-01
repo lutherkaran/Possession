@@ -1,33 +1,34 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine.InputSystem;
 using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
     private PlayerInput playerInput;
     public PlayerInput.OnFootActions OnFootActions;
-    private Player player;
+    private PlayerController player;
     private PlayerLook look;
+    private Entity entity;
 
     private void Awake()
     {
         playerInput = new PlayerInput();
-        OnFootActions = playerInput.OnFoot;
-        player = GetComponent<Player>();
+        player = GetComponent<PlayerController>();
         look = GetComponent<PlayerLook>();
+        entity = GetComponent<Entity>();
+        OnFootActions = playerInput.OnFoot;
 
-        OnFootActions.Jump.performed += ctx => player.ProcessJump();
-        OnFootActions.Sprint.performed += ctx => player.Sprint();
-        OnFootActions.Possession.performed += ctx => player.PossessEntities();
+        if (entity != null)
+        {
+            OnFootActions.Sprint.performed += ctx => entity.Sprint();
+            OnFootActions.Jump.performed += ctx => entity.ProcessJump();
+            OnFootActions.MouseInteraction.performed += ctx => look.MouseInteraction();
+
+            OnFootActions.Possession.performed += ctx => ((PlayerController)entity).PossessEntities();
+        }
     }
 
     private void FixedUpdate()
     {
-        if (player.currentPossession != null)
-        {
-            player.ProcessMove(OnFootActions.Movement.ReadValue<Vector2>());
-        }
+        entity.ProcessMove(OnFootActions.Movement.ReadValue<Vector2>());
     }
 
     private void LateUpdate()

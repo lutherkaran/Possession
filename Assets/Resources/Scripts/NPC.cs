@@ -14,16 +14,9 @@ public class NPC : Entity, IPossessible
     {
         if (PossessionManager.currentlyPossessed == possessed)
         {
-            PlayerControlling();
+
         }
 
-    }
-
-    private void PlayerControlling()
-    {
-        Jump();
-        Movement();
-        Attack();
     }
 
     public override void Attack()
@@ -36,24 +29,11 @@ public class NPC : Entity, IPossessible
         return false;
     }
 
-    public override void Jump()
-    {
-        if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Joystick1Button0))
-        {
-            rb.AddForce(Vector3.up * 10f, ForceMode.Impulse);
-        }
-    }
-
-    public override void Movement()
-    {
-
-    }
-
     public void Possess()
     {
 
         Debug.Log("Possessing..." + this.gameObject);
-        possessed = PossessionManager.ToPossess(this);
+        possessed = PossessionManager.ToPossess(this, this);
     }
 
     public void UnPossess()
@@ -61,5 +41,19 @@ public class NPC : Entity, IPossessible
         Debug.Log("Un-Possessing..." + this.gameObject);
         //PossessionManager.UnPossessing();
         //FindAnyObjectByType<Player>().Possessed();
+    }
+    public override void ProcessMove(Vector2 input)
+    {
+        base.ProcessMove(input);
+    }
+
+    public override void ProcessJump()
+    {
+        base.ProcessJump();
+    }
+
+    public override void Sprint()
+    {
+        base.Sprint();
     }
 }

@@ -11,6 +11,7 @@ public class PlayerInteract : MonoBehaviour
     LayerMask layer;
     private PlayerUI playerUI;
     private InputManager playerInput;
+
     private void Start()
     {
         cam = this.GetComponent<PlayerLook>().cam;
