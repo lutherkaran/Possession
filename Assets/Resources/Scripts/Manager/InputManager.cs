@@ -4,38 +4,44 @@ public class InputManager : MonoBehaviour
 {
     private PlayerInput playerInput;
     public PlayerInput.OnFootActions OnFootActions;
-    private PlayerController player;
-    private PlayerLook look;
-    private Entity entity;
+    private PlayerController player; 
+    private Entity controlledEntity;
 
     private void Awake()
     {
         playerInput = new PlayerInput();
         player = GetComponent<PlayerController>();
-        look = GetComponent<PlayerLook>();
-        entity = GetComponent<Entity>();
         OnFootActions = playerInput.OnFoot;
 
-        if (entity != null)
+        if (player != null)
         {
-            OnFootActions.Sprint.performed += ctx => entity.Sprint();
-            OnFootActions.Jump.performed += ctx => entity.ProcessJump();
-            OnFootActions.MouseInteraction.performed += ctx => look.MouseInteraction();
+            OnFootActions.Possession.performed += ctx => player.PossessEntities();
+            OnFootActions.MouseInteraction.performed += ctx => CameraManager.instance.MouseInteraction();
+        }
+    }
 
-            OnFootActions.Possession.performed += ctx => ((PlayerController)entity).PossessEntities();
+    private void Update()
+    {
+        controlledEntity = PossessionManager.currentlyPossessed.GetEntity();
+        if (controlledEntity != null)
+        {
+            OnFootActions.Sprint.performed += ctx => controlledEntity.Sprint();
+            OnFootActions.Jump.performed += ctx => controlledEntity.ProcessJump();
         }
     }
 
     private void FixedUpdate()
     {
-        entity.ProcessMove(OnFootActions.Movement.ReadValue<Vector2>());
+        controlledEntity = PossessionManager.currentlyPossessed.GetEntity();
+        if (controlledEntity != null)
+            controlledEntity.ProcessMove(OnFootActions.Movement.ReadValue<Vector2>());
     }
 
     private void LateUpdate()
     {
-        if (player.currentPossession != null)
+        if (controlledEntity != null)
         {
-            look.ProcessLook(OnFootActions.Look.ReadValue<Vector2>());
+            CameraManager.instance.ProcessLook(OnFootActions.Look.ReadValue<Vector2>());
         }
     }
 
@@ -46,6 +52,9 @@ public class InputManager : MonoBehaviour
 
     private void OnDisable()
     {
+        OnFootActions.Sprint.performed -= ctx => controlledEntity.Sprint();
+        OnFootActions.Jump.performed -= ctx => controlledEntity.ProcessJump();
         OnFootActions.Disable();
     }
 }
+// Whatever the entity is currently possessed, they should be able to move/jump/attack etc.

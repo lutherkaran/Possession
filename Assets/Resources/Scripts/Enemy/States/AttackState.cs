@@ -8,7 +8,8 @@ public class AttackState : BaseState
 
     public override void Enter()
     {
-
+        enemy.anim.SetBool(Enemy.PATROLLING, false);
+        enemy.anim.SetBool(Enemy.ATTACK, true);
     }
 
     public override void Exit()
@@ -20,40 +21,46 @@ public class AttackState : BaseState
 
     public override void Perform()
     {
-        if (enemy.CanSeePlayer())
+        if (enemy.GetHealth() > 30)
         {
-            losePlayerTimer = 0;
-
-            moveTimer += Time.deltaTime;
-            shotTimer += Time.deltaTime;
-
-            enemy.transform.LookAt(enemy.Player.transform);
-
-            //Vector3 direction = enemy.Player.transform.position - enemy.transform.position;
-            //Quaternion targetRotation = Quaternion.LookRotation(direction);
-            //enemy.transform.localRotation = Quaternion.Slerp(enemy.transform.localRotation, targetRotation, Time.deltaTime * rotationSpeed);
-
-            if (shotTimer > enemy.fireRate)
+            if (enemy.CanSeePlayer())
             {
-                Shoot();
+                losePlayerTimer = 0;
+
+                moveTimer += Time.deltaTime;
+                shotTimer += Time.deltaTime;
+
+                enemy.transform.LookAt(enemy.Player.transform);
+                //Vector3 direction = enemy.Player.transform.position - enemy.transform.position;
+                //Quaternion targetRotation = Quaternion.LookRotation(direction);
+                //enemy.transform.localRotation = Quaternion.Slerp(enemy.transform.localRotation, targetRotation, Time.deltaTime * rotationSpeed);
+
+                if (shotTimer > enemy.fireRate)
+                {
+                    Shoot();
+                }
+
+                if (moveTimer > Random.Range(3, 7))
+                {
+                    enemy.Agent.SetDestination(enemy.transform.position + (Random.insideUnitSphere * 5));
+                    moveTimer = 0;
+                }
+                enemy.LastKnownPos = enemy.Player.transform.position;
             }
 
-            if (moveTimer > Random.Range(3, 7))
+            else
             {
-                enemy.Agent.SetDestination(enemy.transform.position + (Random.insideUnitSphere * 5));
-                moveTimer = 0;
+                losePlayerTimer += Time.deltaTime;
+
+                if (losePlayerTimer > 5)
+                {
+                    stateMachine.ChangeState(new SearchState());
+                }
             }
-            enemy.LastKnownPos = enemy.Player.transform.position;
         }
-
         else
         {
-            losePlayerTimer += Time.deltaTime;
-
-            if (losePlayerTimer > 5)
-            {
-                stateMachine.ChangeState(new SearchState());
-            }
+            stateMachine.ChangeState(new FleeState());
         }
     }
 

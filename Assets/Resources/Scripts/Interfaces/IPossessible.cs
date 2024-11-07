@@ -1,6 +1,8 @@
+using UnityEngine;
 
 public interface IPossessible
 {
-    void Possess();
-    void UnPossess();
+    void Possess(GameObject go);
+    void Depossess(GameObject go);
+    Entity GetEntity();
 }

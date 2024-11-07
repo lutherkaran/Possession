@@ -1,20 +1,26 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class Entity : MonoBehaviour
 {
+    protected IPossessible playerPossessed { get; set; }
+
+    [SerializeField]
+    protected Camera cam;
+
     protected PlayerController player;
 
-    public Vector3 moveDirection = Vector3.zero;
-    public Vector3 velocity = Vector3.zero;
+    protected Vector3 moveDirection = Vector3.zero;
+    protected Vector3 velocity = Vector3.zero;
 
-    public float jumpHeight = 1.5f;
-    public float gravity = -9.8f;
-    public float speed;
+    protected float jumpHeight = 1.5f;
+    protected float gravity = -9.8f;
+    protected float speed;
 
-    public bool sprinting = false;
-    public bool isGrounded = true;
+    protected bool sprinting = false;
+    protected bool isGrounded = true;
+
+    public float maxHealth = 100f;
+    protected float health;
 
     public void SetPlayer(PlayerController Player)
     {

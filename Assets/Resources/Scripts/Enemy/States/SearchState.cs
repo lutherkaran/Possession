@@ -12,25 +12,32 @@ public class SearchState : BaseState
 
     public override void Perform()
     {
-        if (enemy.CanSeePlayer())
-            stateMachine.ChangeState(new AttackState());
-
-        if (enemy.Agent.remainingDistance <= enemy.Agent.stoppingDistance)
+        if (enemy.GetHealth() > 30f)
         {
-            searchTimer += Time.deltaTime;
-            moveTimer += Time.deltaTime;
+            if (enemy.CanSeePlayer())
+                stateMachine.ChangeState(new AttackState());
 
-            if (moveTimer > Random.Range(2, 5))
+            if (enemy.Agent.remainingDistance <= enemy.Agent.stoppingDistance)
             {
-                enemy.Agent.SetDestination(enemy.transform.position + (Random.insideUnitSphere * 10));
-                moveTimer = 0;
-            }
+                searchTimer += Time.deltaTime;
+                moveTimer += Time.deltaTime;
 
-            if (searchTimer > 5)
-            {
-                stateMachine.ChangeState(new PatrolState());
-            }
+                if (moveTimer > Random.Range(3f, 7f))
+                {
+                    enemy.Agent.SetDestination(enemy.transform.position + (Random.insideUnitSphere * 10f));
+                    moveTimer = 0;
+                }
 
+                if (searchTimer > 7f)
+                {
+                    stateMachine.ChangeState(new PatrolState());
+                }
+
+            }
+        }
+        else
+        {
+            stateMachine.ChangeState(new FleeState());
         }
     }
 

@@ -1,23 +1,20 @@
-using UnityEngine;
-
-public sealed class PossessionManager : MonoBehaviour
+public static class PossessionManager
 {
     public static IPossessible currentlyPossessed = null;
     public static Entity entity;
 
-    public static IPossessible ToPossess(IPossessible possessible, Entity e)
+    public static IPossessible ToPossess(IPossessible possessible)
     {
         if (possessible != null && currentlyPossessed != possessible)
         {
             currentlyPossessed = possessible;
-            entity = e;
             return currentlyPossessed;
         }
 
         return null;
     }
 
-    public static void UnPossessEntity()
+    public static void ToDepossess()
     {
         if (currentlyPossessed != null)
         {
@@ -25,5 +22,4 @@ public sealed class PossessionManager : MonoBehaviour
         }
 
     }
-
 }

@@ -6,14 +6,20 @@ public class StateMachine : MonoBehaviour
 
     public void Initialise()
     {
-        ChangeState(new PatrolState());
+        ChangeState(new IdleState());
     }
 
     public void Update()
     {
-        if (activeState != null && PossessionManager.currentlyPossessed != activeState.enemy.playerPossessed)
+        // If enemy health is < 50 change activestate to flee state.
+
+        if (activeState != null && PossessionManager.currentlyPossessed != activeState.enemy.PlayerPossessed)
         {
             activeState.Perform();
+        }
+        else
+        {
+            activeState.enemy.Agent.velocity = Vector3.zero;
         }
     }
 
@@ -30,7 +36,7 @@ public class StateMachine : MonoBehaviour
         {
             activeState.stateMachine = this;
             activeState.enemy = GetComponent<Enemy>();
-            if (PossessionManager.currentlyPossessed != activeState.enemy.playerPossessed)
+            if (PossessionManager.currentlyPossessed != activeState.enemy.PlayerPossessed)
                 activeState.Enter();
         }
     }

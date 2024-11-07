@@ -14,7 +14,7 @@ public class PlayerInteract : MonoBehaviour
 
     private void Start()
     {
-        cam = this.GetComponent<PlayerLook>().cam;
+        cam = CameraManager.instance.cam;
         playerUI = this.GetComponent<PlayerUI>();
         playerInput = this.GetComponent<InputManager>();
     }

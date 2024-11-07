@@ -3,7 +3,6 @@ using UnityEngine;
 public class NPC : Entity, IPossessible
 {
     Rigidbody rb;
-    IPossessible possessed;
 
     void Awake()
     {
@@ -12,10 +11,6 @@ public class NPC : Entity, IPossessible
 
     public void Update()
     {
-        if (PossessionManager.currentlyPossessed == possessed)
-        {
-
-        }
 
     }
 
@@ -29,19 +24,6 @@ public class NPC : Entity, IPossessible
         return false;
     }
 
-    public void Possess()
-    {
-
-        Debug.Log("Possessing..." + this.gameObject);
-        possessed = PossessionManager.ToPossess(this, this);
-    }
-
-    public void UnPossess()
-    {
-        Debug.Log("Un-Possessing..." + this.gameObject);
-        //PossessionManager.UnPossessing();
-        //FindAnyObjectByType<Player>().Possessed();
-    }
     public override void ProcessMove(Vector2 input)
     {
         base.ProcessMove(input);
@@ -55,5 +37,25 @@ public class NPC : Entity, IPossessible
     public override void Sprint()
     {
         base.Sprint();
+    }
+
+    public void Possess(GameObject go)
+    {
+        Debug.Log("Possessing..." + go.name);
+        playerPossessed = PossessionManager.ToPossess(go.GetComponent<IPossessible>());
+        CameraManager.instance.Initialize(this.gameObject);
+    }
+
+    public void Depossess(GameObject go)
+    {
+        Debug.Log("DePossessing..." + go.name);
+        PossessionManager.ToDepossess();
+        playerPossessed = null;
+        CameraManager.instance.Initialize(player.transform.gameObject);
+    }
+
+    public Entity GetEntity()
+    {
+        return this;
     }
 }

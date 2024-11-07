@@ -1,9 +1,9 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Enemy : Entity, IPossessible
+public class Enemy : Entity, IPossessible, IDamageable
 {
-    public IPossessible playerPossessed;
+    public IPossessible PlayerPossessed { get => playerPossessed; }
 
     private Rigidbody rb;
     private NavMeshAgent agent;
@@ -13,6 +13,11 @@ public class Enemy : Entity, IPossessible
 
     public Vector3 LastKnownPos { get => lastKnownPos; set => lastKnownPos = value; }
     public NavMeshAgent Agent { get => agent; }
+    public Animator anim;
+    public const string PATROLLING = "IsPatrolling";
+    public const string ATTACK = "IsAttacking";
+    public const string IDLE = "Idle";
+
     public GameObject Player { get => this.player.gameObject; }
 
     public EnemyPath enemyPath;
@@ -29,11 +34,14 @@ public class Enemy : Entity, IPossessible
 
     [SerializeField]
     private string currentState;
+
     void Awake()
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         rb = this.GetComponent<Rigidbody>();
+        anim = GetComponent<Animator>();
+        health = maxHealth;
     }
 
     void Start()
@@ -46,6 +54,19 @@ public class Enemy : Entity, IPossessible
 
     private void Update()
     {
+        health = Mathf.Clamp(health, 0, maxHealth);
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            TakeDamage(Random.Range(10f, 20f));
+            Debug.Log("Health Damaged: " + health);
+        }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            RestoreHealth(Random.Range(10f, 20f));
+            Debug.Log("Health Restored: " + health);
+        }
+
         CanSeePlayer();
         currentState = stateMachine.activeState.ToString();
     }
@@ -63,7 +84,8 @@ public class Enemy : Entity, IPossessible
     public override void ProcessMove(Vector2 Input)
     {
         base.ProcessMove(Input);
-        transform.Translate(moveDirection * speed * Time.deltaTime);
+        if (PossessionManager.currentlyPossessed == playerPossessed)
+            transform.Translate(moveDirection * speed * Time.deltaTime);
     }
 
     public override void ProcessJump()
@@ -82,7 +104,7 @@ public class Enemy : Entity, IPossessible
         {
             if (Vector3.Distance(transform.position, player.gameObject.transform.position) < sightDistance)
             {
-                Vector3 targetDirection = player.gameObject.transform.position - transform.localPosition - (Vector3.up * eyeHeight);
+                Vector3 targetDirection = player.transform.position - transform.localPosition - (Vector3.up * eyeHeight);
                 float angleToPlayer = Vector3.Angle(targetDirection, player.gameObject.transform.position);
 
                 if (angleToPlayer >= -fieldOfView && angleToPlayer <= fieldOfView)
@@ -94,6 +116,7 @@ public class Enemy : Entity, IPossessible
                     {
                         if (hitInfo.transform.gameObject == player.gameObject)
                         {
+                            lastKnownPos = player.transform.position;
                             Debug.DrawRay(ray.origin, ray.direction * sightDistance);
                             return true;
                         }
@@ -105,18 +128,48 @@ public class Enemy : Entity, IPossessible
         return false;
     }
 
-    public void Possess()
+    public void Possess(GameObject go)
     {
-        Debug.Log("Possessing..." + this.gameObject);
-        playerPossessed = PossessionManager.ToPossess(this,this);
+        Debug.Log("Possessing..." + go.name);
+        playerPossessed = PossessionManager.ToPossess(go.GetComponent<IPossessible>());
+        CameraManager.instance.Initialize(this.gameObject);
     }
 
-    public void UnPossess()
+    public void Depossess(GameObject go)
     {
-        Debug.Log("Un-Possessing..." + this.gameObject);
-        //PossessionManager.UnPossessing();
-        //FindAnyObjectByType<Player>().Possessed();
+        Debug.Log("DePossessing..." + go.name);
+        PossessionManager.ToDepossess();
+        playerPossessed = null;
+        CameraManager.instance.Initialize(player.transform.gameObject);
     }
 
+    public Entity GetEntity()
+    {
+        return this;
+    }
 
+    public void TakeDamage(float damage)
+    {
+        health -= damage;
+    }
+
+    public void RestoreHealth(float healAmount)
+    {
+        health += healAmount;
+    }
+
+    public float GetHealth()
+    {
+        return health;
+    }
+
+    public bool IsSafe()
+    {
+        if (Vector3.Distance(this.transform.position, player.transform.position) > 20f)
+        {
+            return true;
+        }
+        else
+            return false;
+    }
 }

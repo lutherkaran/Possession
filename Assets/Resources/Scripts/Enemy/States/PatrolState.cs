@@ -9,19 +9,32 @@ public class PatrolState : BaseState
 
     public override void Enter()
     {
-
+        enemy.anim.SetBool(Enemy.PATROLLING, true);
+        enemy.anim.SetBool(Enemy.ATTACK, false);
     }
 
     public override void Perform()
     {
-        if (enemy.CanSeePlayer())
-        {
-            stateMachine.ChangeState(new AttackState());
-        }
-        else
+
+        if (PossessionManager.currentlyPossessed != enemy.PlayerPossessed)
         {
             PatrolCycle();
+
+            if (enemy.CanSeePlayer())
+            {
+                if (enemy.GetHealth() > 30f)
+                {
+                    stateMachine.ChangeState(new AttackState());
+                }
+                else
+                {
+                    stateMachine.ChangeState(new FleeState());
+                }
+            }
+
+            //stateMachine.ChangeState(new IdleState());
         }
+
     }
 
     public override void Exit()
@@ -34,16 +47,14 @@ public class PatrolState : BaseState
     {
         if (enemy.Agent.remainingDistance < 0.2f)
         {
-            waitTimer += Time.deltaTime;
-            if (waitTimer > 3)
+            stateMachine.ChangeState(new PatrolState());
+            enemy.Agent.SetDestination(enemy.enemyPath.Waypoints[Random.Range(0, enemy.enemyPath.Waypoints.Count - 1)].position);
+
+            if (enemy.Agent.remainingDistance >= 0.1f)
             {
-                if (waypointIndex < enemy.enemyPath.Waypoints.Count - 1)
-                    waypointIndex++;
-                else
-                    waypointIndex = 0;
-                enemy.Agent.SetDestination(enemy.enemyPath.Waypoints[waypointIndex].position);
-                waitTimer = 0;
+                stateMachine.ChangeState(new IdleState());
             }
         }
+
     }
 }
