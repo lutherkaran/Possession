@@ -11,6 +11,7 @@ public class IdleState : BaseState
         enemy.anim.SetBool(Enemy.PATROLLING, false);
         enemy.anim.SetBool(Enemy.ATTACK, false);
         duration = Random.Range(1, 6);
+        enemy.Agent.speed = 0;
     }
 
     public override void Perform()

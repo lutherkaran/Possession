@@ -11,6 +11,8 @@ public class PatrolState : BaseState
     {
         enemy.anim.SetBool(Enemy.PATROLLING, true);
         enemy.anim.SetBool(Enemy.ATTACK, false);
+        enemy.anim.SetBool(Enemy.SEARCHING, false);
+        enemy.Agent.speed = 2;
     }
 
     public override void Perform()

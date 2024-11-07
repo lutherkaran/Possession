@@ -9,6 +9,11 @@ public class NPC : Entity, IPossessible
         rb = this.GetComponent<Rigidbody>();
     }
 
+    void Start()
+    {
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+    }
+
     public void Update()
     {
 
@@ -27,11 +32,18 @@ public class NPC : Entity, IPossessible
     public override void ProcessMove(Vector2 input)
     {
         base.ProcessMove(input);
+        if (PossessionManager.currentlyPossessed == playerPossessed)
+            transform.Translate(moveDirection * speed * Time.deltaTime);
     }
 
     public override void ProcessJump()
     {
         base.ProcessJump();
+        if (PossessionManager.currentlyPossessed == playerPossessed)
+        {
+            transform.position += velocity * Time.deltaTime;
+            velocity.y = gravity * Time.deltaTime * 10;
+        }
     }
 
     public override void Sprint()

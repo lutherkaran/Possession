@@ -11,7 +11,7 @@ public class PlayerController : Entity, IPossessible
     public IPossessible currentPossession;
 
     private GameObject Go;
-    private void Awake()
+    private void Start()
     {
         isAlive = true;
         characterController = GetComponent<CharacterController>();

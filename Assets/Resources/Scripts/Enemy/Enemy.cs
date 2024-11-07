@@ -17,6 +17,7 @@ public class Enemy : Entity, IPossessible, IDamageable
     public const string PATROLLING = "IsPatrolling";
     public const string ATTACK = "IsAttacking";
     public const string IDLE = "Idle";
+    public const string SEARCHING = "IsSearching";
 
     public GameObject Player { get => this.player.gameObject; }
 

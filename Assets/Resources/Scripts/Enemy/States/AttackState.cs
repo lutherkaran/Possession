@@ -10,6 +10,8 @@ public class AttackState : BaseState
     {
         enemy.anim.SetBool(Enemy.PATROLLING, false);
         enemy.anim.SetBool(Enemy.ATTACK, true);
+        enemy.anim.SetBool(Enemy.SEARCHING, false);
+        enemy.Agent.speed = 2;
     }
 
     public override void Exit()
@@ -31,9 +33,6 @@ public class AttackState : BaseState
                 shotTimer += Time.deltaTime;
 
                 enemy.transform.LookAt(enemy.Player.transform);
-                //Vector3 direction = enemy.Player.transform.position - enemy.transform.position;
-                //Quaternion targetRotation = Quaternion.LookRotation(direction);
-                //enemy.transform.localRotation = Quaternion.Slerp(enemy.transform.localRotation, targetRotation, Time.deltaTime * rotationSpeed);
 
                 if (shotTimer > enemy.fireRate)
                 {

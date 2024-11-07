@@ -8,6 +8,7 @@ public class FleeState : BaseState
 
     public override void Enter()
     {
+        enemy.Agent.speed = 4;
     }
 
     public override void Perform()
@@ -15,11 +16,9 @@ public class FleeState : BaseState
         if (enemy.IsSafe() & !enemy.CanSeePlayer())
         {
             stateMachine.ChangeState(new PatrolState());
-            enemy.Agent.speed = 2;
         }
         else
         {
-            enemy.Agent.speed = 4;
             fleeDirection = (enemy.transform.position - enemy.Player.transform.position).normalized;
             enemy.Agent.SetDestination(enemy.transform.position + fleeDirection * 10f);
             // Not Safe // Can't runaway // just attack and die

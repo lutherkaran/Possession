@@ -8,6 +8,10 @@ public class SearchState : BaseState
     public override void Enter()
     {
         enemy.Agent.SetDestination(enemy.LastKnownPos);
+        enemy.anim.SetBool(Enemy.SEARCHING,true);
+        enemy.anim.SetBool(Enemy.ATTACK,false);
+        enemy.anim.SetBool(Enemy.PATROLLING,false);
+        enemy.Agent.speed = 3;
     }
 
     public override void Perform()
@@ -26,6 +30,7 @@ public class SearchState : BaseState
                 {
                     enemy.Agent.SetDestination(enemy.transform.position + (Random.insideUnitSphere * 10f));
                     moveTimer = 0;
+                    //stateMachine.ChangeState(new IdleState());
                 }
 
                 if (searchTimer > 7f)
