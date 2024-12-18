@@ -3,45 +3,48 @@ using UnityEngine;
 
 public class PlayerController : Entity, IPossessible
 {
-    [SerializeField] bool isAlive = true;
-
+    [SerializeField] private bool isAlive = true;
     private CharacterController characterController;
-    private bool canPossess = true; // It's a player that's currently possessed and it can possess other Entity.
+    private bool canPossess = true; // Indicates if the player can possess other entities.
 
-    public IPossessible currentPossession;
+    private GameObject targetEntity; // The current entity the player is interacting with.
+    private IPossessible currentPossession; // The currently possessed entity.
 
-    private GameObject Go;
+    private InputManager inputManager;
+
     private void Start()
     {
         isAlive = true;
         characterController = GetComponent<CharacterController>();
-        playerPossessed = currentPossession = PossessionManager.ToPossess(this);
-        CameraManager.instance.Initialize(this.gameObject);
+        currentPossession = PossessionManager.ToPossess(this);
+        playerPossessed = currentPossession;
+
+        CameraManager.instance.Initialize(gameObject);
+        inputManager = GetComponent<InputManager>();
         SetPlayer(this);
     }
 
-    public void Update()
+    private void Update()
     {
         isGrounded = characterController.isGrounded;
     }
 
-    // To jump the player.
     public override void ProcessJump()
     {
         base.ProcessJump();
     }
 
-    // To sprint the player.
     public override void Sprint()
     {
         base.Sprint();
     }
 
-    // To move the player.
-    public override void ProcessMove(Vector2 Input)
+    public override void ProcessMove(Vector2 input)
     {
-        base.ProcessMove(Input);
-        characterController.Move(transform.TransformDirection(moveDirection) * base.speed * Time.deltaTime);
+        base.ProcessMove(input);
+
+        characterController.Move(transform.TransformDirection(moveDirection) * speed * Time.deltaTime);
+
         velocity.y += gravity * Time.deltaTime;
         if (isGrounded && velocity.y < 0)
         {
@@ -56,67 +59,90 @@ public class PlayerController : Entity, IPossessible
         return isAlive;
     }
 
-    // To possess the entities by shooting a raycast.
+    public override void Attack()
+    {
+        // Implement attack logic here.
+    }
+
+    /// <summary>
+    /// Handles the possession of nearby entities using a raycast.
+    /// </summary>
     public void PossessEntities()
     {
-        if (canPossess)
+        if (!canPossess)
         {
-            Ray ray = new Ray(transform.position + (Vector3.up * .5f), transform.forward);
-            Debug.DrawRay(ray.origin, transform.forward * 20);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, 20f))
-            {
-                var PossessableEntity = hit.transform.gameObject.GetComponentInParent<IPossessible>();
-                Go = hit.transform.GetComponentInParent<Entity>().gameObject;
-                Debug.LogWarning(": " + hit.transform.gameObject.name);
-                if (PossessableEntity != null)
-                {
-                    PossessableEntity.Possess(Go);
-                    Debug.LogWarning("Hello");
-                    currentPossession = PossessableEntity;
-                    playerPossessed = null;
-                    canPossess = !canPossess;
-                }
-                // Can't possess that object.
-            }
-
-            else
-            {
-                // Please go near to that object.
-                if (Go != null)
-                {
-                    currentPossession.Depossess(Go);
-                    playerPossessed = currentPossession = PossessionManager.ToPossess(this);
-                }
-            }
-
+            HandleDepossession();
+            return;
         }
 
+        Ray ray = new Ray(transform.position + (Vector3.up * 0.5f), transform.forward);
+        Debug.DrawRay(ray.origin, ray.direction * 40, Color.red);
+
+        if (Physics.Raycast(ray, out RaycastHit hit, 40f))
+        {
+            HandlePossession(hit);
+        }
         else
         {
-            if (Go != null)
-            {
-                canPossess = true;
-                currentPossession.Depossess(Go);
-                playerPossessed = currentPossession = PossessionManager.ToPossess(this);
-            }
+            HandleFailedPossession();
         }
     }
 
-    public override void Attack()
+    private void HandlePossession(RaycastHit hit)
     {
+        var possessableEntity = hit.transform.GetComponentInParent<IPossessible>();
+        targetEntity = hit.transform.GetComponentInParent<Entity>()?.gameObject;
 
+        if (possessableEntity == null) return;
+
+        if (possessableEntity is Enemy && !IsBehindEnemy(targetEntity)) return;
+
+        // Perform possession
+        possessableEntity.Possess(targetEntity);
+        StartCoroutine(CameraManager.instance.MovetoPosition(targetEntity));
+
+        currentPossession = possessableEntity;
+        playerPossessed = null;
+        canPossess = false;
+    }
+
+    private bool IsBehindEnemy(GameObject enemy)
+    {
+        float dotProduct = Vector3.Dot(
+            enemy.transform.forward.normalized,
+            (transform.position - enemy.transform.position).normalized
+        );
+
+        Debug.Log($"Dot Product: {dotProduct}");
+        return dotProduct < 0;
+    }
+
+    private void HandleFailedPossession()
+    {
+        if (targetEntity == null) return;
+
+        currentPossession.Depossess(targetEntity);
+        currentPossession = playerPossessed = PossessionManager.ToPossess(this);
+    }
+
+    private void HandleDepossession()
+    {
+        if (targetEntity == null) return;
+
+        canPossess = true;
+        currentPossession.Depossess(targetEntity);
+        currentPossession = playerPossessed = PossessionManager.ToPossess(this);
     }
 
     public void Possess(GameObject go)
     {
-        Debug.Log("Possessing..." + go.name);
+        Debug.Log($"Possessing... {go.name}");
         playerPossessed = PossessionManager.ToPossess(go.GetComponent<IPossessible>());
     }
 
     public void Depossess(GameObject go)
     {
-        Debug.Log("DePossessing..." + go.name);
+        Debug.Log($"DePossessing... {go.name}");
         PossessionManager.ToDepossess();
         playerPossessed = null;
     }

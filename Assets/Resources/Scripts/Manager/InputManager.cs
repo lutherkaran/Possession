@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
-    private PlayerInput playerInput;
+    public PlayerInput playerInput;
     public PlayerInput.OnFootActions OnFootActions;
     private PlayerController player; 
     private Entity controlledEntity;

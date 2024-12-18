@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using Unity.VisualScripting;
 
 public class CameraManager : MonoBehaviour
 {
@@ -12,7 +13,11 @@ public class CameraManager : MonoBehaviour
     private bool MouseControl = false;
     private float xSensitivity = 30f;
     private float ySensitivity = 30f;
+    Vector3 targetPosition = Vector3.zero;
+    float smoothTime = 0.3f; // Adjust for desired speed
+    Vector3 velocity = Vector3.zero;
 
+    InputManager inputManager;
     private void Awake()
     {
         if (instance != null)
@@ -20,6 +25,22 @@ public class CameraManager : MonoBehaviour
             Destroy(instance);
         }
         instance = this;
+        inputManager = GameObject.FindObjectOfType<InputManager>();
+    }
+
+    private void LateUpdate()
+    {
+        if (tempGO != null)
+        {
+            //FollowTarget();
+        }
+    }
+
+    public void FollowTarget()
+    {
+        targetPosition = tempGO.transform.position + new Vector3(0, .6f, 0);
+        targetPosition = Vector3.SmoothDamp(transform.position, tempGO.transform.position, ref velocity, smoothTime * Time.deltaTime);
+        transform.position = targetPosition;
     }
 
     public void Initialize(GameObject go)
@@ -27,14 +48,23 @@ public class CameraManager : MonoBehaviour
         cam = this.GetComponent<Camera>();
         tempGO = go;
         cam.transform.SetParent(go.transform);
-        StartCoroutine(MovetoPosition());
+
+        inputManager.playerInput.OnFoot.Disable();
+        inputManager.playerInput.Disable();
+        StartCoroutine(MovetoPosition(go));
+        inputManager.playerInput.Enable();
+        inputManager.playerInput.OnFoot.Enable();
+
+        this.gameObject.transform.position = Vector3.zero;
+        this.gameObject.transform.rotation = Quaternion.identity;
     }
 
-    private IEnumerator MovetoPosition()
+    public IEnumerator MovetoPosition(GameObject go)
     {
-        float smoothTime = 0.3f; // Adjust for desired speed
-        Vector3 velocity = Vector3.zero;
-        Vector3 targetPosition = tempGO.transform.position + new Vector3(0, .6f, 0);
+        this.gameObject.transform.position = Vector3.zero;
+        this.gameObject.transform.rotation = Quaternion.identity;
+
+        targetPosition = go.transform.position + new Vector3(0, .6f, 0);
 
         while (Vector3.Distance(cam.transform.position, targetPosition) > 0.1f)
         {

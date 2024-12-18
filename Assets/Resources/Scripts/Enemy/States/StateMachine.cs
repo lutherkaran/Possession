@@ -41,3 +41,6 @@ public class StateMachine : MonoBehaviour
         }
     }
 }
+// I wanna have a behaviour in which when I possess the enemy the state machine stops.
+// Should I create possessible state?
+
