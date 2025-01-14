@@ -32,14 +32,14 @@ public class NPC : Entity, IPossessible
     public override void ProcessMove(Vector2 input)
     {
         base.ProcessMove(input);
-        if (PossessionManager.currentlyPossessed == playerPossessed)
+        if (PossessionManager.Instance.currentlyPossessed == playerPossessed)
             transform.Translate(moveDirection * speed * Time.deltaTime);
     }
 
     public override void ProcessJump()
     {
         base.ProcessJump();
-        if (PossessionManager.currentlyPossessed == playerPossessed)
+        if (PossessionManager.Instance.currentlyPossessed == playerPossessed)
         {
             transform.position += velocity * Time.deltaTime;
             velocity.y = gravity * Time.deltaTime * 10;
@@ -54,14 +54,14 @@ public class NPC : Entity, IPossessible
     public void Possess(GameObject go)
     {
         Debug.Log("Possessing..." + go.name);
-        playerPossessed = PossessionManager.ToPossess(go.GetComponent<IPossessible>());
+        playerPossessed = PossessionManager.Instance.ToPossess(go.GetComponent<IPossessible>());
         CameraManager.instance.AttachCameraToPossessedObject(this.gameObject);
     }
 
     public void Depossess(GameObject go)
     {
         Debug.Log("DePossessing..." + go.name);
-        PossessionManager.ToDepossess();
+        PossessionManager.Instance.ToDepossess();
         playerPossessed = null;
         CameraManager.instance.AttachCameraToPossessedObject(player.transform.gameObject);
     }

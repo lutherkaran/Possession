@@ -3,6 +3,7 @@ using UnityEngine;
 public class StateMachine : MonoBehaviour
 {
     public BaseState activeState;
+    public BaseState possessedState;
 
     public void Initialise()
     {
@@ -13,13 +14,14 @@ public class StateMachine : MonoBehaviour
     {
         // if enemy isn't possessed by the player then perform actions else stay idle.
 
-        if (activeState != null && PossessionManager.currentlyPossessed != activeState.enemy.PlayerPossessed)
+        if (activeState != null && PossessionManager.Instance.currentlyPossessed != activeState.enemy.PlayerPossessed)
         {
             activeState.Perform();
         }
         else
-        { 
+        {
             ChangeState(new PossessedState());
+            possessedState = activeState;
             activeState.Perform();
         }
     }
@@ -37,7 +39,7 @@ public class StateMachine : MonoBehaviour
         {
             activeState.stateMachine = this;
             activeState.enemy = GetComponent<Enemy>();
-            if (PossessionManager.currentlyPossessed != activeState.enemy.PlayerPossessed)
+            if (PossessionManager.Instance.currentlyPossessed != activeState.enemy.PlayerPossessed)
                 activeState.Enter();
         }
     }

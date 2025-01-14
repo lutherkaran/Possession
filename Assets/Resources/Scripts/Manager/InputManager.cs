@@ -3,7 +3,8 @@ using UnityEngine;
 public class InputManager : MonoBehaviour
 {
     public PlayerInput playerInput;
-    public PlayerInput.OnFootActions OnFootActions;
+    public PlayerInput.OnPossessionActions OnPossessionActions;
+    public static PlayerInput.OnFootActions OnFootActions;
     private PlayerController player;
     private Entity controlledEntity;
 
@@ -12,17 +13,18 @@ public class InputManager : MonoBehaviour
         playerInput = new PlayerInput();
         player = GetComponent<PlayerController>();
         OnFootActions = playerInput.OnFoot;
+        OnPossessionActions = playerInput.OnPossession;
 
         if (player != null)
         {
-            OnFootActions.Possession.performed += ctx => player.PossessEntities();
+            OnPossessionActions.Possession.performed += ctx => player.PossessEntities();
             OnFootActions.MouseInteraction.performed += ctx => CameraManager.instance.MouseInteraction();
         }
     }
 
     private void Update()
     {
-        controlledEntity = PossessionManager.currentlyPossessed.GetEntity();
+        controlledEntity = PossessionManager.Instance.currentlyPossessed.GetEntity();
         if (controlledEntity != null)
         {
             OnFootActions.Sprint.performed += ctx => controlledEntity.Sprint();
@@ -32,7 +34,6 @@ public class InputManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-        controlledEntity = PossessionManager.currentlyPossessed.GetEntity();
         if (controlledEntity != null)
             controlledEntity.ProcessMove(OnFootActions.Movement.ReadValue<Vector2>());
     }
@@ -48,11 +49,13 @@ public class InputManager : MonoBehaviour
     private void OnEnable()
     {
         OnFootActions.Enable();
+        OnPossessionActions.Enable();
     }
 
     private void OnDisable()
     {
         OnFootActions.Disable();
+        OnPossessionActions.Disable();
     }
 }
 // Whatever the entity is currently possessed, they should be able to move/jump/attack etc.

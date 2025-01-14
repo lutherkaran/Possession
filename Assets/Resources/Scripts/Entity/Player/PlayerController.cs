@@ -11,17 +11,17 @@ public class PlayerController : Entity, IPossessible
     private IPossessible currentPossession; // The currently possessed entity.
 
     private InputManager inputManager;
-
+  
     private void Start()
     {
         isAlive = true;
         characterController = GetComponent<CharacterController>();
-        currentPossession = PossessionManager.ToPossess(this);
+        currentPossession = PossessionManager.Instance.ToPossess(this);
         playerPossessed = currentPossession;
 
         CameraManager.instance.AttachCameraToPossessedObject(gameObject);
         inputManager = GetComponent<InputManager>();
-        SetPlayer(this);
+        SetPlayer(this);;
     }
 
     private void Update()
@@ -113,7 +113,6 @@ public class PlayerController : Entity, IPossessible
             (transform.position - enemy.transform.position).normalized
         );
 
-        //Debug.Log($"Dot Product: {dotProduct}");
         return dotProduct < 0;
     }
 
@@ -122,7 +121,7 @@ public class PlayerController : Entity, IPossessible
         if (targetEntity == null) return;
 
         currentPossession.Depossess(targetEntity);
-        currentPossession = playerPossessed = PossessionManager.ToPossess(this);
+        currentPossession = playerPossessed = PossessionManager.Instance.ToPossess(this);
     }
 
     private void HandleDepossession()
@@ -131,19 +130,19 @@ public class PlayerController : Entity, IPossessible
 
         canPossess = true;
         currentPossession.Depossess(targetEntity);
-        currentPossession = playerPossessed = PossessionManager.ToPossess(this);
+        currentPossession = playerPossessed = PossessionManager.Instance.ToPossess(this);
     }
 
     public void Possess(GameObject go)
     {
         Debug.Log($"Possessing... {go.name}");
-        playerPossessed = PossessionManager.ToPossess(go.GetComponent<IPossessible>());
+        playerPossessed = PossessionManager.Instance.ToPossess(go.GetComponent<IPossessible>());
     }
 
     public void Depossess(GameObject go)
     {
         Debug.Log($"DePossessing... {go.name}");
-        PossessionManager.ToDepossess();
+        PossessionManager.Instance.ToDepossess();
         playerPossessed = null;
     }
 

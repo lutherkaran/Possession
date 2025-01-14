@@ -1,9 +1,10 @@
-public static class PossessionManager
+public class PossessionManager
 {
-    public static IPossessible currentlyPossessed = null;
-    public static Entity entity;
+    private static PossessionManager instance;
+    public static PossessionManager Instance { get { return instance == null ? instance = new PossessionManager() : instance; } }
+    public IPossessible currentlyPossessed = null;
 
-    public static IPossessible ToPossess(IPossessible possessible)
+    public IPossessible ToPossess(IPossessible possessible)
     {
         
         if (possessible != null && currentlyPossessed != possessible)
@@ -15,7 +16,7 @@ public static class PossessionManager
         return null;
     }
 
-    public static void ToDepossess()
+    public void ToDepossess()
     {
         if (currentlyPossessed != null)
         {

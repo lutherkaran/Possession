@@ -6,7 +6,6 @@ public abstract class Entity : MonoBehaviour
 
     [SerializeField]
     protected Camera cam;
-
     protected PlayerController player;
 
     protected Vector3 moveDirection = Vector3.zero;
@@ -14,13 +13,13 @@ public abstract class Entity : MonoBehaviour
 
     protected float jumpHeight = 1.5f;
     protected float gravity = -9.8f;
-    protected float speed;
+    protected float speed = 5f;
 
     protected bool sprinting = false;
     protected bool isGrounded = true;
 
-    public float maxHealth = 100f;
     [SerializeField] protected float health;
+    public float maxHealth = 100f;
 
     public void SetPlayer(PlayerController Player)
     {

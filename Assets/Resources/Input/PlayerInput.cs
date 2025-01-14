@@ -46,15 +46,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Possession"",
-                    ""type"": ""Button"",
-                    ""id"": ""23919841-4029-4c42-97c0-be74ab6b38ef"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
                     ""name"": ""Look"",
                     ""type"": ""Value"",
                     ""id"": ""a747d33b-c17d-4d47-8d64-7232e8e27bd6"",
@@ -235,28 +226,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""540f9c8c-994c-477e-bf8d-ca3f03e9fa72"",
-                    ""path"": ""<Gamepad>/buttonEast"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Possession"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""b7cb244b-bf17-4ca0-9325-883402b7f237"",
-                    ""path"": ""<Keyboard>/f"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Possession"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""6ad1193a-fa15-4639-946f-308afaf2674f"",
                     ""path"": ""<Mouse>/delta"",
                     ""interactions"": """",
@@ -351,6 +320,45 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""MouseInteraction"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""OnPossession"",
+            ""id"": ""5fedbfb3-4c43-496f-9596-2187bef51218"",
+            ""actions"": [
+                {
+                    ""name"": ""Possession"",
+                    ""type"": ""Button"",
+                    ""id"": ""7b52b328-ab27-43dc-8058-01ee2e3b1dff"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""959b1fe3-e0d7-4178-94b2-3dd54bcf5c3e"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Possession"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c6fff16a-3740-440d-bbd6-774dc90e6858"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Possession"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -879,12 +887,14 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_OnFoot = asset.FindActionMap("OnFoot", throwIfNotFound: true);
         m_OnFoot_Movement = m_OnFoot.FindAction("Movement", throwIfNotFound: true);
         m_OnFoot_Jump = m_OnFoot.FindAction("Jump", throwIfNotFound: true);
-        m_OnFoot_Possession = m_OnFoot.FindAction("Possession", throwIfNotFound: true);
         m_OnFoot_Look = m_OnFoot.FindAction("Look", throwIfNotFound: true);
         m_OnFoot_Sprint = m_OnFoot.FindAction("Sprint", throwIfNotFound: true);
         m_OnFoot_Crouch = m_OnFoot.FindAction("Crouch", throwIfNotFound: true);
         m_OnFoot_Interact = m_OnFoot.FindAction("Interact", throwIfNotFound: true);
         m_OnFoot_MouseInteraction = m_OnFoot.FindAction("MouseInteraction", throwIfNotFound: true);
+        // OnPossession
+        m_OnPossession = asset.FindActionMap("OnPossession", throwIfNotFound: true);
+        m_OnPossession_Possession = m_OnPossession.FindAction("Possession", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -960,7 +970,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private List<IOnFootActions> m_OnFootActionsCallbackInterfaces = new List<IOnFootActions>();
     private readonly InputAction m_OnFoot_Movement;
     private readonly InputAction m_OnFoot_Jump;
-    private readonly InputAction m_OnFoot_Possession;
     private readonly InputAction m_OnFoot_Look;
     private readonly InputAction m_OnFoot_Sprint;
     private readonly InputAction m_OnFoot_Crouch;
@@ -972,7 +981,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         public OnFootActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
         public InputAction @Movement => m_Wrapper.m_OnFoot_Movement;
         public InputAction @Jump => m_Wrapper.m_OnFoot_Jump;
-        public InputAction @Possession => m_Wrapper.m_OnFoot_Possession;
         public InputAction @Look => m_Wrapper.m_OnFoot_Look;
         public InputAction @Sprint => m_Wrapper.m_OnFoot_Sprint;
         public InputAction @Crouch => m_Wrapper.m_OnFoot_Crouch;
@@ -993,9 +1001,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Jump.started += instance.OnJump;
             @Jump.performed += instance.OnJump;
             @Jump.canceled += instance.OnJump;
-            @Possession.started += instance.OnPossession;
-            @Possession.performed += instance.OnPossession;
-            @Possession.canceled += instance.OnPossession;
             @Look.started += instance.OnLook;
             @Look.performed += instance.OnLook;
             @Look.canceled += instance.OnLook;
@@ -1021,9 +1026,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Jump.started -= instance.OnJump;
             @Jump.performed -= instance.OnJump;
             @Jump.canceled -= instance.OnJump;
-            @Possession.started -= instance.OnPossession;
-            @Possession.performed -= instance.OnPossession;
-            @Possession.canceled -= instance.OnPossession;
             @Look.started -= instance.OnLook;
             @Look.performed -= instance.OnLook;
             @Look.canceled -= instance.OnLook;
@@ -1056,6 +1058,52 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         }
     }
     public OnFootActions @OnFoot => new OnFootActions(this);
+
+    // OnPossession
+    private readonly InputActionMap m_OnPossession;
+    private List<IOnPossessionActions> m_OnPossessionActionsCallbackInterfaces = new List<IOnPossessionActions>();
+    private readonly InputAction m_OnPossession_Possession;
+    public struct OnPossessionActions
+    {
+        private @PlayerInput m_Wrapper;
+        public OnPossessionActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Possession => m_Wrapper.m_OnPossession_Possession;
+        public InputActionMap Get() { return m_Wrapper.m_OnPossession; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(OnPossessionActions set) { return set.Get(); }
+        public void AddCallbacks(IOnPossessionActions instance)
+        {
+            if (instance == null || m_Wrapper.m_OnPossessionActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_OnPossessionActionsCallbackInterfaces.Add(instance);
+            @Possession.started += instance.OnPossession;
+            @Possession.performed += instance.OnPossession;
+            @Possession.canceled += instance.OnPossession;
+        }
+
+        private void UnregisterCallbacks(IOnPossessionActions instance)
+        {
+            @Possession.started -= instance.OnPossession;
+            @Possession.performed -= instance.OnPossession;
+            @Possession.canceled -= instance.OnPossession;
+        }
+
+        public void RemoveCallbacks(IOnPossessionActions instance)
+        {
+            if (m_Wrapper.m_OnPossessionActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(IOnPossessionActions instance)
+        {
+            foreach (var item in m_Wrapper.m_OnPossessionActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_OnPossessionActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public OnPossessionActions @OnPossession => new OnPossessionActions(this);
 
     // UI
     private readonly InputActionMap m_UI;
@@ -1178,12 +1226,15 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     {
         void OnMovement(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
-        void OnPossession(InputAction.CallbackContext context);
         void OnLook(InputAction.CallbackContext context);
         void OnSprint(InputAction.CallbackContext context);
         void OnCrouch(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
         void OnMouseInteraction(InputAction.CallbackContext context);
+    }
+    public interface IOnPossessionActions
+    {
+        void OnPossession(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

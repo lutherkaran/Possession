@@ -35,7 +35,8 @@ public class Enemy : Entity, IPossessible, IDamageable
     [SerializeField] private string currentState;
 
     // Initialization
-    private void Awake()
+
+    private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -43,10 +44,7 @@ public class Enemy : Entity, IPossessible, IDamageable
         rb = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
         health = maxHealth;
-    }
 
-    private void Start()
-    {
         stateMachine = GetComponent<StateMachine>();
         Agent = GetComponent<NavMeshAgent>();
         stateMachine.Initialise();
@@ -71,7 +69,7 @@ public class Enemy : Entity, IPossessible, IDamageable
     {
         base.ProcessMove(input);
 
-        if (PossessionManager.currentlyPossessed == playerPossessed)
+        if (PossessionManager.Instance.currentlyPossessed == playerPossessed)
         {
             Vector3 moveDirection = new Vector3(input.x, 0, input.y).normalized;
             Agent.Move(moveDirection * speed * Time.deltaTime);
@@ -80,7 +78,7 @@ public class Enemy : Entity, IPossessible, IDamageable
 
     public override void ProcessJump()
     {
-        if (PossessionManager.currentlyPossessed == playerPossessed)
+        if (PossessionManager.Instance.currentlyPossessed == playerPossessed)
         {
             rb.AddForce(Vector3.up * -3f, ForceMode.Impulse);
         }
@@ -92,14 +90,14 @@ public class Enemy : Entity, IPossessible, IDamageable
     public void Possess(GameObject go)
     {
         Debug.Log($"Possessing {go.name}");
-        PlayerPossessed = PossessionManager.ToPossess(go.GetComponent<IPossessible>());
+        PlayerPossessed = PossessionManager.Instance.ToPossess(go.GetComponent<IPossessible>());
         CameraManager.instance.AttachCameraToPossessedObject(gameObject);
     }
 
     public void Depossess(GameObject go)
     {
         Debug.Log($"DePossessing {go.name}");
-        PossessionManager.ToDepossess();
+        PossessionManager.Instance.ToDepossess();
         PlayerPossessed = null;
         CameraManager.instance.AttachCameraToPossessedObject(player.gameObject);
     }
@@ -118,7 +116,7 @@ public class Enemy : Entity, IPossessible, IDamageable
     // Sight and AI Logic
     public bool CanSeePlayer()
     {
-        if (PossessionManager.currentlyPossessed == playerPossessed) return false;
+        if (PossessionManager.Instance.currentlyPossessed == playerPossessed) return false;
 
         if (player != null && Vector3.Distance(transform.position, player.transform.position) < sightDistance)
         {

@@ -17,7 +17,7 @@ public class CameraManager : MonoBehaviour
     [Header("Camera Settings")]
     [SerializeField] private float smoothTime = 0.3f; // Adjust for desired speed
     [SerializeField] private Vector3 DefaultPosition = new Vector3(0, .6f, 0);
-    
+
     Vector3 targetPosition = Vector3.zero;
     Vector3 velocity = Vector3.zero;
 
@@ -45,6 +45,7 @@ public class CameraManager : MonoBehaviour
 
     public IEnumerator MovetoPosition(GameObject currentlyPossessed)
     {
+        InputManager.OnFootActions.Disable();
         targetPosition = currentlyPossessed.transform.position + DefaultPosition;
 
         while (Vector3.Distance(cam.transform.position, targetPosition) > 0.1f)
@@ -52,6 +53,7 @@ public class CameraManager : MonoBehaviour
             cam.transform.position = Vector3.SmoothDamp(cam.transform.position, targetPosition, ref velocity, smoothTime);
             yield return null;
         }
+        InputManager.OnFootActions.Enable();
     }
 
     public void ProcessLook(Vector2 input)

@@ -24,15 +24,6 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Possession",
-                    "type": "Button",
-                    "id": "23919841-4029-4c42-97c0-be74ab6b38ef",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "Look",
                     "type": "Value",
                     "id": "a747d33b-c17d-4d47-8d64-7232e8e27bd6",
@@ -213,28 +204,6 @@
                 },
                 {
                     "name": "",
-                    "id": "540f9c8c-994c-477e-bf8d-ca3f03e9fa72",
-                    "path": "<Gamepad>/buttonEast",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Possession",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "b7cb244b-bf17-4ca0-9325-883402b7f237",
-                    "path": "<Keyboard>/f",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Possession",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "6ad1193a-fa15-4639-946f-308afaf2674f",
                     "path": "<Mouse>/delta",
                     "interactions": "",
@@ -329,6 +298,45 @@
                     "processors": "",
                     "groups": "",
                     "action": "MouseInteraction",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "OnPossession",
+            "id": "5fedbfb3-4c43-496f-9596-2187bef51218",
+            "actions": [
+                {
+                    "name": "Possession",
+                    "type": "Button",
+                    "id": "7b52b328-ab27-43dc-8058-01ee2e3b1dff",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "959b1fe3-e0d7-4178-94b2-3dd54bcf5c3e",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Possession",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c6fff16a-3740-440d-bbd6-774dc90e6858",
+                    "path": "<Keyboard>/f",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Possession",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
