@@ -5,6 +5,7 @@ public static class PossessionManager
 
     public static IPossessible ToPossess(IPossessible possessible)
     {
+        
         if (possessible != null && currentlyPossessed != possessible)
         {
             currentlyPossessed = possessible;

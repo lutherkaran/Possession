@@ -4,7 +4,7 @@ public class InputManager : MonoBehaviour
 {
     public PlayerInput playerInput;
     public PlayerInput.OnFootActions OnFootActions;
-    private PlayerController player; 
+    private PlayerController player;
     private Entity controlledEntity;
 
     private void Awake()
@@ -52,8 +52,6 @@ public class InputManager : MonoBehaviour
 
     private void OnDisable()
     {
-        OnFootActions.Sprint.performed -= ctx => controlledEntity.Sprint();
-        OnFootActions.Jump.performed -= ctx => controlledEntity.ProcessJump();
         OnFootActions.Disable();
     }
 }
