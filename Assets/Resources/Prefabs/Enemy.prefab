@@ -164,14 +164,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cam: {fileID: 0}
+  health: 0
+  PossessableLayerMask:
+    serializedVersion: 2
+    m_Bits: 256
   maxHealth: 100
   enemyPath: {fileID: 0}
   sightDistance: 20
-  fieldOfView: 180
+  fieldOfView: 90
   eyeHeight: 0.8
   gunBarrel: {fileID: 9202297458040925666}
   fireRate: 1
   anim: {fileID: 720226412453743824}
+  defaultVelocity: {x: 0, y: 0, z: 0}
+  currentState: 
 --- !u!195 &3266542888555593748
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -243,7 +249,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 8c46187670da52343a12306e694f101f,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.947
+      value: -0.9
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8c46187670da52343a12306e694f101f,
         type: 3}
@@ -336,6 +342,6 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.3
-  m_Height: 2
+  m_Height: 1.64
   m_Direction: 1
   m_Center: {x: 0, y: 0.84, z: 0}

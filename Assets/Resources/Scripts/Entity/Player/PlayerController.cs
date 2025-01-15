@@ -11,7 +11,7 @@ public class PlayerController : Entity, IPossessible
     private IPossessible currentPossession; // The currently possessed entity.
 
     private InputManager inputManager;
-  
+
     private void Start()
     {
         isAlive = true;
@@ -21,7 +21,7 @@ public class PlayerController : Entity, IPossessible
 
         CameraManager.instance.AttachCameraToPossessedObject(gameObject);
         inputManager = GetComponent<InputManager>();
-        SetPlayer(this);;
+        SetPlayer(this); ;
     }
 
     private void Update()
@@ -67,6 +67,7 @@ public class PlayerController : Entity, IPossessible
     /// <summary>
     /// Handles the possession of nearby entities using a raycast.
     /// </summary>
+
     public void PossessEntities()
     {
         if (!canPossess)
@@ -84,7 +85,7 @@ public class PlayerController : Entity, IPossessible
         }
         else
         {
-            HandleFailedPossession();
+            HandleDepossession();
         }
     }
 
@@ -114,14 +115,6 @@ public class PlayerController : Entity, IPossessible
         );
 
         return dotProduct < 0;
-    }
-
-    private void HandleFailedPossession()
-    {
-        if (targetEntity == null) return;
-
-        currentPossession.Depossess(targetEntity);
-        currentPossession = playerPossessed = PossessionManager.Instance.ToPossess(this);
     }
 
     private void HandleDepossession()

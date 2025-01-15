@@ -1,55 +1,54 @@
+using System.Collections;
 using UnityEngine;
 
 public class SearchState : BaseState
 {
     private float searchTimer;
+    private float searchDuration = 10f;
     private float moveTimer;
+    private bool isIdling = false;
 
     public override void Enter()
     {
+        enemy.anim.SetBool(Enemy.FLEE, true);
         enemy.Agent.SetDestination(enemy.LastKnownPos);
-        enemy.anim.SetBool(Enemy.FLEE,true);
-        enemy.anim.SetBool(Enemy.ATTACK,false);
-        enemy.anim.SetBool(Enemy.PATROLLING,false);
-        enemy.Agent.speed = 3;
+        enemy.Agent.velocity = enemy.defaultVelocity * 2f;
+        isIdling = false;
     }
 
     public override void Perform()
     {
-        if (enemy.GetHealth() > 30f)
-        {
-            if (enemy.CanSeePlayer())
-                stateMachine.ChangeState(new AttackState());
+        if (enemy.CanSeePlayer())
+            stateMachine.ChangeState(new AttackState());
 
-            if (enemy.Agent.remainingDistance <= enemy.Agent.stoppingDistance)
+        if (enemy.Agent.remainingDistance <= enemy.Agent.stoppingDistance && !isIdling)
+        {
+            enemy.StartCoroutine(IdleAndPickRandomLocation());
+
+            searchTimer += Time.deltaTime;
+            if (searchTimer > searchDuration)
             {
-                searchTimer += Time.deltaTime;
-                moveTimer += Time.deltaTime;
-
-                if (moveTimer > Random.Range(3f, 7f))
-                {
-                    enemy.Agent.SetDestination(enemy.transform.position + (Random.insideUnitSphere * 10f));
-                    moveTimer = 0;
-                    //stateMachine.ChangeState(new IdleState());
-                }
-
-                if (searchTimer > 7f)
-                {
-                    stateMachine.ChangeState(new PatrolState());
-                }
-
+                stateMachine.ChangeState(new PatrolState());
             }
-        }
-        else
-        {
-            stateMachine.ChangeState(new FleeState());
         }
     }
 
     public override void Exit()
     {
+        enemy.anim.SetBool(Enemy.FLEE, false);
         searchTimer = 0;
-        moveTimer = 0;
         enemy.LastKnownPos = Vector3.zero;
+        enemy.StopAllCoroutines();
+    }
+
+    private IEnumerator IdleAndPickRandomLocation()
+    {
+        isIdling = true;
+        stateMachine.ChangeState(new IdleState());
+        yield return new WaitForSeconds(5f);
+        isIdling = false;
+
+        stateMachine.ChangeState(new SearchState());
+        enemy.Agent.SetDestination(enemy.transform.position + (Random.insideUnitSphere * 10f));
     }
 }

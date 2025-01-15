@@ -8,9 +8,8 @@ public class PatrolState : BaseState
     public override void Enter()
     {
         enemy.anim.SetBool(Enemy.PATROLLING, true);
-        enemy.anim.SetBool(Enemy.ATTACK, false);
-        enemy.anim.SetBool(Enemy.FLEE, false);
-        enemy.Agent.speed = 2;
+        enemy.Agent.velocity = enemy.defaultVelocity;
+        enemy.Agent.SetDestination(enemy.enemyPath.Waypoints[Random.Range(0, enemy.enemyPath.Waypoints.Count - 1)].position);
     }
 
     public override void Perform()
@@ -19,20 +18,15 @@ public class PatrolState : BaseState
 
         if (enemy.CanSeePlayer())
         {
-            if(enemy.GetHealth() < 30) 
-            {
-                stateMachine.ChangeState(new FleeState());
-            }
-
             stateMachine.ChangeState(new AttackState());
         }
     }
 
     public override void Exit()
     {
+        enemy.anim.SetBool(Enemy.PATROLLING, false);
         waitTimer = 0;
         waypointIndex = 0;
-        enemy.anim.SetBool(Enemy.PATROLLING, false);
     }
 
     public void PatrolCycle()
@@ -43,7 +37,7 @@ public class PatrolState : BaseState
             {
                 stateMachine.ChangeState(new IdleState());
             }
-            enemy.Agent.SetDestination(enemy.enemyPath.Waypoints[Random.Range(0, enemy.enemyPath.Waypoints.Count - 1)].position);
+      
         }
 
     }

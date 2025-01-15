@@ -7,11 +7,9 @@ public class IdleState : BaseState
 
     public override void Enter()
     {
-        enemy.anim.Play(Enemy.IDLE);
-        enemy.anim.SetBool(Enemy.PATROLLING, false);
-        enemy.anim.SetBool(Enemy.ATTACK, false);
-        duration = Random.Range(4, 10);
-        enemy.Agent.speed = 0;
+        enemy.Agent.velocity = Vector3.zero;
+        enemy.anim.SetBool(Enemy.IDLE, true);
+        duration = Random.Range(4f, 10f);
     }
 
     public override void Perform()
@@ -25,7 +23,9 @@ public class IdleState : BaseState
 
     public override void Exit()
     {
+        enemy.anim.SetBool(Enemy.IDLE, false);
         waitTimer = 0;
+        enemy.Agent.velocity = enemy.defaultVelocity;   
     }
 
     public void Waiting()

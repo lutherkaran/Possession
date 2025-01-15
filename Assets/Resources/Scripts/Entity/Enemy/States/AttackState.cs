@@ -8,18 +8,17 @@ public class AttackState : BaseState
 
     public override void Enter()
     {
-        enemy.anim.SetBool(Enemy.PATROLLING, false);
         enemy.anim.SetBool(Enemy.ATTACK, true);
-        enemy.anim.SetBool(Enemy.FLEE, false);
-        enemy.Agent.speed = 2;
+        enemy.Agent.velocity = Vector3.zero;
     }
 
     public override void Exit()
     {
+        enemy.anim.SetBool(Enemy.ATTACK, false);
+        enemy.Agent.velocity = enemy.defaultVelocity;
         moveTimer = 0;
         losePlayerTimer = 0;
         shotTimer = 0;
-        enemy.anim.SetBool(Enemy.ATTACK, false);
     }
 
     public override void Perform()

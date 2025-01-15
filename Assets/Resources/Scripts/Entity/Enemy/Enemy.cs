@@ -12,7 +12,7 @@ public class Enemy : Entity, IPossessible, IDamageable
     // Constants
     public const string PATROLLING = "IsPatrolling";
     public const string ATTACK = "IsAttacking";
-    public const string IDLE = "Idle";
+    public const string IDLE = "IsIdle";
     public const string FLEE = "IsSearching";
 
     [Header("Pathfinding")]
@@ -32,6 +32,7 @@ public class Enemy : Entity, IPossessible, IDamageable
     private Rigidbody rb;
     private StateMachine stateMachine;
     public Animator anim;
+    public Vector3 defaultVelocity = Vector3.zero;
     [SerializeField] private string currentState;
 
     // Initialization
@@ -47,6 +48,7 @@ public class Enemy : Entity, IPossessible, IDamageable
 
         stateMachine = GetComponent<StateMachine>();
         Agent = GetComponent<NavMeshAgent>();
+        defaultVelocity = Agent.velocity;
         stateMachine.Initialise();
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
     }
@@ -56,7 +58,7 @@ public class Enemy : Entity, IPossessible, IDamageable
     {
         health = Mathf.Clamp(health, 0, maxHealth);
         HandleDebugInputs();
-        CanSeePlayer(); 
+        CanSeePlayer();
         currentState = stateMachine?.activeState?.ToString() ?? "None";
     }
 

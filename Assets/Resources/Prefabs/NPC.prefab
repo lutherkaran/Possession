@@ -126,6 +126,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cam: {fileID: 0}
+  health: 0
+  PossessableLayerMask:
+    serializedVersion: 2
+    m_Bits: 256
   maxHealth: 100
 --- !u!135 &500486801584989677
 SphereCollider:

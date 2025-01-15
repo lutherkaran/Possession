@@ -13,11 +13,12 @@ public class StateMachine : MonoBehaviour
     public void Update()
     {
         // if enemy isn't possessed by the player then perform actions else stay idle.
-
+        
         if (activeState != null && PossessionManager.Instance.currentlyPossessed != activeState.enemy.PlayerPossessed)
         {
             activeState.Perform();
         }
+
         else
         {
             ChangeState(new PossessedState());

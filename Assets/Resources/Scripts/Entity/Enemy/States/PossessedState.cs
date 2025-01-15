@@ -17,7 +17,7 @@ public class PossessedState : BaseState
 
     public override void Exit()
     {
-        //stateMachine.ChangeState(new IdleState());
+        enemy.Agent.velocity = enemy.defaultVelocity;
     }
 
 }

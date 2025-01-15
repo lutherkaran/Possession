@@ -4,36 +4,40 @@ using UnityEngine;
 
 public class HealState : BaseState
 {
+    EventOnlyInteractable interactable;
+
     public override void Enter()
     {
-
+        enemy.anim.SetBool(Enemy.IDLE, true); // Should be Heal Animation
+        GameObject.FindGameObjectWithTag("Interactable").TryGetComponent(out interactable);
+        enemy.Agent.SetDestination(interactable.gameObject.transform.position);
     }
 
     public override void Perform()
     {
-        // Find heal potion 
-        if (enemy.GetHealth() < 50)
+        if (!enemy.CanSeePlayer())
         {
-            GameObject.FindGameObjectWithTag("Interactable").TryGetComponent(out EventOnlyInteractable interactable);
-            enemy.Agent.SetDestination(interactable.gameObject.transform.position);
-
-            if (enemy.Agent.remainingDistance < 0.2f)
+            if (enemy.Agent.remainingDistance == enemy.Agent.stoppingDistance)//if (enemy.Agent.remainingDistance < 0.2f)
             {
+                enemy.Agent.velocity = Vector3.zero;
                 interactable.BaseInteract();
-
-            }
-
-            if (enemy.GetHealth() >= 100)
-            {
-                stateMachine.ChangeState(new PatrolState());
+                Debug.Log("Interacted Enemy....!!");
+                if (enemy.GetHealth() >= 100)
+                {
+                    stateMachine.ChangeState(new PatrolState());
+                }
             }
         }
-
+        else
+        {
+            stateMachine.ChangeState(new FleeState());
+        }
     }
 
     public override void Exit()
     {
-
+        enemy.anim.SetBool(Enemy.IDLE, false); // should be heal animation
+        enemy.Agent.velocity = enemy.defaultVelocity;
     }
 }
 
