@@ -7,34 +7,46 @@ public class FleeState : BaseState
 
     public override void Enter()
     {
-        enemy.anim.SetBool(Enemy.FLEE, true);
-        enemy.Agent.velocity = enemy.defaultVelocity * 4;
+        enemy.anim.SetBool(Enemy.IS_FLEEING, true);
+        enemy.Agent.velocity = enemy.defaultVelocity * 4f;
     }
 
     public override void Perform()
     {
-        // considering enemy's health is low...
-
-        if (!enemy.IsSafe() || enemy.CanSeePlayer())
+        if (!enemy.IsSafe())
         {
-            fleeDirection = (enemy.transform.position - enemy.Player.transform.position).normalized + (Random.insideUnitSphere * 5);
+            fleeDirection = (enemy.transform.position - enemy.Player.transform.position).normalized + (Random.insideUnitSphere * 10).normalized;
             enemy.Agent.SetDestination(enemy.transform.position + fleeDirection * FleeDistance);
+            //stateMachine.ChangeState(new FleeState());
+        }
+        else
+        {
+            //heal
+            if (!enemy.CanSeePlayer())
+            {
+                GameObject.FindGameObjectWithTag("Interactable").TryGetComponent(out EventOnlyInteractable interactable);
+                stateMachine.ChangeState(new HealState(interactable, interactable.gameObject.transform.position));
+            }
+            else
+            {
+                if (enemy.GetHealth() > 30f)
+                {
+                    stateMachine.ChangeState(new AttackState());
+                }
+                else
+                {
+                    fleeDirection = (enemy.transform.position - enemy.Player.transform.position).normalized + (Random.insideUnitSphere * 10).normalized;
+                    enemy.Agent.SetDestination(enemy.transform.position + fleeDirection * FleeDistance);
+                    //stateMachine.ChangeState(new FleeState());
+                }
+            }
         }
 
-        if (enemy.IsSafe() && !enemy.CanSeePlayer())
-        {
-            stateMachine.ChangeState(new HealState());
-        }
-
-        else if (enemy.IsSafe() && enemy.CanSeePlayer())
-        {
-            stateMachine.ChangeState(new AttackState());
-        }
     }
 
     public override void Exit()
     {
-        enemy.anim.SetBool(Enemy.FLEE, false);
+        enemy.anim.SetBool(Enemy.IS_FLEEING, false);
         enemy.Agent.velocity = enemy.defaultVelocity;
     }
 }

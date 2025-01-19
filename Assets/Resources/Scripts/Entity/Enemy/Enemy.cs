@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -10,10 +11,11 @@ public class Enemy : Entity, IPossessible, IDamageable
     public GameObject Player => player.gameObject;
 
     // Constants
-    public const string PATROLLING = "IsPatrolling";
-    public const string ATTACK = "IsAttacking";
-    public const string IDLE = "IsIdle";
-    public const string FLEE = "IsSearching";
+    public const string IS_IDLE = "IsIdle";
+    public const string IS_PATROLLING = "IsPatrolling";
+    public const string IS_SEARCHING = "IsSearching";
+    public const string IS_ATTACKING = "IsAttacking";
+    public const string IS_FLEEING = "IsFleeing";
 
     [Header("Pathfinding")]
     [SerializeField] public EnemyPath enemyPath;
@@ -35,8 +37,8 @@ public class Enemy : Entity, IPossessible, IDamageable
     public Vector3 defaultVelocity = Vector3.zero;
     [SerializeField] private string currentState;
 
+    public event EventHandler OnEnemyDied;
     // Initialization
-
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
@@ -56,10 +58,19 @@ public class Enemy : Entity, IPossessible, IDamageable
     // Main Update Loop
     private void Update()
     {
-        health = Mathf.Clamp(health, 0, maxHealth);
-        HandleDebugInputs();
-        CanSeePlayer();
-        currentState = stateMachine?.activeState?.ToString() ?? "None";
+
+        if (health >= 0)
+        {
+            health = Mathf.Clamp(health, 0, maxHealth);
+            HandleDebugInputs();
+            CanSeePlayer();
+            currentState = stateMachine?.activeState?.ToString() ?? "None";
+        }
+        else
+        {
+            OnEnemyDied?.Invoke(this, EventArgs.Empty);
+
+        }
     }
 
     // Public Overrides
@@ -113,7 +124,7 @@ public class Enemy : Entity, IPossessible, IDamageable
 
     public float GetHealth() => health;
 
-    public bool IsSafe() => Vector3.Distance(transform.position, player.transform.position) > 20f;
+    public bool IsSafe() => Vector3.Distance(transform.position, player.transform.position) >= 20f;
 
     // Sight and AI Logic
     public bool CanSeePlayer()
@@ -145,13 +156,13 @@ public class Enemy : Entity, IPossessible, IDamageable
     {
         if (Input.GetKeyDown(KeyCode.G))
         {
-            TakeDamage(Random.Range(10f, 20f));
+            TakeDamage(UnityEngine.Random.Range(10f, 20f));
             Debug.Log($"Health Damaged: {health}");
         }
 
         if (Input.GetKeyDown(KeyCode.R))
         {
-            RestoreHealth(Random.Range(10f, 20f));
+            RestoreHealth(UnityEngine.Random.Range(10f, 20f));
             Debug.Log($"Health Restored: {health}");
         }
     }

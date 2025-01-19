@@ -4,16 +4,16 @@ using UnityEngine;
 public class SearchState : BaseState
 {
     private float searchTimer;
-    private float searchDuration = 10f;
+    private float searchDuration = 60f;
     private float moveTimer;
-    private bool isIdling = false;
+    private bool isSearching = false;
 
     public override void Enter()
     {
-        enemy.anim.SetBool(Enemy.FLEE, true);
+        enemy.anim.SetBool(Enemy.IS_SEARCHING, true);
         enemy.Agent.SetDestination(enemy.LastKnownPos);
         enemy.Agent.velocity = enemy.defaultVelocity * 2f;
-        isIdling = false;
+        isSearching = true;
     }
 
     public override void Perform()
@@ -21,34 +21,29 @@ public class SearchState : BaseState
         if (enemy.CanSeePlayer())
             stateMachine.ChangeState(new AttackState());
 
-        if (enemy.Agent.remainingDistance <= enemy.Agent.stoppingDistance && !isIdling)
+        if (enemy.Agent.remainingDistance <= enemy.Agent.stoppingDistance && !isSearching)
         {
-            enemy.StartCoroutine(IdleAndPickRandomLocation());
-
             searchTimer += Time.deltaTime;
-            if (searchTimer > searchDuration)
+            moveTimer += Time.deltaTime;
+            if (moveTimer <= Random.Range(3f, searchDuration - 1))
             {
-                stateMachine.ChangeState(new PatrolState());
+                enemy.Agent.SetDestination(enemy.transform.position + (Random.insideUnitSphere * 60f));
+                if (enemy.Agent.remainingDistance <= enemy.Agent.stoppingDistance)
+                {
+                    stateMachine.ChangeState(new IdleState());
+                }
             }
         }
+        else if (searchTimer > searchDuration)
+            stateMachine.ChangeState(new PatrolState());
     }
 
     public override void Exit()
     {
-        enemy.anim.SetBool(Enemy.FLEE, false);
+        enemy.anim.SetBool(Enemy.IS_SEARCHING, false);
         searchTimer = 0;
+        moveTimer = 0;
         enemy.LastKnownPos = Vector3.zero;
         enemy.StopAllCoroutines();
-    }
-
-    private IEnumerator IdleAndPickRandomLocation()
-    {
-        isIdling = true;
-        stateMachine.ChangeState(new IdleState());
-        yield return new WaitForSeconds(5f);
-        isIdling = false;
-
-        stateMachine.ChangeState(new SearchState());
-        enemy.Agent.SetDestination(enemy.transform.position + (Random.insideUnitSphere * 10f));
     }
 }
