@@ -7,6 +7,7 @@ public class PatrolState : BaseState
         enemy.anim.SetBool(Enemy.IS_PATROLLING, true);
         enemy.Agent.velocity = enemy.defaultVelocity;
         enemy.Agent.SetDestination(enemy.enemyPath.Waypoints[Random.Range(0, enemy.enemyPath.Waypoints.Count - 1)].position);
+        enemy.fieldOfView = 150f;
     }
 
     public override void Perform()
@@ -15,6 +16,7 @@ public class PatrolState : BaseState
         if (enemy.CanSeePlayer())
         {
             stateMachine.ChangeState(new AttackState());
+            return;
         }
     }
 
@@ -25,7 +27,7 @@ public class PatrolState : BaseState
 
     public void PatrolCycle()
     {
-        if (enemy.Agent.remainingDistance < 0.2f && (enemy.Agent.remainingDistance >= 0.1f))
+        if (enemy.Agent.remainingDistance <= enemy.Agent.stoppingDistance)//0.2f && (enemy.Agent.remainingDistance >= 0.1f))
         {
             stateMachine.ChangeState(new IdleState());
         }

@@ -23,7 +23,7 @@ public class Enemy : Entity, IPossessible, IDamageable
     // Serialized Fields
     [Header("Sight Values")]
     [SerializeField] private float sightDistance = 20f;
-    [SerializeField] private float fieldOfView = 85f;
+    [SerializeField] public float fieldOfView = 90f;
     [SerializeField] private float eyeHeight;
 
     [Header("Weapon Values")]
@@ -37,7 +37,7 @@ public class Enemy : Entity, IPossessible, IDamageable
     public Vector3 defaultVelocity = Vector3.zero;
     [SerializeField] private string currentState;
 
-    public event EventHandler OnEnemyDied;
+    public event EventHandler<float> OnEnemyHealthChanged;
     // Initialization
     private void Start()
     {
@@ -65,11 +65,6 @@ public class Enemy : Entity, IPossessible, IDamageable
             HandleDebugInputs();
             CanSeePlayer();
             currentState = stateMachine?.activeState?.ToString() ?? "None";
-        }
-        else
-        {
-            OnEnemyDied?.Invoke(this, EventArgs.Empty);
-
         }
     }
 
@@ -118,7 +113,14 @@ public class Enemy : Entity, IPossessible, IDamageable
     public Entity GetEntity() => this;
 
     // IDamageable Implementation
-    public void TakeDamage(float damage) => health -= damage;
+    public void TakeDamage(float damage)
+    {
+        if (health > 0)
+        {
+            health -= damage;
+            OnEnemyHealthChanged?.Invoke(this, health);
+        }
+    }
 
     public void RestoreHealth(float healAmount) => health += healAmount;
 

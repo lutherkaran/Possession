@@ -13,35 +13,20 @@ public class FleeState : BaseState
 
     public override void Perform()
     {
-        if (!enemy.IsSafe())
+        if (!enemy.IsSafe() && enemy.CanSeePlayer())
         {
-            fleeDirection = (enemy.transform.position - enemy.Player.transform.position).normalized + (Random.insideUnitSphere * 10).normalized;
-            enemy.Agent.SetDestination(enemy.transform.position + fleeDirection * FleeDistance);
-            //stateMachine.ChangeState(new FleeState());
+            Flee();
         }
         else
         {
-            //heal
-            if (!enemy.CanSeePlayer())
-            {
-                GameObject.FindGameObjectWithTag("Interactable").TryGetComponent(out EventOnlyInteractable interactable);
-                stateMachine.ChangeState(new HealState(interactable, interactable.gameObject.transform.position));
-            }
-            else
-            {
-                if (enemy.GetHealth() > 30f)
-                {
-                    stateMachine.ChangeState(new AttackState());
-                }
-                else
-                {
-                    fleeDirection = (enemy.transform.position - enemy.Player.transform.position).normalized + (Random.insideUnitSphere * 10).normalized;
-                    enemy.Agent.SetDestination(enemy.transform.position + fleeDirection * FleeDistance);
-                    //stateMachine.ChangeState(new FleeState());
-                }
-            }
+            stateMachine.ChangeState(new HealState());
         }
+    }
 
+    private void Flee()
+    {
+        fleeDirection = (enemy.transform.position - enemy.Player.transform.position).normalized + (Random.insideUnitSphere * 10).normalized;
+        enemy.Agent.SetDestination(enemy.transform.position + fleeDirection * FleeDistance);
     }
 
     public override void Exit()

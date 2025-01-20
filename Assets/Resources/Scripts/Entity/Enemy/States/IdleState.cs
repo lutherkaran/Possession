@@ -9,12 +9,13 @@ public class IdleState : BaseState
     {
         enemy.anim.SetBool(Enemy.IS_IDLE, true);
         enemy.Agent.velocity = Vector3.zero;
+        enemy.fieldOfView = 90f;
         duration = Random.Range(4f, 10f);
     }
 
     public override void Perform()
     {
-        if (enemy.CanSeePlayer()) { stateMachine.ChangeState(new AttackState()); }
+        if (enemy.CanSeePlayer()) { stateMachine.ChangeState(new AttackState()); return; }
         else
         {
             Waiting();
@@ -25,7 +26,7 @@ public class IdleState : BaseState
     {
         enemy.anim.SetBool(Enemy.IS_IDLE, false);
         waitTimer = 0;
-        enemy.Agent.velocity = enemy.defaultVelocity;   
+        enemy.Agent.velocity = enemy.defaultVelocity;
     }
 
     public void Waiting()

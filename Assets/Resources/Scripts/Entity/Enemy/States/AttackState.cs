@@ -23,43 +23,34 @@ public class AttackState : BaseState
 
     public override void Perform()
     {
-        if (enemy.GetHealth() > 30)
+        if (enemy.CanSeePlayer())
         {
-            if (enemy.CanSeePlayer())
+            enemy.transform.LookAt(enemy.Player.transform);
+
+            losePlayerTimer = 0;
+            moveTimer += Time.deltaTime;
+            shotTimer += Time.deltaTime;
+
+            if (shotTimer > enemy.fireRate)
             {
-                losePlayerTimer = 0;
-
-                moveTimer += Time.deltaTime;
-                shotTimer += Time.deltaTime;
-
-                enemy.transform.LookAt(enemy.Player.transform);
-
-                if (shotTimer > enemy.fireRate)
-                {
-                    Shoot();
-                }
-
-                if (moveTimer > Random.Range(3, 7))
-                {
-                    enemy.Agent.SetDestination(enemy.transform.position + (Random.insideUnitSphere * 5));
-                    moveTimer = 0;
-                }
-                enemy.LastKnownPos = enemy.Player.transform.position;
+                Shoot();
             }
-
-            else
+            if (moveTimer > Random.Range(3, 7))
             {
-                losePlayerTimer += Time.deltaTime;
-
-                if (losePlayerTimer > 5)
-                {
-                    stateMachine.ChangeState(new SearchState());
-                }
+                enemy.Agent.SetDestination(enemy.transform.position + (Random.insideUnitSphere * 5));
+                moveTimer = 0;
             }
         }
+
         else
         {
-            stateMachine.ChangeState(new FleeState());
+            losePlayerTimer += Time.deltaTime;
+
+            if (losePlayerTimer > 5)
+            {
+                enemy.LastKnownPos = enemy.Player.transform.position;
+                stateMachine.ChangeState(new SearchState());
+            }
         }
     }
 
