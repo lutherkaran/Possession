@@ -175,9 +175,9 @@ MonoBehaviour:
   eyeHeight: 0.8
   gunBarrel: {fileID: 9202297458040925666}
   fireRate: 1
+  currentState: 
   anim: {fileID: 720226412453743824}
   defaultVelocity: {x: 0, y: 0, z: 0}
-  currentState: 
 --- !u!114 &8715494641091584613
 MonoBehaviour:
   m_ObjectHideFlags: 0

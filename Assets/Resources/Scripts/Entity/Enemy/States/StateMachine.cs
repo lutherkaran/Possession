@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 public class StateMachine : MonoBehaviour
 {
@@ -7,6 +8,15 @@ public class StateMachine : MonoBehaviour
     {
         ChangeState(new IdleState());
         activeState.enemy.OnEnemyHealthChanged += HealthChanged;
+        PossessionManager.Instance.OnPossessed += ChangeState;
+    }
+
+    private void ChangeState(object sender, IPossessable e)
+    {
+        if (e != null && e == activeState.enemy.GetComponent<IPossessable>())
+        {
+            ChangeState(new PossessedState());
+        }
     }
 
     private void Update()
@@ -39,14 +49,14 @@ public class StateMachine : MonoBehaviour
         }
     }
 
-    private void HealthChanged(object sender, float e)
+    private void HealthChanged(object sender, float health)
     {
-        if (e > 30 && e < 50)
+        if (health > 30 && health < 50)
         {
             ChangeState(new FleeState());
         }
 
-        else if (e < 30)
+        else if (health < 30)
         {
             ChangeState(new HealState());
         }

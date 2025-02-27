@@ -1,14 +1,15 @@
 using System;
 using UnityEngine;
 
-public class PlayerController : Entity, IPossessible
+public class PlayerController : Entity, IPossessable
 {
+    [SerializeField] private const float RaycastHitDistance = 40f;
     [SerializeField] private bool isAlive = true;
     private CharacterController characterController;
     private bool canPossess = true; // Indicates if the player can possess other entities.
 
     private GameObject targetEntity; // The current entity the player is interacting with.
-    private IPossessible currentPossession; // The currently possessed entity.
+    private IPossessable currentPossession; // The currently possessed entity.
 
     private InputManager inputManager;
 
@@ -61,7 +62,20 @@ public class PlayerController : Entity, IPossessible
 
     public override void Attack()
     {
-        // Implement attack logic here.
+        Ray ray = new Ray(transform.position + (Vector3.up * 0.5f), transform.forward);
+        Debug.DrawRay(ray.origin, ray.direction * 40, Color.red);
+        if (Physics.Raycast(ray, out RaycastHit hit, RaycastHitDistance))
+        {
+            if (hit.transform.parent.CompareTag("Enemy"))
+            {
+                hit.transform.GetComponentInParent<Enemy>()?.TakeDamage(UnityEngine.Random.Range(10f, 20f));
+                Debug.Log("Attacked: " + hit.transform.GetComponentInParent<Enemy>()?.gameObject.name);
+            }
+            else
+            {
+                Debug.Log("Unable to hit enemy");
+            }
+        }
     }
 
     /// <summary>
@@ -79,7 +93,7 @@ public class PlayerController : Entity, IPossessible
         Ray ray = new Ray(transform.position + (Vector3.up * 0.5f), transform.forward);
         Debug.DrawRay(ray.origin, ray.direction * 40, Color.red);
 
-        if (Physics.Raycast(ray, out RaycastHit hit, 40f))
+        if (Physics.Raycast(ray, out RaycastHit hit, RaycastHitDistance))
         {
             HandlePossession(hit);
         }
@@ -91,7 +105,7 @@ public class PlayerController : Entity, IPossessible
 
     private void HandlePossession(RaycastHit hit)
     {
-        var possessableEntity = hit.transform.GetComponentInParent<IPossessible>();
+        var possessableEntity = hit.transform.GetComponentInParent<IPossessable>();
         targetEntity = hit.transform.GetComponentInParent<Entity>()?.gameObject;
 
         if (possessableEntity == null) return;
@@ -129,7 +143,7 @@ public class PlayerController : Entity, IPossessible
     public void Possess(GameObject go)
     {
         Debug.Log($"Possessing... {go.name}");
-        playerPossessed = PossessionManager.Instance.ToPossess(go.GetComponent<IPossessible>());
+        playerPossessed = PossessionManager.Instance.ToPossess(go.GetComponent<IPossessable>());
     }
 
     public void Depossess(GameObject go)

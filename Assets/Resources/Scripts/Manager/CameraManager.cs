@@ -39,8 +39,8 @@ public class CameraManager : MonoBehaviour
         cam = this.GetComponent<Camera>();
         StartCoroutine(MovetoPosition(currentlyPossessed));
         cam.transform.SetParent(currentlyPossessed.transform);
-        this.gameObject.transform.position = Vector3.zero;
-        this.gameObject.transform.rotation = Quaternion.identity;
+        //this.gameObject.transform.position = Vector3.zero;
+        //this.gameObject.transform.rotation = Quaternion.identity;
     }
 
     public IEnumerator MovetoPosition(GameObject currentlyPossessed)

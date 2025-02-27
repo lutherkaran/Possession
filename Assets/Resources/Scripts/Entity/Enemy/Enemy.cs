@@ -2,10 +2,10 @@ using System;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Enemy : Entity, IPossessible, IDamageable
+public class Enemy : Entity, IPossessable, IDamageable
 {
     // Public Properties
-    public IPossessible PlayerPossessed { get; private set; }
+    public IPossessable PlayerPossessed { get; private set; }
     public Vector3 LastKnownPos { get; set; }
     public NavMeshAgent Agent { get; private set; }
     public GameObject Player => player.gameObject;
@@ -32,14 +32,24 @@ public class Enemy : Entity, IPossessible, IDamageable
 
     // Private Fields
     private Rigidbody rb;
+    [SerializeField] private string currentState;
     private StateMachine stateMachine;
+
     public Animator anim;
     public Vector3 defaultVelocity = Vector3.zero;
-    [SerializeField] private string currentState;
-
     public event EventHandler<float> OnEnemyHealthChanged;
-    // Initialization
+
+    private void Awake()
+    {
+        Initialize();
+    }
+
     private void Start()
+    {
+        PostInitialize();
+    }
+
+    private void Initialize()
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -47,22 +57,22 @@ public class Enemy : Entity, IPossessible, IDamageable
         rb = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
         health = maxHealth;
-
         stateMachine = GetComponent<StateMachine>();
         Agent = GetComponent<NavMeshAgent>();
+    }
+
+    private void PostInitialize()
+    {
         defaultVelocity = Agent.velocity;
         stateMachine.Initialise();
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
     }
 
-    // Main Update Loop
     private void Update()
     {
-
         if (health >= 0)
         {
             health = Mathf.Clamp(health, 0, maxHealth);
-            HandleDebugInputs();
             CanSeePlayer();
             currentState = stateMachine?.activeState?.ToString() ?? "None";
         }
@@ -98,7 +108,7 @@ public class Enemy : Entity, IPossessible, IDamageable
     public void Possess(GameObject go)
     {
         Debug.Log($"Possessing {go.name}");
-        PlayerPossessed = PossessionManager.Instance.ToPossess(go.GetComponent<IPossessible>());
+        PlayerPossessed = PossessionManager.Instance.ToPossess(go.GetComponent<IPossessable>());
         CameraManager.instance.AttachCameraToPossessedObject(gameObject);
     }
 
@@ -151,21 +161,5 @@ public class Enemy : Entity, IPossessible, IDamageable
         }
 
         return false;
-    }
-
-    // Private Helper Methods
-    private void HandleDebugInputs()
-    {
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            TakeDamage(UnityEngine.Random.Range(10f, 20f));
-            Debug.Log($"Health Damaged: {health}");
-        }
-
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            RestoreHealth(UnityEngine.Random.Range(10f, 20f));
-            Debug.Log($"Health Restored: {health}");
-        }
     }
 }

@@ -28,16 +28,11 @@ public class SearchState : BaseState
         if (enemy.Agent.remainingDistance <= enemy.Agent.stoppingDistance)
         {
             searchTimer += Time.deltaTime;
-
-            if (!isSettingIdle)
+            moveTimer += Time.deltaTime;
+            if (moveTimer >= Random.Range(3f, searchDuration - 1) && !isSettingIdle)
             {
-                moveTimer += Time.deltaTime;
-                if (moveTimer >= Random.Range(3f, searchDuration - 1))
-                {
-                    isSettingIdle = true;
-                    enemy.StartCoroutine(SettingUpIdle());
-                    moveTimer = 0;
-                }
+                enemy.StartCoroutine(SettingUpIdle());
+                moveTimer = 0;
             }
         }
 
@@ -60,6 +55,8 @@ public class SearchState : BaseState
 
     private IEnumerator SettingUpIdle()
     {
+        isSettingIdle = true;
+        enemy.anim.Play("Idle");
         yield return new WaitForSeconds(3f);
         isSettingIdle = false; // Allow future idles
         enemy.Agent.SetDestination(enemy.transform.position + (Random.insideUnitSphere * 30f));

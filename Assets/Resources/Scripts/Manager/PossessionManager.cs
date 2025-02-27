@@ -1,15 +1,19 @@
+using System;
+
 public class PossessionManager
 {
     private static PossessionManager instance;
     public static PossessionManager Instance { get { return instance == null ? instance = new PossessionManager() : instance; } }
-    public IPossessible currentlyPossessed = null;
+    public IPossessable currentlyPossessed = null;
 
-    public IPossessible ToPossess(IPossessible possessible)
+    public event EventHandler<IPossessable> OnPossessed;
+
+    public IPossessable ToPossess(IPossessable possessible)
     {
-        
         if (possessible != null && currentlyPossessed != possessible)
         {
             currentlyPossessed = possessible;
+            OnPossessed?.Invoke(this, currentlyPossessed);
             return currentlyPossessed;
         }
 

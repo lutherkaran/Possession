@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class NPC : Entity, IPossessible
+public class NPC : Entity, IPossessable
 {
     Rigidbody rb;
 
@@ -54,7 +54,7 @@ public class NPC : Entity, IPossessible
     public void Possess(GameObject go)
     {
         Debug.Log("Possessing..." + go.name);
-        playerPossessed = PossessionManager.Instance.ToPossess(go.GetComponent<IPossessible>());
+        playerPossessed = PossessionManager.Instance.ToPossess(go.GetComponent<IPossessable>());
         CameraManager.instance.AttachCameraToPossessedObject(this.gameObject);
     }
 

@@ -28,7 +28,7 @@ public class HealState : BaseState
         }
         else
         {
-            stateMachine.ChangeState(new FleeState());
+            stateMachine.ChangeState(new FleeState()); // BUG keep on transitioning to Heal and Flee
         }
     }
 

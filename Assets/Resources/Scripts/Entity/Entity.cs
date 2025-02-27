@@ -2,7 +2,7 @@ using UnityEngine;
 
 public abstract class Entity : MonoBehaviour
 {
-    protected IPossessible playerPossessed { get; set; }
+    protected IPossessable playerPossessed { get; set; }
 
     [SerializeField]
     protected Camera cam;

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public interface IPossessible
+public interface IPossessable
 {
     void Possess(GameObject go);
     void Depossess(GameObject go);
