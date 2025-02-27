@@ -128,9 +128,10 @@ GameObject:
   - component: {fileID: 8715494641091584613}
   - component: {fileID: 720226412453743824}
   - component: {fileID: 7164283807608249480}
+  - component: {fileID: -7021639688230631289}
   m_Layer: 0
   m_Name: Enemy
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -170,8 +171,8 @@ MonoBehaviour:
     m_Bits: 256
   maxHealth: 100
   enemyPath: {fileID: 0}
-  sightDistance: 20
   fieldOfView: 180
+  sightDistance: 20
   eyeHeight: 0.8
   gunBarrel: {fileID: 9202297458040925666}
   fireRate: 1
@@ -233,6 +234,22 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &-7021639688230631289
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8164293709562816023}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8bae178060863d746898738b99408b9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  chipSpeed: 2
+  frontHealthBar: {fileID: 0}
+  backHealthBar: {fileID: 0}
 --- !u!1001 &8084521505495260211
 PrefabInstance:
   m_ObjectHideFlags: 0

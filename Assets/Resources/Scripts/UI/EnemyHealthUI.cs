@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HealthUI : MonoBehaviour
+public class EnemyHealthUI : MonoBehaviour
 {
     private float health;
     private float lerpTimer;
@@ -12,38 +12,15 @@ public class HealthUI : MonoBehaviour
     public Image frontHealthBar;
     public Image backHealthBar;
 
-    [Header("Damage Overlay")]
-    public Image damageOverlay;
-    public float duration;
-    public float fadeSpeed; // How quickly the image will fade.
-    private float durationTimer;
-
     private void Start()
     {
-        health = maxHealth;
-        damageOverlay.color = new Color(damageOverlay.color.r, damageOverlay.color.g, damageOverlay.color.b, 0);
+         health = maxHealth;
     }
 
     private void Update()
     {
         health = Mathf.Clamp(health, 0, maxHealth);
         UpdateHealthUI();
-        DamageOverlay();
-    }
-
-    private void DamageOverlay()
-    {
-        if (damageOverlay.color.a > 0)
-        {
-            if (health < 30) return;
-            durationTimer += Time.deltaTime;
-            if (durationTimer > duration)
-            {
-                float tempAlpha = damageOverlay.color.a;
-                tempAlpha -= Time.deltaTime * fadeSpeed;
-                damageOverlay.color = new Color(damageOverlay.color.r, damageOverlay.color.g, damageOverlay.color.b, tempAlpha);
-            }
-        }
     }
 
     private void UpdateHealthUI()
@@ -76,8 +53,6 @@ public class HealthUI : MonoBehaviour
     {
         health -= damage;
         lerpTimer = 0;
-        durationTimer = 0;
-        damageOverlay.color = new Color(damageOverlay.color.r, damageOverlay.color.g, damageOverlay.color.b, 1);
     }
     public void RestoreHealth(float healAmount)
     {

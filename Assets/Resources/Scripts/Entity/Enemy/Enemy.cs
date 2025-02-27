@@ -22,8 +22,8 @@ public class Enemy : Entity, IPossessable, IDamageable
 
     // Serialized Fields
     [Header("Sight Values")]
+    public float fieldOfView = 90f;
     [SerializeField] private float sightDistance = 20f;
-    [SerializeField] public float fieldOfView = 90f;
     [SerializeField] private float eyeHeight;
 
     [Header("Weapon Values")]
@@ -38,6 +38,8 @@ public class Enemy : Entity, IPossessable, IDamageable
     public Animator anim;
     public Vector3 defaultVelocity = Vector3.zero;
     public event EventHandler<float> OnEnemyHealthChanged;
+
+    private EnemyHealthUI enemyHealthUI;
 
     private void Awake()
     {
@@ -59,6 +61,7 @@ public class Enemy : Entity, IPossessable, IDamageable
         health = maxHealth;
         stateMachine = GetComponent<StateMachine>();
         Agent = GetComponent<NavMeshAgent>();
+        enemyHealthUI = GetComponent<EnemyHealthUI>();
     }
 
     private void PostInitialize()
@@ -127,12 +130,15 @@ public class Enemy : Entity, IPossessable, IDamageable
     {
         if (health > 0)
         {
-            health -= damage;
+            enemyHealthUI.TakeDamage(damage);
             OnEnemyHealthChanged?.Invoke(this, health);
         }
     }
 
-    public void RestoreHealth(float healAmount) => health += healAmount;
+    public void RestoreHealth(float healAmount)
+    {
+        enemyHealthUI.RestoreHealth(healAmount);
+    }
 
     public float GetHealth() => health;
 

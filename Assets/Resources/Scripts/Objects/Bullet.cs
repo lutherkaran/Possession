@@ -9,8 +9,8 @@ public class Bullet : MonoBehaviour
         Transform hitTransform = collision.transform;
         if (hitTransform.CompareTag("Player"))
         {
-            //Debug.Log("Hit Player");
-            hitTransform.GetComponent<HealthUI>().TakeDamage(10);
+            if (hitTransform.GetComponent<IDamageable>() is PlayerController player)
+                player.TakeDamage(UnityEngine.Random.Range(5f, 10f));
         }
 
         Destroy(gameObject);

@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class PlayerController : Entity, IPossessable
+public class PlayerController : Entity, IPossessable, IDamageable
 {
     [SerializeField] private const float RaycastHitDistance = 40f;
     [SerializeField] private bool isAlive = true;
@@ -12,11 +12,13 @@ public class PlayerController : Entity, IPossessable
     private IPossessable currentPossession; // The currently possessed entity.
 
     private InputManager inputManager;
+    private PlayerHealthUI healthUI;
 
     private void Start()
     {
         isAlive = true;
         characterController = GetComponent<CharacterController>();
+        healthUI = GetComponent<PlayerHealthUI>();
         currentPossession = PossessionManager.Instance.ToPossess(this);
         playerPossessed = currentPossession;
 
@@ -62,25 +64,22 @@ public class PlayerController : Entity, IPossessable
 
     public override void Attack()
     {
-        Ray ray = new Ray(transform.position + (Vector3.up * 0.5f), transform.forward);
-        Debug.DrawRay(ray.origin, ray.direction * 40, Color.red);
+        Ray ray = DrawRayfromPlayerEye();
         if (Physics.Raycast(ray, out RaycastHit hit, RaycastHitDistance))
         {
-            if (hit.transform.parent.CompareTag("Enemy"))
+            if (hit.transform.parent.CompareTag("Enemy")) // if there's an object that has no parent then it will throw an exception. current example: NPC
             {
                 hit.transform.GetComponentInParent<Enemy>()?.TakeDamage(UnityEngine.Random.Range(10f, 20f));
-                Debug.Log("Attacked: " + hit.transform.GetComponentInParent<Enemy>()?.gameObject.name);
-            }
-            else
-            {
-                Debug.Log("Unable to hit enemy");
             }
         }
     }
 
-    /// <summary>
-    /// Handles the possession of nearby entities using a raycast.
-    /// </summary>
+    private Ray DrawRayfromPlayerEye()
+    {
+        Ray ray = new Ray(transform.position + (Vector3.up * 0.5f), transform.forward);
+        Debug.DrawRay(ray.origin, ray.direction * 40, Color.red);
+        return ray;
+    }
 
     public void PossessEntities()
     {
@@ -90,8 +89,7 @@ public class PlayerController : Entity, IPossessable
             return;
         }
 
-        Ray ray = new Ray(transform.position + (Vector3.up * 0.5f), transform.forward);
-        Debug.DrawRay(ray.origin, ray.direction * 40, Color.red);
+        Ray ray = DrawRayfromPlayerEye();
 
         if (Physics.Raycast(ray, out RaycastHit hit, RaycastHitDistance))
         {
@@ -156,5 +154,15 @@ public class PlayerController : Entity, IPossessable
     public Entity GetEntity()
     {
         return this;
+    }
+
+    public void TakeDamage(float damage)
+    {
+        healthUI.TakeDamage(damage);
+    }
+
+    public void RestoreHealth(float healAmount)
+    {
+        healthUI.RestoreHealth(healAmount);
     }
 }
