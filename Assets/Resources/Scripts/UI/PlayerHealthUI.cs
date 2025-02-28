@@ -3,11 +3,10 @@ using UnityEngine.UI;
 
 public class PlayerHealthUI : MonoBehaviour
 {
-    private float health;
+    [SerializeField] private float health;
     private float lerpTimer;
 
     [Header("Health Bar")]
-    public float maxHealth = 100f;
     public float chipSpeed = 2f;
     public Image frontHealthBar;
     public Image backHealthBar;
@@ -18,17 +17,23 @@ public class PlayerHealthUI : MonoBehaviour
     public float fadeSpeed; // How quickly the image will fade.
     private float durationTimer;
 
+    private PlayerController playerController;
+
+    private void Awake()
+    {
+        playerController = GetComponent<PlayerController>();
+    }
     private void Start()
     {
-        health = maxHealth;
+        health = playerController.maxHealth;
         damageOverlay.color = new Color(damageOverlay.color.r, damageOverlay.color.g, damageOverlay.color.b, 0);
     }
 
     private void Update()
     {
-        health = Mathf.Clamp(health, 0, maxHealth);
+        health = Mathf.Clamp(health, 0, playerController.maxHealth);
         UpdateHealthUI();
-        DamageOverlay();
+        //DamageOverlay();
     }
 
     private void DamageOverlay()
@@ -50,7 +55,7 @@ public class PlayerHealthUI : MonoBehaviour
     {
         float fillF = frontHealthBar.fillAmount;
         float fillB = backHealthBar.fillAmount;
-        float hFraction = health / maxHealth;
+        float hFraction = health / playerController.maxHealth;
 
         if (fillB > hFraction)
         {

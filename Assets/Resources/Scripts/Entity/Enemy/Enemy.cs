@@ -58,10 +58,10 @@ public class Enemy : Entity, IPossessable, IDamageable
 
         rb = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
-        health = maxHealth;
+        enemyHealthUI = GetComponent<EnemyHealthUI>();
+        health = enemyHealthUI.GetMaxHealth();
         stateMachine = GetComponent<StateMachine>();
         Agent = GetComponent<NavMeshAgent>();
-        enemyHealthUI = GetComponent<EnemyHealthUI>();
     }
 
     private void PostInitialize()
@@ -73,9 +73,8 @@ public class Enemy : Entity, IPossessable, IDamageable
 
     private void Update()
     {
-        if (health >= 0)
+        if (enemyHealthUI.GetHealth() >= 0)
         {
-            health = Mathf.Clamp(health, 0, maxHealth);
             CanSeePlayer();
             currentState = stateMachine?.activeState?.ToString() ?? "None";
         }
@@ -84,7 +83,7 @@ public class Enemy : Entity, IPossessable, IDamageable
     // Public Overrides
     public override void Attack() { /* Implement attack logic */ }
 
-    public override bool IsAlive() => health > 0;
+    public override bool IsAlive() => enemyHealthUI.GetHealth() > 0;
 
     public override void ProcessMove(Vector2 input)
     {
@@ -128,10 +127,10 @@ public class Enemy : Entity, IPossessable, IDamageable
     // IDamageable Implementation
     public void TakeDamage(float damage)
     {
-        if (health > 0)
+        if (enemyHealthUI.GetHealth() > 0)
         {
             enemyHealthUI.TakeDamage(damage);
-            OnEnemyHealthChanged?.Invoke(this, health);
+            OnEnemyHealthChanged?.Invoke(this, enemyHealthUI.GetHealth());
         }
     }
 
@@ -140,7 +139,7 @@ public class Enemy : Entity, IPossessable, IDamageable
         enemyHealthUI.RestoreHealth(healAmount);
     }
 
-    public float GetHealth() => health;
+    public float GetHealth() => enemyHealthUI.GetHealth();
 
     public bool IsSafe() => Vector3.Distance(transform.position, player.transform.position) >= 20f;
 

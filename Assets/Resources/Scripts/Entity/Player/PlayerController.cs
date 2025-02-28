@@ -24,7 +24,7 @@ public class PlayerController : Entity, IPossessable, IDamageable
 
         CameraManager.instance.AttachCameraToPossessedObject(gameObject);
         inputManager = GetComponent<InputManager>();
-        SetPlayer(this); ;
+        SetPlayer(this);
     }
 
     private void Update()

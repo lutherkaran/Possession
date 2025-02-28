@@ -19,9 +19,9 @@ public abstract class Entity : MonoBehaviour
     protected bool isGrounded = true;
 
     [SerializeField] protected float health;
+    public float maxHealth = 100f;
     [SerializeField] protected LayerMask PossessableLayerMask;
 
-    public float maxHealth = 100f;
 
     public void SetPlayer(PlayerController Player)
     {

@@ -14,7 +14,7 @@ public class EnemyHealthUI : MonoBehaviour
 
     private void Start()
     {
-         health = maxHealth;
+        health = maxHealth;
     }
 
     private void Update()
@@ -59,4 +59,15 @@ public class EnemyHealthUI : MonoBehaviour
         health += healAmount;
         lerpTimer = 0f;
     }
+
+    public float GetHealth()
+    {
+        return health;
+    }
+
+    public float GetMaxHealth()
+    {
+       return maxHealth;
+    }
+
 }
