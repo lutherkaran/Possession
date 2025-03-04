@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 
+[RequireComponent(typeof(InputManager))]
 public class PlayerController : Entity, IPossessable, IDamageable
 {
     [SerializeField] private const float RaycastHitDistance = 40f;
@@ -10,21 +11,19 @@ public class PlayerController : Entity, IPossessable, IDamageable
 
     private GameObject targetEntity; // The current entity the player is interacting with.
     private IPossessable currentPossession; // The currently possessed entity.
-
     private InputManager inputManager;
-    private PlayerHealthUI healthUI;
+    private PlayerHealthUI playerHealthUI;
 
     private void Start()
     {
         isAlive = true;
-        characterController = GetComponent<CharacterController>();
-        healthUI = GetComponent<PlayerHealthUI>();
-        currentPossession = PossessionManager.Instance.ToPossess(this);
-        playerPossessed = currentPossession;
-
-        CameraManager.instance.AttachCameraToPossessedObject(gameObject);
-        inputManager = GetComponent<InputManager>();
         SetPlayer(this);
+        characterController = GetComponent<CharacterController>();
+        playerHealthUI = GetComponent<PlayerHealthUI>();
+        inputManager = GetComponent<InputManager>();
+        currentPossession = PossessionManager.Instance.ToPossess(this);
+        CameraManager.instance.AttachCameraToPossessedObject(gameObject);
+        playerPossessed = currentPossession;
     }
 
     private void Update()
@@ -46,14 +45,12 @@ public class PlayerController : Entity, IPossessable, IDamageable
     {
         base.ProcessMove(input);
 
-        characterController.Move(transform.TransformDirection(moveDirection) * speed * Time.deltaTime);
-
-        velocity.y += gravity * Time.deltaTime;
+        characterController.Move(transform.TransformDirection(new Vector3(moveDirection.x, 0, moveDirection.z)) * speed * Time.deltaTime);
         if (isGrounded && velocity.y < 0)
         {
-            velocity.y = -2f;
+            velocity.y = -1f;
         }
-
+        velocity.y += gravity * Time.deltaTime;
         characterController.Move(velocity * Time.deltaTime);
     }
 
@@ -158,11 +155,27 @@ public class PlayerController : Entity, IPossessable, IDamageable
 
     public void TakeDamage(float damage)
     {
-        healthUI.TakeDamage(damage);
+        playerHealthUI.TakeDamage(damage);
     }
 
     public void RestoreHealth(float healAmount)
     {
-        healthUI.RestoreHealth(healAmount);
+        playerHealthUI.RestoreHealth(healAmount);
     }
+
+    public PlayerHealthUI GetPlayerHealthUIReference()
+    {
+        return playerHealthUI;
+    }
+
+    public InputManager GetInputManager()
+    {
+        return inputManager;
+    }
+
+    public CharacterController GetCharacterControllerReference()
+    {
+        return characterController;
+    }
+
 }
