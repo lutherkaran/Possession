@@ -1,10 +1,13 @@
 using System;
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 
-[RequireComponent(typeof(InputManager))]
+[RequireComponent(typeof(InputManager), typeof(CharacterController), typeof(PlayerHealthUI))]
+[RequireComponent(typeof(PlayerInteract), typeof(PlayerUI))]
+
 public class PlayerController : Entity, IPossessable, IDamageable
 {
-    [SerializeField] private const float RaycastHitDistance = 40f;
+    [SerializeField] private float RaycastHitDistance = 40f;
     [SerializeField] private bool isAlive = true;
     private CharacterController characterController;
     private bool canPossess = true; // Indicates if the player can possess other entities.
@@ -16,13 +19,12 @@ public class PlayerController : Entity, IPossessable, IDamageable
 
     private void Start()
     {
-        isAlive = true;
         SetPlayer(this);
         characterController = GetComponent<CharacterController>();
         playerHealthUI = GetComponent<PlayerHealthUI>();
         inputManager = GetComponent<InputManager>();
         currentPossession = PossessionManager.Instance.ToPossess(this);
-        CameraManager.instance.AttachCameraToPossessedObject(gameObject);
+        CameraManager.instance?.AttachCameraToPossessedObject(gameObject);
         playerPossessed = currentPossession;
     }
 
@@ -54,9 +56,12 @@ public class PlayerController : Entity, IPossessable, IDamageable
         characterController.Move(velocity * Time.deltaTime);
     }
 
-    public override bool IsAlive()
+
+    private Ray DrawRayfromPlayerEye()
     {
-        return isAlive;
+        Ray ray = new Ray(transform.position + (Vector3.up * 0.5f), transform.forward);
+        Debug.DrawRay(ray.origin, ray.direction * 40, Color.red);
+        return ray;
     }
 
     public override void Attack()
@@ -69,13 +74,6 @@ public class PlayerController : Entity, IPossessable, IDamageable
                 hit.transform.GetComponentInParent<Enemy>()?.TakeDamage(UnityEngine.Random.Range(10f, 20f));
             }
         }
-    }
-
-    private Ray DrawRayfromPlayerEye()
-    {
-        Ray ray = new Ray(transform.position + (Vector3.up * 0.5f), transform.forward);
-        Debug.DrawRay(ray.origin, ray.direction * 40, Color.red);
-        return ray;
     }
 
     public void PossessEntities()
@@ -148,34 +146,17 @@ public class PlayerController : Entity, IPossessable, IDamageable
         playerPossessed = null;
     }
 
-    public Entity GetEntity()
-    {
-        return this;
-    }
+    public override bool IsAlive() => isAlive;
 
-    public void TakeDamage(float damage)
-    {
-        playerHealthUI.TakeDamage(damage);
-    }
+    public Entity GetEntity() => this;
 
-    public void RestoreHealth(float healAmount)
-    {
-        playerHealthUI.RestoreHealth(healAmount);
-    }
+    public void TakeDamage(float damage) => playerHealthUI.TakeDamage(damage);
 
-    public PlayerHealthUI GetPlayerHealthUIReference()
-    {
-        return playerHealthUI;
-    }
+    public void RestoreHealth(float healAmount) => playerHealthUI.RestoreHealth(healAmount);
 
-    public InputManager GetInputManager()
-    {
-        return inputManager;
-    }
+    public PlayerHealthUI GetPlayerHealthUIReference() => playerHealthUI;
 
-    public CharacterController GetCharacterControllerReference()
-    {
-        return characterController;
-    }
+    public InputManager GetInputManager() => inputManager;
 
+    public CharacterController GetCharacterControllerReference() => characterController;
 }

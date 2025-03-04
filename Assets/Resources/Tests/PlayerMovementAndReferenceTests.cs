@@ -1,11 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using NUnit.Framework;
+using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using UnityEngine.AI;
 using UnityEngine.TestTools;
 
-public class PlayerTests
+public class PlayerMovementAndReferenceTests
 {
     CameraManager cameraManager;
     GameObject player;
@@ -18,6 +17,7 @@ public class PlayerTests
 
         GameObject plane = GameObject.CreatePrimitive(PrimitiveType.Plane);
         plane.gameObject.transform.position = new Vector3(0, 0, 0);
+        plane.gameObject.transform.localScale = (new Vector3(10, 1, 10));
 
         GameObject Camera = MonoBehaviour.Instantiate(Resources.Load<GameObject>("Prefabs/Camera"));
         player = MonoBehaviour.Instantiate(Resources.Load<GameObject>("Prefabs/Player"));
@@ -101,11 +101,12 @@ public class PlayerTests
     }
     #endregion
 
+    #region References
     [UnityTest]
     public IEnumerator CheckPlayerHealthUI()
     {
         PlayerHealthUI playerHealthUI = playerController.GetPlayerHealthUIReference();
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(.5f);
         Assert.IsNotNull(playerHealthUI);
     }
 
@@ -113,7 +114,7 @@ public class PlayerTests
     public IEnumerator CheckPlayerInputManagerReference()
     {
         InputManager inputManager = playerController.GetInputManager();
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(.5f);
         Assert.IsNotNull(inputManager);
     }
 
@@ -121,7 +122,16 @@ public class PlayerTests
     public IEnumerator CheckCharacterControllerReference()
     {
         CharacterController characterController = playerController.GetCharacterControllerReference();
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(.5f);
         Assert.IsNotNull(characterController);
     }
+    [UnityTest]
+    public IEnumerator CheckIfPlayerIsPossessible()
+    {
+        IPossessable possessable = playerController.GetComponent<IPossessable>();
+        yield return new WaitForSeconds(.5f);
+        Assert.IsNotNull(possessable);
+    }
+
+    #endregion
 }
