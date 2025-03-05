@@ -1,5 +1,3 @@
-using System;
-using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 
 [RequireComponent(typeof(InputManager), typeof(CharacterController), typeof(PlayerHealthUI))]
@@ -7,23 +5,29 @@ using UnityEngine;
 
 public class PlayerController : Entity, IPossessable, IDamageable
 {
-    [SerializeField] private float RaycastHitDistance = 40f;
     [SerializeField] private bool isAlive = true;
-    private CharacterController characterController;
-    private bool canPossess = true; // Indicates if the player can possess other entities.
 
-    private GameObject targetEntity; // The current entity the player is interacting with.
+    private CharacterController characterController;
     private IPossessable currentPossession; // The currently possessed entity.
     private InputManager inputManager;
     private PlayerHealthUI playerHealthUI;
+    private Possession possession;
+
+    public float RaycastHitDistance = 40f;
 
     private void Start()
     {
+        PostInitialize();
+    }
+
+    private void PostInitialize()
+    {
         SetPlayer(this);
+        possession = new Possession(this);
         characterController = GetComponent<CharacterController>();
         playerHealthUI = GetComponent<PlayerHealthUI>();
         inputManager = GetComponent<InputManager>();
-        currentPossession = PossessionManager.Instance.ToPossess(this);
+        currentPossession = PossessionManager.Instance?.ToPossess(this);
         CameraManager.instance?.AttachCameraToPossessedObject(gameObject);
         playerPossessed = currentPossession;
     }
@@ -56,14 +60,6 @@ public class PlayerController : Entity, IPossessable, IDamageable
         characterController.Move(velocity * Time.deltaTime);
     }
 
-
-    private Ray DrawRayfromPlayerEye()
-    {
-        Ray ray = new Ray(transform.position + (Vector3.up * 0.5f), transform.forward);
-        Debug.DrawRay(ray.origin, ray.direction * 40, Color.red);
-        return ray;
-    }
-
     public override void Attack()
     {
         Ray ray = DrawRayfromPlayerEye();
@@ -76,61 +72,11 @@ public class PlayerController : Entity, IPossessable, IDamageable
         }
     }
 
-    public void PossessEntities()
+    public Ray DrawRayfromPlayerEye()
     {
-        if (!canPossess)
-        {
-            HandleDepossession();
-            return;
-        }
-
-        Ray ray = DrawRayfromPlayerEye();
-
-        if (Physics.Raycast(ray, out RaycastHit hit, RaycastHitDistance))
-        {
-            HandlePossession(hit);
-        }
-        else
-        {
-            HandleDepossession();
-        }
-    }
-
-    private void HandlePossession(RaycastHit hit)
-    {
-        var possessableEntity = hit.transform.GetComponentInParent<IPossessable>();
-        targetEntity = hit.transform.GetComponentInParent<Entity>()?.gameObject;
-
-        if (possessableEntity == null) return;
-
-        if (possessableEntity is Enemy && !IsBehindEnemy(targetEntity)) return;
-
-        // Perform possession
-        possessableEntity.Possess(targetEntity);
-        StartCoroutine(CameraManager.instance.MovetoPosition(targetEntity));
-
-        currentPossession = possessableEntity;
-        playerPossessed = null;
-        canPossess = false;
-    }
-
-    private bool IsBehindEnemy(GameObject enemy)
-    {
-        float dotProduct = Vector3.Dot(
-            enemy.transform.forward.normalized,
-            (transform.position - enemy.transform.position).normalized
-        );
-
-        return dotProduct < 0;
-    }
-
-    private void HandleDepossession()
-    {
-        if (targetEntity == null) return;
-
-        canPossess = true;
-        currentPossession.Depossess(targetEntity);
-        currentPossession = playerPossessed = PossessionManager.Instance.ToPossess(this);
+        Ray ray = new Ray(transform.position + (Vector3.up * 0.5f), transform.forward);
+        Debug.DrawRay(ray.origin, ray.direction * 40, Color.red);
+        return ray;
     }
 
     public void Possess(GameObject go)
@@ -159,4 +105,6 @@ public class PlayerController : Entity, IPossessable, IDamageable
     public InputManager GetInputManager() => inputManager;
 
     public CharacterController GetCharacterControllerReference() => characterController;
+
+    public Possession GetPossessionReference() => possession;
 }

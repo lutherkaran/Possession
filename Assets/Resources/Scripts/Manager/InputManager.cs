@@ -17,7 +17,7 @@ public class InputManager : MonoBehaviour
 
         if (player != null)
         {
-            OnPossessionActions.Possession.performed += ctx => player.PossessEntities();
+            OnPossessionActions.Possession.performed += ctx => player.GetPossessionReference().PossessEntities();
             OnFootActions.MouseInteraction.performed += ctx => CameraManager.instance.MouseInteraction();
             OnFootActions.Attack.performed += ctx => player.Attack();
         }

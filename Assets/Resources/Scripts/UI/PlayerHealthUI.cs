@@ -32,7 +32,10 @@ public class PlayerHealthUI : MonoBehaviour
     private void Update()
     {
         health = Mathf.Clamp(health, 0, playerController.maxHealth);
-        UpdateHealthUI();
+        if (health > 0)
+        {
+            UpdateHealthUI();
+        }
         //DamageOverlay();
     }
 
