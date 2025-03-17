@@ -62,7 +62,7 @@ public class PlayerController : Entity, IPossessable, IDamageable
 
     public override void Attack()
     {
-        Ray ray = DrawRayfromPlayerEye();
+        Ray ray = possession.DrawRayFromCamera(); // Should draw from camera to viewport.
         if (Physics.Raycast(ray, out RaycastHit hit, RaycastHitDistance))
         {
             if (hit.transform.parent.CompareTag("Enemy")) // if there's an object that has no parent then it will throw an exception. current example: NPC
@@ -70,13 +70,6 @@ public class PlayerController : Entity, IPossessable, IDamageable
                 hit.transform.GetComponentInParent<Enemy>()?.TakeDamage(UnityEngine.Random.Range(10f, 20f));
             }
         }
-    }
-
-    public Ray DrawRayfromPlayerEye()
-    {
-        Ray ray = new Ray(transform.position + (Vector3.up * 0.5f), transform.forward);
-        Debug.DrawRay(ray.origin, ray.direction * 40, Color.red);
-        return ray;
     }
 
     public void Possess(GameObject go)

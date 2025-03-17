@@ -1,3 +1,4 @@
+using log4net.Util;
 using UnityEngine;
 
 public class Possession
@@ -20,7 +21,7 @@ public class Possession
             return;
         }
 
-        Ray ray = player.DrawRayfromPlayerEye();
+        Ray ray = DrawRayFromCamera();
 
         if (Physics.Raycast(ray, out RaycastHit hit, player.RaycastHitDistance))
         {
@@ -64,6 +65,19 @@ public class Possession
         canPossess = true;
         currentPossession.Depossess(targetEntity);
         currentPossession = player.playerPossessed = PossessionManager.Instance.ToPossess(player);
+    }
+
+    public Ray DrawRayfromPlayerEye()
+    {
+        Ray ray = new Ray(player.transform.position + (Vector3.up * 0.5f), player.transform.forward);
+        Debug.DrawRay(ray.origin, ray.direction * 40, Color.red);
+        return ray;
+    }
+
+    public Ray DrawRayFromCamera()
+    {
+        Ray ray = CameraManager.instance.cam.ScreenPointToRay(Input.mousePosition);
+        return ray;
     }
 
 }
