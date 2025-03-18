@@ -13,8 +13,6 @@ public class PlayerController : Entity, IPossessable, IDamageable
     private PlayerHealthUI playerHealthUI;
     private Possession possession;
 
-    public float RaycastHitDistance = 40f;
-
     private void Start()
     {
         PostInitialize();
@@ -63,7 +61,7 @@ public class PlayerController : Entity, IPossessable, IDamageable
     public override void Attack()
     {
         Ray ray = possession.DrawRayFromCamera(); // Should draw from camera to viewport.
-        if (Physics.Raycast(ray, out RaycastHit hit, RaycastHitDistance))
+        if (Physics.Raycast(ray, out RaycastHit hit, possession.RaycastHitDistance))
         {
             if (hit.transform.parent.CompareTag("Enemy")) // if there's an object that has no parent then it will throw an exception. current example: NPC
             {

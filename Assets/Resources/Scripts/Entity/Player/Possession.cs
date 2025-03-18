@@ -7,6 +7,7 @@ public class Possession
     private GameObject targetEntity;
     private IPossessable currentPossession;
     private bool canPossess = true;
+    public float RaycastHitDistance = 40.0f;
 
     public Possession(PlayerController playerController)
     {
@@ -23,7 +24,7 @@ public class Possession
 
         Ray ray = DrawRayFromCamera();
 
-        if (Physics.Raycast(ray, out RaycastHit hit, player.RaycastHitDistance))
+        if (Physics.Raycast(ray, out RaycastHit hit, RaycastHitDistance))
         {
             HandlePossession(hit);
         }
