@@ -51,19 +51,19 @@ public class NPC : Entity, IPossessable
         base.Sprint();
     }
 
-    public void Possess(GameObject go)
+    public void Possessing(GameObject go)
     {
         Debug.Log("Possessing..." + go.name);
         playerPossessed = PossessionManager.Instance.ToPossess(go.GetComponent<IPossessable>());
-        CameraManager.instance.AttachCameraToPossessedObject(this.gameObject);
+        CameraManager.instance.AttachCameraToPossessedObject(go);
     }
 
-    public void Depossess(GameObject go)
+    public void Depossessing(GameObject go)
     {
         Debug.Log("DePossessing..." + go.name);
-        PossessionManager.Instance.ToDepossess();
+        PossessionManager.Instance.ToDepossess(this);
         playerPossessed = null;
-        CameraManager.instance.AttachCameraToPossessedObject(player.transform.gameObject);
+        CameraManager.instance.AttachCameraToPossessedObject(go);
     }
 
     public Entity GetEntity()

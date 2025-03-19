@@ -133,14 +133,5 @@ public class PlayerMovementAndReferenceTests
         yield return new WaitForSeconds(.5f);
         Assert.IsNotNull(possessable);
     }
-
-    [UnityTest]
-    public IEnumerator CheckPossessionReference()
-    {
-        Possession possession = playerController.GetPossessionReference();
-        yield return new WaitForSeconds(.5f);
-        Assert.IsNotNull(possession);
-    }
-
     #endregion
 }

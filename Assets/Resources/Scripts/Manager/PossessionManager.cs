@@ -13,6 +13,7 @@ public class PossessionManager
         if (possessible != null && currentlyPossessed != possessible)
         {
             currentlyPossessed = possessible;
+            new Possession(currentlyPossessed);
             OnPossessed?.Invoke(this, currentlyPossessed);
             return currentlyPossessed;
         }
@@ -20,8 +21,9 @@ public class PossessionManager
         return null;
     }
 
-    public void ToDepossess()
+    public void ToDepossess(IPossessable possessable)
     {
+        currentlyPossessed = possessable;
         if (currentlyPossessed != null)
         {
             currentlyPossessed = null;

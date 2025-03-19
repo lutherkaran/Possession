@@ -3,15 +3,14 @@ using UnityEngine;
 
 public class Possession
 {
-    private PlayerController player;
     private GameObject targetEntity;
     private IPossessable currentPossession;
     private bool canPossess = true;
     public float RaycastHitDistance = 40.0f;
 
-    public Possession(PlayerController playerController)
+    public Possession(IPossessable possessed)
     {
-        this.player = playerController;
+        currentPossession = possessed;
     }
 
     public void PossessEntities()
@@ -41,20 +40,22 @@ public class Possession
 
         if (possessableEntity == null) return;
 
-        if (possessableEntity is Enemy && !IsBehindEnemy(targetEntity)) return;
-
+        if (currentPossession.GetEntity() is PlayerController)
+        {
+            if (possessableEntity is Enemy && !IsBehindEnemy(targetEntity)) return;
+        }
         // Perform possession
-        possessableEntity.Possess(targetEntity);
-        player.StartCoroutine(CameraManager.instance.MovetoPosition(targetEntity));
+        possessableEntity.Possessing(targetEntity);
+        currentPossession.GetEntity().StartCoroutine(CameraManager.instance.MovetoPosition(targetEntity));
 
         currentPossession = possessableEntity;
-        player.playerPossessed = null;
+        currentPossession.GetEntity().playerPossessed = null;
         canPossess = false;
     }
 
     private bool IsBehindEnemy(GameObject enemy)
     {
-        float dotProduct = Vector3.Dot(enemy.transform.forward.normalized, (player.transform.position - enemy.transform.position).normalized);
+        float dotProduct = Vector3.Dot(enemy.transform.forward.normalized, (currentPossession.GetEntity().transform.position - enemy.transform.position).normalized);
 
         return dotProduct < 0;
     }
@@ -64,15 +65,8 @@ public class Possession
         if (targetEntity == null) return;
 
         canPossess = true;
-        currentPossession.Depossess(targetEntity);
-        currentPossession = player.playerPossessed = PossessionManager.Instance.ToPossess(player);
-    }
-
-    public Ray DrawRayfromPlayerEye()
-    {
-        Ray ray = new Ray(player.transform.position + (Vector3.up * 0.5f), player.transform.forward);
-        Debug.DrawRay(ray.origin, ray.direction * 40, Color.red);
-        return ray;
+        currentPossession.Depossessing(targetEntity);
+        currentPossession = currentPossession.GetEntity().playerPossessed = PossessionManager.Instance.ToPossess(currentPossession);
     }
 
     public Ray DrawRayFromCamera()
@@ -81,4 +75,10 @@ public class Possession
         return ray;
     }
 
+    //public Ray DrawRayfromPlayerEye()
+    //{
+    //    Ray ray = new Ray(player.transform.position + (Vector3.up * 0.5f), player.transform.forward);
+    //    Debug.DrawRay(ray.origin, ray.direction * 40, Color.red);
+    //    return ray;
+    //}
 }

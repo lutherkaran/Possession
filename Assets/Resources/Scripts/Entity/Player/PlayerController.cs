@@ -11,7 +11,7 @@ public class PlayerController : Entity, IPossessable, IDamageable
     private IPossessable currentPossession; // The currently possessed entity.
     private InputManager inputManager;
     private PlayerHealthUI playerHealthUI;
-    private Possession possession;
+    public float RaycastHitDistance = 40.0f;
 
     private void Start()
     {
@@ -21,7 +21,6 @@ public class PlayerController : Entity, IPossessable, IDamageable
     private void PostInitialize()
     {
         SetPlayer(this);
-        possession = new Possession(this);
         characterController = GetComponent<CharacterController>();
         playerHealthUI = GetComponent<PlayerHealthUI>();
         inputManager = GetComponent<InputManager>();
@@ -60,8 +59,8 @@ public class PlayerController : Entity, IPossessable, IDamageable
 
     public override void Attack()
     {
-        Ray ray = possession.DrawRayFromCamera(); // Should draw from camera to viewport.
-        if (Physics.Raycast(ray, out RaycastHit hit, possession.RaycastHitDistance))
+        Ray ray = DrawRayFromCamera(); // Should draw from camera to viewport.
+        if (Physics.Raycast(ray, out RaycastHit hit, RaycastHitDistance))
         {
             if (hit.transform.parent.CompareTag("Enemy")) // if there's an object that has no parent then it will throw an exception. current example: NPC
             {
@@ -70,16 +69,22 @@ public class PlayerController : Entity, IPossessable, IDamageable
         }
     }
 
-    public void Possess(GameObject go)
+    public Ray DrawRayFromCamera()
+    {
+        Ray ray = CameraManager.instance.cam.ScreenPointToRay(Input.mousePosition);
+        return ray;
+    }
+
+    public void Possessing(GameObject go)
     {
         Debug.Log($"Possessing... {go.name}");
         playerPossessed = PossessionManager.Instance.ToPossess(go.GetComponent<IPossessable>());
     }
 
-    public void Depossess(GameObject go)
+    public void Depossessing(GameObject go)
     {
         Debug.Log($"DePossessing... {go.name}");
-        PossessionManager.Instance.ToDepossess();
+        PossessionManager.Instance.ToDepossess(this);
         playerPossessed = null;
     }
 
@@ -97,5 +102,4 @@ public class PlayerController : Entity, IPossessable, IDamageable
 
     public CharacterController GetCharacterControllerReference() => characterController;
 
-    public Possession GetPossessionReference() => possession;
 }
