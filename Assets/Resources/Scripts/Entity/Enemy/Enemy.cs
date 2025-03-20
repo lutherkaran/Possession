@@ -110,16 +110,13 @@ public class Enemy : Entity, IPossessable, IDamageable
     public void Possessing(GameObject go)
     {
         Debug.Log($"Possessing {go.name}");
-        PlayerPossessed = PossessionManager.Instance.ToPossess(go.GetComponent<IPossessable>());
-        CameraManager.instance.AttachCameraToPossessedObject(go);
+        PlayerPossessed = PossessionManager.Instance.ToPossess(go.GetComponent<IPossessable>()).GetCurrentPossession();
     }
 
     public void Depossessing(GameObject go)
     {
         Debug.Log($"DePossessing {go.name}");
         PossessionManager.Instance.ToDepossess(this);
-        PlayerPossessed = null;
-        CameraManager.instance.AttachCameraToPossessedObject(go);
     }
 
     public Entity GetEntity() => this;

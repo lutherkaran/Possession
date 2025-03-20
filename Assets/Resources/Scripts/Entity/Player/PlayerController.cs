@@ -8,7 +8,6 @@ public class PlayerController : Entity, IPossessable, IDamageable
     [SerializeField] private bool isAlive = true;
 
     private CharacterController characterController;
-    private IPossessable currentPossession; // The currently possessed entity.
     private InputManager inputManager;
     private PlayerHealthUI playerHealthUI;
     public float RaycastHitDistance = 40.0f;
@@ -24,9 +23,7 @@ public class PlayerController : Entity, IPossessable, IDamageable
         characterController = GetComponent<CharacterController>();
         playerHealthUI = GetComponent<PlayerHealthUI>();
         inputManager = GetComponent<InputManager>();
-        currentPossession = PossessionManager.Instance?.ToPossess(this);
-        CameraManager.instance?.AttachCameraToPossessedObject(gameObject);
-        playerPossessed = currentPossession;
+        PossessionManager.Instance?.ToPossess(this).GetCurrentPossession();
     }
 
     private void Update()
@@ -78,7 +75,7 @@ public class PlayerController : Entity, IPossessable, IDamageable
     public void Possessing(GameObject go)
     {
         Debug.Log($"Possessing... {go.name}");
-        playerPossessed = PossessionManager.Instance.ToPossess(go.GetComponent<IPossessable>());
+        playerPossessed = PossessionManager.Instance.ToPossess(this).GetCurrentPossession();
     }
 
     public void Depossessing(GameObject go)

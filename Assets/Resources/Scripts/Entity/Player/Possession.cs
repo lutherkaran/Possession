@@ -11,6 +11,7 @@ public class Possession
     public Possession(IPossessable possessed)
     {
         currentPossession = possessed;
+        CameraManager.instance?.AttachCameraToPossessedObject(currentPossession.GetEntity().gameObject);
     }
 
     public void PossessEntities()
@@ -47,9 +48,6 @@ public class Possession
         // Perform possession
         possessableEntity.Possessing(targetEntity);
         currentPossession.GetEntity().StartCoroutine(CameraManager.instance.MovetoPosition(targetEntity));
-
-        currentPossession = possessableEntity;
-        currentPossession.GetEntity().playerPossessed = null;
         canPossess = false;
     }
 
@@ -66,7 +64,6 @@ public class Possession
 
         canPossess = true;
         currentPossession.Depossessing(targetEntity);
-        currentPossession = currentPossession.GetEntity().playerPossessed = PossessionManager.Instance.ToPossess(currentPossession);
     }
 
     public Ray DrawRayFromCamera()
@@ -74,6 +71,8 @@ public class Possession
         Ray ray = CameraManager.instance.cam.ScreenPointToRay(Input.mousePosition);
         return ray;
     }
+    
+    public IPossessable GetCurrentPossession() => currentPossession;
 
     //public Ray DrawRayfromPlayerEye()
     //{
