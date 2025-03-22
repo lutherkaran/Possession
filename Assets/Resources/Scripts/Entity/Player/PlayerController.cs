@@ -23,7 +23,6 @@ public class PlayerController : Entity, IPossessable, IDamageable
         characterController = GetComponent<CharacterController>();
         playerHealthUI = GetComponent<PlayerHealthUI>();
         inputManager = GetComponent<InputManager>();
-        PossessionManager.Instance?.ToPossess(this).GetCurrentPossession();
     }
 
     private void Update()
@@ -56,7 +55,7 @@ public class PlayerController : Entity, IPossessable, IDamageable
 
     public override void Attack()
     {
-        Ray ray = DrawRayFromCamera(); // Should draw from camera to viewport.
+        Ray ray = DrawRayFromCamera();
         if (Physics.Raycast(ray, out RaycastHit hit, RaycastHitDistance))
         {
             if (hit.transform.parent.CompareTag("Enemy")) // if there's an object that has no parent then it will throw an exception. current example: NPC

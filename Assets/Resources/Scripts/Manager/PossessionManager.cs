@@ -15,6 +15,7 @@ public class PossessionManager
         if (possessible != null && currentlyPossessed != possessible)
         {
             currentlyPossessed = possessible;
+            CameraManager.instance?.AttachCameraToPossessedObject(currentlyPossessed.GetEntity().gameObject);
             currentPossession = new Possession(currentlyPossessed);
             OnPossessed?.Invoke(this, currentlyPossessed);
             return currentPossession;
@@ -32,5 +33,10 @@ public class PossessionManager
             currentPossession = null;
         }
 
+    }
+
+    public Possession GetCurrentPossession()
+    {
+        return currentPossession;
     }
 }

@@ -11,7 +11,6 @@ public class Possession
     public Possession(IPossessable possessed)
     {
         currentPossession = possessed;
-        CameraManager.instance?.AttachCameraToPossessedObject(currentPossession.GetEntity().gameObject);
     }
 
     public void PossessEntities()

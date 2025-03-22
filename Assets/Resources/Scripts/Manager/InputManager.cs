@@ -7,8 +7,6 @@ public class InputManager : MonoBehaviour
     public static PlayerInput.OnFootActions OnFootActions;
     private PlayerController player;
     private Entity controlledEntity;
-    private Possession possession;
-    private IPossessable possessed;
 
     private void Awake()
     {
@@ -16,12 +14,15 @@ public class InputManager : MonoBehaviour
         player = GetComponent<PlayerController>();
         OnFootActions = playerInput.OnFoot;
         OnPossessionActions = playerInput.OnPossession;
-        possession = new Possession(player);
+    }
 
+    public void Start()
+    {
         if (player != null)
         {
-            OnPossessionActions.Possession.performed += ctx => possession?.PossessEntities();
-            OnFootActions.MouseInteraction.performed += ctx => CameraManager.instance.MouseInteraction();
+            PossessionManager.Instance.ToPossess(player);
+            OnPossessionActions.Possession.performed += ctx => PossessionManager.Instance.GetCurrentPossession()?.PossessEntities();
+            OnFootActions.MouseInteraction.performed += ctx => CameraManager.instance?.MouseInteraction();
             OnFootActions.Attack.performed += ctx => player.Attack();
         }
     }
