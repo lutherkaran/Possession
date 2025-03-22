@@ -29,7 +29,7 @@ public class InputManager : MonoBehaviour
 
     private void Update()
     {
-        controlledEntity = PossessionManager.Instance.currentlyPossessed.GetEntity();
+        controlledEntity = PossessionManager.Instance.GetCurrentPossessable().GetEntity();
         if (controlledEntity != null)
         {
             OnFootActions.Sprint.performed += ctx => controlledEntity.Sprint();

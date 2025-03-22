@@ -4,20 +4,19 @@ public class PossessionManager
 {
     private static PossessionManager instance;
     private Possession currentPossession;
+    private IPossessable currentPossessable;
 
     public static PossessionManager Instance { get { return instance == null ? instance = new PossessionManager() : instance; } }
-    public IPossessable currentlyPossessed = null;
-
     public event EventHandler<IPossessable> OnPossessed;
 
     public Possession ToPossess(IPossessable possessible)
     {
-        if (possessible != null && currentlyPossessed != possessible)
+        if (possessible != null && currentPossessable != possessible)
         {
-            currentlyPossessed = possessible;
-            CameraManager.instance?.AttachCameraToPossessedObject(currentlyPossessed.GetEntity().gameObject);
-            currentPossession = new Possession(currentlyPossessed);
-            OnPossessed?.Invoke(this, currentlyPossessed);
+            currentPossessable = possessible;
+            CameraManager.instance?.AttachCameraToPossessedObject(currentPossessable.GetEntity().gameObject);
+            currentPossession = new Possession(currentPossessable);
+            OnPossessed?.Invoke(this, currentPossessable);
             return currentPossession;
         }
 
@@ -26,17 +25,16 @@ public class PossessionManager
 
     public void ToDepossess(IPossessable possessable)
     {
-        currentlyPossessed = possessable;
-        if (currentlyPossessed != null)
+        currentPossessable = possessable;
+        if (currentPossessable != null)
         {
-            currentlyPossessed = null;
+            currentPossessable = null;
             currentPossession = null;
         }
 
     }
 
-    public Possession GetCurrentPossession()
-    {
-        return currentPossession;
-    }
+    public Possession GetCurrentPossession() => currentPossession;
+
+    public IPossessable GetCurrentPossessable() => currentPossessable;
 }

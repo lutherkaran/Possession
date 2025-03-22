@@ -9,11 +9,6 @@ public class NPC : Entity, IPossessable
         rb = this.GetComponent<Rigidbody>();
     }
 
-    void Start()
-    {
-        player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
-    }
-
     public void Update()
     {
 
@@ -32,14 +27,14 @@ public class NPC : Entity, IPossessable
     public override void ProcessMove(Vector2 input)
     {
         base.ProcessMove(input);
-        if (PossessionManager.Instance.currentlyPossessed == playerPossessed)
+        if (PossessionManager.Instance.GetCurrentPossessable() == possessedByPlayer)
             transform.Translate(moveDirection * speed * Time.deltaTime);
     }
 
     public override void ProcessJump()
     {
         base.ProcessJump();
-        if (PossessionManager.Instance.currentlyPossessed == playerPossessed)
+        if (PossessionManager.Instance.GetCurrentPossessable() == possessedByPlayer)
         {
             transform.position += velocity * Time.deltaTime;
             velocity.y = gravity * Time.deltaTime * 10;
@@ -54,18 +49,15 @@ public class NPC : Entity, IPossessable
     public void Possessing(GameObject go)
     {
         Debug.Log("Possessing..." + go.name);
-        playerPossessed = PossessionManager.Instance.ToPossess(go.GetComponent<IPossessable>()).GetCurrentPossession();
+        possessedByPlayer = PossessionManager.Instance.ToPossess(go.GetComponent<IPossessable>()).GetCurrentPossession();
     }
 
     public void Depossessing(GameObject go)
     {
         Debug.Log("DePossessing..." + go.name);
         PossessionManager.Instance.ToDepossess(this);
-        playerPossessed = null;
+        possessedByPlayer = null;
     }
 
-    public Entity GetEntity()
-    {
-        return this;
-    }
+    public Entity GetEntity() => this;
 }

@@ -5,7 +5,6 @@ using UnityEngine.AI;
 public class Enemy : Entity, IPossessable, IDamageable
 {
     // Public Properties
-    public IPossessable PlayerPossessed { get; private set; }
     public Vector3 LastKnownPos { get; set; }
     public NavMeshAgent Agent { get; private set; }
     public GameObject Player => player.gameObject;
@@ -89,7 +88,7 @@ public class Enemy : Entity, IPossessable, IDamageable
     {
         base.ProcessMove(input);
 
-        if (PossessionManager.Instance.currentlyPossessed == playerPossessed)
+        if (PossessionManager.Instance.GetCurrentPossessable() == possessedByPlayer)
         {
             Vector3 moveDirection = new Vector3(input.x, 0, input.y).normalized;
             Agent.Move(moveDirection * speed * Time.deltaTime);
@@ -98,7 +97,7 @@ public class Enemy : Entity, IPossessable, IDamageable
 
     public override void ProcessJump()
     {
-        if (PossessionManager.Instance.currentlyPossessed == playerPossessed)
+        if (PossessionManager.Instance.GetCurrentPossessable() == possessedByPlayer)
         {
             rb.AddForce(Vector3.up * -3f, ForceMode.Impulse);
         }
@@ -110,7 +109,7 @@ public class Enemy : Entity, IPossessable, IDamageable
     public void Possessing(GameObject go)
     {
         Debug.Log($"Possessing {go.name}");
-        PlayerPossessed = PossessionManager.Instance.ToPossess(go.GetComponent<IPossessable>()).GetCurrentPossession();
+        possessedByPlayer = PossessionManager.Instance.ToPossess(go.GetComponent<IPossessable>()).GetCurrentPossession();
     }
 
     public void Depossessing(GameObject go)
@@ -118,8 +117,6 @@ public class Enemy : Entity, IPossessable, IDamageable
         Debug.Log($"DePossessing {go.name}");
         PossessionManager.Instance.ToDepossess(this);
     }
-
-    public Entity GetEntity() => this;
 
     // IDamageable Implementation
     public void TakeDamage(float damage)
@@ -143,7 +140,7 @@ public class Enemy : Entity, IPossessable, IDamageable
     // Sight and AI Logic
     public bool CanSeePlayer()
     {
-        if (PossessionManager.Instance.currentlyPossessed == playerPossessed) return false;
+        if (PossessionManager.Instance.GetCurrentPossessable() == possessedByPlayer) return false;
 
         if (player != null && Vector3.Distance(transform.position, player.transform.position) < sightDistance)
         {
@@ -164,4 +161,6 @@ public class Enemy : Entity, IPossessable, IDamageable
 
         return false;
     }
+
+    public Entity GetEntity() => this;
 }

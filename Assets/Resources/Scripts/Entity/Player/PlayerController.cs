@@ -74,14 +74,14 @@ public class PlayerController : Entity, IPossessable, IDamageable
     public void Possessing(GameObject go)
     {
         Debug.Log($"Possessing... {go.name}");
-        playerPossessed = PossessionManager.Instance.ToPossess(this).GetCurrentPossession();
+        possessedByPlayer = PossessionManager.Instance.ToPossess(this).GetCurrentPossession();
     }
 
     public void Depossessing(GameObject go)
     {
         Debug.Log($"DePossessing... {go.name}");
         PossessionManager.Instance.ToDepossess(this);
-        playerPossessed = null;
+        possessedByPlayer = null;
     }
 
     public override bool IsAlive() => isAlive;
