@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 500486801584989677}
   m_Layer: 0
   m_Name: NPC
-  m_TagString: Untagged
+  m_TagString: Npc
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -64,7 +64,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: ff673aae4d46aa946a0287a692f9560a, type: 2}
+  - {fileID: 2100000, guid: bd6353ca1e1193d42a02254a9553ff01, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -125,12 +125,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80ea7c0b2363c284e94a84e79076ecb2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cam: {fileID: 0}
+  player: {fileID: 0}
   health: 0
+  maxHealth: 100
   PossessableLayerMask:
     serializedVersion: 2
     m_Bits: 256
-  maxHealth: 100
 --- !u!135 &500486801584989677
 SphereCollider:
   m_ObjectHideFlags: 0

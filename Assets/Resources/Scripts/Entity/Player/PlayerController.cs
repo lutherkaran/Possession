@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(InputManager), typeof(CharacterController), typeof(PlayerHealthUI))]
@@ -58,9 +59,17 @@ public class PlayerController : Entity, IPossessable, IDamageable
         Ray ray = DrawRayFromCamera();
         if (Physics.Raycast(ray, out RaycastHit hit, RaycastHitDistance))
         {
-            if (!hit.transform.CompareTag("Enemy")) return;
+            string tag = hit.transform.gameObject.tag;
 
-            if (hit.transform.parent.CompareTag("Enemy")) // if there's an entity that has no parent then it will throw an exception. current example: NPC
+            if (hit.transform.CompareTag("Npc"))
+            {
+                Debug.Log("Hiittt to NPC: ");
+            }
+            else if (hit.transform.CompareTag("Player"))
+            {
+                Debug.Log("Unable to Hit");
+            }
+            else if (hit.transform.parent.CompareTag("Enemy")) // if there's an entity that has no parent then it will throw an exception. current example: NPC
             {
                 hit.transform.GetComponentInParent<Enemy>()?.TakeDamage(UnityEngine.Random.Range(10f, 20f));
             }
