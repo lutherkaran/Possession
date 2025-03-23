@@ -58,7 +58,9 @@ public class PlayerController : Entity, IPossessable, IDamageable
         Ray ray = DrawRayFromCamera();
         if (Physics.Raycast(ray, out RaycastHit hit, RaycastHitDistance))
         {
-            if (hit.transform.parent.CompareTag("Enemy")) // if there's an object that has no parent then it will throw an exception. current example: NPC
+            if (!hit.transform.CompareTag("Enemy")) return;
+
+            if (hit.transform.parent.CompareTag("Enemy")) // if there's an entity that has no parent then it will throw an exception. current example: NPC
             {
                 hit.transform.GetComponentInParent<Enemy>()?.TakeDamage(UnityEngine.Random.Range(10f, 20f));
             }
@@ -74,13 +76,14 @@ public class PlayerController : Entity, IPossessable, IDamageable
     public void Possessing(GameObject go)
     {
         Debug.Log($"Possessing... {go.name}");
-        possessedByPlayer = PossessionManager.Instance.ToPossess(this).GetCurrentPossession();
+        PossessionManager.Instance.ToPossess(go);
+        possessedByPlayer = PossessionManager.Instance.GetCurrentPossessable();
     }
 
     public void Depossessing(GameObject go)
     {
         Debug.Log($"DePossessing... {go.name}");
-        PossessionManager.Instance.ToDepossess(this);
+        PossessionManager.Instance.ToDepossess(this.gameObject);
         possessedByPlayer = null;
     }
 

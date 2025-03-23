@@ -44,7 +44,7 @@ public class Possession
         {
             if (possessableEntity is Enemy && !IsBehindEnemy(targetEntity)) return;
         }
-        // Perform possession
+
         possessableEntity.Possessing(targetEntity);
         currentPossession.GetEntity().StartCoroutine(CameraManager.instance.MovetoPosition(targetEntity));
         canPossess = false;
@@ -71,8 +71,6 @@ public class Possession
         return ray;
     }
     
-    public IPossessable GetCurrentPossession() => currentPossession;
-
     //public Ray DrawRayfromPlayerEye()
     //{
     //    Ray ray = new Ray(player.transform.position + (Vector3.up * 0.5f), player.transform.forward);

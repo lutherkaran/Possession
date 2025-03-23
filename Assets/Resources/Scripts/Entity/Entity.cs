@@ -5,7 +5,6 @@ public abstract class Entity : MonoBehaviour
     public IPossessable possessedByPlayer { get; set; }
 
     [SerializeField]
-    protected Camera cam;
     protected PlayerController player;
 
     protected Vector3 moveDirection = Vector3.zero;
@@ -20,6 +19,7 @@ public abstract class Entity : MonoBehaviour
 
     [SerializeField] protected float health;
     public float maxHealth = 100f;
+
     [SerializeField] protected LayerMask PossessableLayerMask;
 
 

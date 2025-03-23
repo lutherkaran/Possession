@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 public class PossessionManager
 {
@@ -9,23 +10,26 @@ public class PossessionManager
     public static PossessionManager Instance { get { return instance == null ? instance = new PossessionManager() : instance; } }
     public event EventHandler<IPossessable> OnPossessed;
 
-    public Possession ToPossess(IPossessable possessible)
+    public Possession ToPossess(GameObject possessable)
     {
-        if (possessible != null && currentPossessable != possessible)
+        if (possessable)
         {
-            currentPossessable = possessible;
-            CameraManager.instance?.AttachCameraToPossessedObject(currentPossessable.GetEntity().gameObject);
-            currentPossession = new Possession(currentPossessable);
-            OnPossessed?.Invoke(this, currentPossessable);
-            return currentPossession;
+            currentPossessable = possessable.GetComponent<IPossessable>();
+            if (currentPossessable != null)
+            {
+                CameraManager.instance?.AttachCameraToPossessedObject(currentPossessable.GetEntity().gameObject);
+                currentPossession = new Possession(currentPossessable);
+                OnPossessed?.Invoke(this, currentPossessable);
+                return currentPossession;
+            }
         }
 
         return null;
     }
 
-    public void ToDepossess(IPossessable possessable)
+    public void ToDepossess(GameObject possessable)
     {
-        currentPossessable = possessable;
+        currentPossessable = possessable.GetComponent<IPossessable>();
         if (currentPossessable != null)
         {
             currentPossessable = null;

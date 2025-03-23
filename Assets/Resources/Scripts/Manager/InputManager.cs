@@ -20,9 +20,9 @@ public class InputManager : MonoBehaviour
     {
         if (player != null)
         {
-            PossessionManager.Instance.ToPossess(player);
+            PossessionManager.Instance.ToPossess(player.gameObject);
             OnPossessionActions.Possession.performed += ctx => PossessionManager.Instance.GetCurrentPossession()?.PossessEntities();
-            OnFootActions.MouseInteraction.performed += ctx => CameraManager.instance?.MouseInteraction();
+            OnFootActions.MouseInteraction.performed += ctx => CameraManager.instance.GetMouseAim()?.MouseInteraction();
             OnFootActions.Attack.performed += ctx => player.Attack();
         }
     }
@@ -47,7 +47,7 @@ public class InputManager : MonoBehaviour
     {
         if (controlledEntity != null)
         {
-            CameraManager.instance.ProcessLook(OnFootActions.Look.ReadValue<Vector2>());
+            CameraManager.instance.GetMouseAim().ProcessLook(OnFootActions.Look.ReadValue<Vector2>());
         }
     }
 

@@ -2,7 +2,7 @@ using UnityEngine;
 
 public interface IPossessable
 {
-    void Possessing(GameObject go);
-    void Depossessing(GameObject go);
+    void Possessing(GameObject gameObject);
+    void Depossessing(GameObject gameObject);
     Entity GetEntity();
 }
