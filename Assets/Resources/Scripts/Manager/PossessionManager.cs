@@ -14,21 +14,23 @@ public class PossessionManager
     {
         if (possessable)
         {
-            currentPossessable = possessable.GetComponent<IPossessable>();
             if (currentPossessable != null)
-            {
-                currentPossession = new Possession(currentPossessable);
-                OnPossessed?.Invoke(this, currentPossessable);
-                return currentPossession;
-            }
-        }
+                ToDepossess(currentPossessable.GetEntity().gameObject);
 
+            currentPossessable = possessable.GetComponent<IPossessable>();
+            currentPossession = new Possession(currentPossessable);
+            OnPossessed?.Invoke(this, currentPossessable);
+            return currentPossession;
+
+        }
         return null;
     }
 
     public void ToDepossess(GameObject possessable)
     {
         currentPossessable = possessable.GetComponent<IPossessable>();
+        currentPossessable.Depossessing(possessable);
+
         if (currentPossessable != null)
         {
             currentPossessable = null;

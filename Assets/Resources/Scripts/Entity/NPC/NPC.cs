@@ -56,7 +56,6 @@ public class NPC : Entity, IPossessable
     public void Depossessing(GameObject go)
     {
         Debug.Log("DePossessing..." + go.name);
-        PossessionManager.Instance.ToDepossess(this.gameObject);
         possessedByPlayer = null;
     }
 

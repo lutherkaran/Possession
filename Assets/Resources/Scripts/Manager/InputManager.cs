@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem.Interactions;
 
 public class InputManager : MonoBehaviour
 {
@@ -21,10 +22,27 @@ public class InputManager : MonoBehaviour
         if (player != null)
         {
             PossessionManager.Instance.ToPossess(player.gameObject);
-            OnPossessionActions.Possession.performed += ctx => PossessionManager.Instance.GetCurrentPossession()?.PossessEntities();
+            OnPossessionActions.Possession.performed += Possession_performed1;
             OnFootActions.MouseInteraction.performed += ctx => CameraManager.instance.GetMouseAim()?.MouseInteraction();
             OnFootActions.Attack.performed += ctx => player.Attack();
         }
+    }
+
+    private void Possession_performed1(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    {
+        if (obj.interaction is PressInteraction)
+        {
+            PossessionManager.Instance.GetCurrentPossession()?.PossessEntities();
+        }
+        else if (obj.interaction is HoldInteraction)
+        {
+            PossessionManager.Instance.GetCurrentPossession()?.RepossessPlayer(player.gameObject);
+        }
+    }
+
+    private void Possession_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    {
+        throw new System.NotImplementedException();
     }
 
     private void Update()

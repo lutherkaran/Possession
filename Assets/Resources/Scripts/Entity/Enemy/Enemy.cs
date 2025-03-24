@@ -116,7 +116,6 @@ public class Enemy : Entity, IPossessable, IDamageable
     public void Depossessing(GameObject go)
     {
         Debug.Log($"DePossessing {go.name}");
-        PossessionManager.Instance.ToDepossess(this.gameObject);
     }
 
     // IDamageable Implementation

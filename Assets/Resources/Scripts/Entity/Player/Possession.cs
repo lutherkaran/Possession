@@ -70,6 +70,11 @@ public class Possession
         return ray;
     }
     
+    public void RepossessPlayer(GameObject player)
+    {
+        PossessionManager.Instance.ToPossess(player);
+    }
+
     //public Ray DrawRayfromPlayerEye()
     //{
     //    Ray ray = new Ray(player.transform.position + (Vector3.up * 0.5f), player.transform.forward);
