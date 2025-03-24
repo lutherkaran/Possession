@@ -109,7 +109,6 @@ public class Enemy : Entity, IPossessable, IDamageable
     public void Possessing(GameObject go)
     {
         Debug.Log($"Possessing {go.name}");
-        PossessionManager.Instance.ToPossess(go);
         possessedByPlayer = PossessionManager.Instance.GetCurrentPossessable();
     }
 

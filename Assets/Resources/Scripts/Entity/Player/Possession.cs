@@ -35,16 +35,16 @@ public class Possession
     private void HandlePossession(RaycastHit hit)
     {
         var possessableEntity = hit.transform.GetComponentInParent<IPossessable>();
-        targetEntity = hit.transform.GetComponentInParent<Entity>()?.gameObject;
-
         if (possessableEntity == null) return;
+        
+        targetEntity = hit.transform.GetComponentInParent<Entity>()?.gameObject;
 
         if (currentPossession.GetEntity() is PlayerController)
         {
             if (possessableEntity is Enemy && !IsBehindEnemy(targetEntity)) return;
         }
 
-        possessableEntity.Possessing(targetEntity);
+        PossessionManager.Instance.ToPossess(targetEntity);
         currentPossession.GetEntity().StartCoroutine(CameraManager.instance.MovetoPosition(targetEntity));
         canPossess = false;
     }
@@ -69,7 +69,7 @@ public class Possession
         Ray ray = CameraManager.instance.camera.ScreenPointToRay(Input.mousePosition);
         return ray;
     }
-    
+
     public void RepossessPlayer(GameObject player)
     {
         PossessionManager.Instance.ToPossess(player);

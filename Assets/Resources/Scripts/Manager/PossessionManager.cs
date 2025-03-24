@@ -18,6 +18,8 @@ public class PossessionManager
                 ToDepossess(currentPossessable.GetEntity().gameObject);
 
             currentPossessable = possessable.GetComponent<IPossessable>();
+            currentPossessable.Possessing(possessable);
+
             currentPossession = new Possession(currentPossessable);
             OnPossessed?.Invoke(this, currentPossessable);
             return currentPossession;
