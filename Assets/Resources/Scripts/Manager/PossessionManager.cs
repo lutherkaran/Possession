@@ -17,7 +17,6 @@ public class PossessionManager
             currentPossessable = possessable.GetComponent<IPossessable>();
             if (currentPossessable != null)
             {
-                CameraManager.instance?.AttachCameraToPossessedObject(currentPossessable.GetEntity().gameObject);
                 currentPossession = new Possession(currentPossessable);
                 OnPossessed?.Invoke(this, currentPossessable);
                 return currentPossession;

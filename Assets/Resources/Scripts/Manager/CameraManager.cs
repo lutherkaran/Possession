@@ -16,6 +16,10 @@ public class CameraManager : MonoBehaviour
     Vector3 targetPosition = Vector3.zero;
     Vector3 velocity = Vector3.zero;
 
+    private void OnEnable()
+    {
+        PossessionManager.Instance.OnPossessed += AttachCameraToPossessedObject;
+    }
 
     private void Awake()
     {
@@ -28,9 +32,9 @@ public class CameraManager : MonoBehaviour
         mouseAim = new MouseAim();
     }
 
-    public void AttachCameraToPossessedObject(GameObject possessedObject)
+    private void AttachCameraToPossessedObject(object sender, IPossessable possessedObject)
     {
-        currentlyPossessed = possessedObject;
+        currentlyPossessed = possessedObject.GetEntity().gameObject;
         cam = this.GetComponent<Camera>();
         StartCoroutine(MovetoPosition(currentlyPossessed));
         cam.transform.SetParent(currentlyPossessed.transform);
@@ -50,4 +54,9 @@ public class CameraManager : MonoBehaviour
     }
 
     public MouseAim GetMouseAim() => mouseAim;
+
+    public void OnDisable()
+    {
+        PossessionManager.Instance.OnPossessed -= AttachCameraToPossessedObject;
+    }
 }
