@@ -38,7 +38,8 @@ public class HealState : BaseState
         enemy.Agent.velocity = enemy.defaultVelocity;
         enemy.StopAllCoroutines();
     }
-    IEnumerator Interacting(EventOnlyInteractable _interactable)
+
+    IEnumerator Interacting(Interactable _interactable)
     {
         isHealing = true;
         _interactable?.BaseInteract();
