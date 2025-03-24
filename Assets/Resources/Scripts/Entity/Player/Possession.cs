@@ -67,7 +67,7 @@ public class Possession
 
     public Ray DrawRayFromCamera()
     {
-        Ray ray = CameraManager.instance.cam.ScreenPointToRay(Input.mousePosition);
+        Ray ray = CameraManager.instance.camera.ScreenPointToRay(Input.mousePosition);
         return ray;
     }
     

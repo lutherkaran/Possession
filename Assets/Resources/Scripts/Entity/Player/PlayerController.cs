@@ -78,7 +78,7 @@ public class PlayerController : Entity, IPossessable, IDamageable
 
     public Ray DrawRayFromCamera()
     {
-        Ray ray = CameraManager.instance.cam.ScreenPointToRay(Input.mousePosition);
+        Ray ray = CameraManager.instance.camera.ScreenPointToRay(Input.mousePosition);
         return ray;
     }
 
