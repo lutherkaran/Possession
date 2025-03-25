@@ -14,11 +14,7 @@ public class Possession
 
     public void PossessEntities()
     {
-        if (!canPossess)
-        {
-            HandleDepossession();
-            return;
-        }
+        if (!canPossess) return;
 
         Ray ray = DrawRayFromCamera();
 
@@ -36,7 +32,7 @@ public class Possession
     {
         var possessableEntity = hit.transform.GetComponentInParent<IPossessable>();
         if (possessableEntity == null) return;
-        
+
         targetEntity = hit.transform.GetComponentInParent<Entity>()?.gameObject;
 
         if (currentPossession.GetEntity() is PlayerController)
@@ -59,9 +55,7 @@ public class Possession
     private void HandleDepossession()
     {
         if (targetEntity == null) return;
-
         canPossess = true;
-        currentPossession.Depossessing(targetEntity);
     }
 
     public Ray DrawRayFromCamera()
