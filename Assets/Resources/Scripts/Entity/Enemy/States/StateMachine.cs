@@ -11,9 +11,10 @@ public class StateMachine : MonoBehaviour
         PossessionManager.Instance.OnPossessed += ChangeState;
     }
 
-    private void ChangeState(object sender, IPossessable e)
+    private void ChangeState(object sender, GameObject possessedObject)
     {
-        if (e != null && e == activeState.enemy.GetComponent<IPossessable>())
+        var Possessable = possessedObject.GetComponent<IPossessable>();
+        if (Possessable != null && Possessable == activeState.enemy.GetComponent<IPossessable>())
         {
             ChangeState(new PossessedState());
         }

@@ -8,7 +8,7 @@ public class PossessionManager
     private IPossessable currentPossessable;
 
     public static PossessionManager Instance { get { return instance == null ? instance = new PossessionManager() : instance; } }
-    public event EventHandler<IPossessable> OnPossessed;
+    public event EventHandler<GameObject> OnPossessed;
 
     public Possession ToPossess(GameObject possessable)
     {
@@ -21,7 +21,7 @@ public class PossessionManager
             currentPossessable.Possessing(possessable);
 
             currentPossession = new Possession(currentPossessable);
-            OnPossessed?.Invoke(this, currentPossessable);
+            OnPossessed?.Invoke(this, currentPossessable.GetEntity().gameObject);
             return currentPossession;
 
         }
