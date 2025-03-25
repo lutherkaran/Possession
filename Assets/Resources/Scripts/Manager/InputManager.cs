@@ -40,11 +40,6 @@ public class InputManager : MonoBehaviour
         }
     }
 
-    private void Possession_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
-    {
-        throw new System.NotImplementedException();
-    }
-
     private void Update()
     {
         controlledEntity = PossessionManager.Instance.GetCurrentPossessable().GetEntity();
