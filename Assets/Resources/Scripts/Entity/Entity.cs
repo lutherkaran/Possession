@@ -5,7 +5,7 @@ public abstract class Entity : MonoBehaviour
     public IPossessable possessedByPlayer { get; set; }
 
     [SerializeField]
-    protected PlayerController player;
+    protected PlayerController playerController;
 
     protected Vector3 moveDirection = Vector3.zero;
     protected Vector3 velocity = Vector3.zero;
@@ -23,15 +23,9 @@ public abstract class Entity : MonoBehaviour
     [SerializeField] protected LayerMask PossessableLayerMask;
 
 
-    public void SetPlayer(PlayerController Player)
+    public void SetPlayer(PlayerController player)
     {
-        player = Player;
-    }
-
-    public virtual void ProcessMove(Vector2 input)
-    {
-        moveDirection.x = input.x;
-        moveDirection.z = input.y;
+        playerController = player;
     }
 
     public virtual void ProcessJump()
@@ -46,6 +40,12 @@ public abstract class Entity : MonoBehaviour
     {
         sprinting = !sprinting;
         speed = sprinting ? 10f : 5f;
+    }
+
+    public virtual void ProcessMove(Vector2 input)
+    {
+        moveDirection.x = input.x;
+        moveDirection.z = input.y;
     }
 
     public abstract void Attack();

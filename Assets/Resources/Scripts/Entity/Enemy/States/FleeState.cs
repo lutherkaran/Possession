@@ -25,7 +25,7 @@ public class FleeState : BaseState
 
     private void Flee()
     {
-        fleeDirection = (enemy.transform.position - enemy.Player.transform.position).normalized + (Random.insideUnitSphere * 10).normalized;
+        fleeDirection = (enemy.transform.position - enemy.player.transform.position).normalized + (Random.insideUnitSphere * 10).normalized;
         enemy.Agent.SetDestination(enemy.transform.position + fleeDirection * FleeDistance);
     }
 

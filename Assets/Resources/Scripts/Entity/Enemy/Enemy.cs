@@ -7,7 +7,7 @@ public class Enemy : Entity, IPossessable, IDamageable
     // Public Properties
     public Vector3 LastKnownPos { get; set; }
     public NavMeshAgent Agent { get; private set; }
-    public GameObject Player => player.gameObject;
+    public GameObject player;
 
     // Constants
     public const string IS_IDLE = "IsIdle";
@@ -52,9 +52,6 @@ public class Enemy : Entity, IPossessable, IDamageable
 
     private void Initialize()
     {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-
         rb = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
         enemyHealthUI = GetComponent<EnemyHealthUI>();
@@ -66,15 +63,14 @@ public class Enemy : Entity, IPossessable, IDamageable
     private void PostInitialize()
     {
         defaultVelocity = Agent.velocity;
+        player = FindAnyObjectByType<PlayerController>().gameObject;
         stateMachine.Initialise();
-        player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
     }
 
     private void Update()
     {
         if (enemyHealthUI.GetHealth() >= 0)
         {
-            CanSeePlayer();
             currentState = stateMachine?.activeState?.ToString() ?? "None";
         }
     }
@@ -82,25 +78,16 @@ public class Enemy : Entity, IPossessable, IDamageable
     // Public Overrides
     public override void Attack() { /* Implement attack logic */ }
 
-    public override bool IsAlive() => enemyHealthUI.GetHealth() > 0;
+    public override void ProcessJump()
+    {
+        base.ProcessJump();
+    }
 
     public override void ProcessMove(Vector2 input)
     {
         base.ProcessMove(input);
-
         if (PossessionManager.Instance.GetCurrentPossessable() == possessedByPlayer)
-        {
-            Vector3 moveDirection = new Vector3(input.x, 0, input.y).normalized;
-            Agent.Move(moveDirection * speed * Time.deltaTime);
-        }
-    }
-
-    public override void ProcessJump()
-    {
-        if (PossessionManager.Instance.GetCurrentPossessable() == possessedByPlayer)
-        {
-            rb.AddForce(Vector3.up * -3f, ForceMode.Impulse);
-        }
+            transform.Translate(moveDirection * speed * Time.deltaTime);
     }
 
     public override void Sprint() { base.Sprint(); }
@@ -132,10 +119,6 @@ public class Enemy : Entity, IPossessable, IDamageable
         enemyHealthUI.RestoreHealth(healAmount);
     }
 
-    public float GetHealth() => enemyHealthUI.GetHealth();
-
-    public bool IsSafe() => Vector3.Distance(transform.position, player.transform.position) >= 20f;
-
     // Sight and AI Logic
     public bool CanSeePlayer()
     {
@@ -149,7 +132,7 @@ public class Enemy : Entity, IPossessable, IDamageable
             if (angleToPlayer >= -fieldOfView && angleToPlayer <= fieldOfView)
             {
                 Ray ray = new Ray(transform.position + (Vector3.up * eyeHeight), targetDirection);
-                if (Physics.Raycast(ray, out RaycastHit hitInfo, sightDistance) && hitInfo.transform.gameObject == player.gameObject)
+                if (Physics.Raycast(ray, out RaycastHit hitInfo, sightDistance) && hitInfo.transform.gameObject == player)
                 {
                     LastKnownPos = player.transform.position;
                     Debug.DrawRay(ray.origin, ray.direction * sightDistance, Color.red);
@@ -161,5 +144,12 @@ public class Enemy : Entity, IPossessable, IDamageable
         return false;
     }
 
+    public override bool IsAlive() => enemyHealthUI.GetHealth() > 0;
+
+    public float GetHealth() => enemyHealthUI.GetHealth();
+
+    public bool IsSafe() => Vector3.Distance(transform.position, player.transform.position) >= 20f;
+
     public Entity GetEntity() => this;
+
 }
