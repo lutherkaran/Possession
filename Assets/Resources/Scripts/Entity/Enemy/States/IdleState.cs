@@ -15,7 +15,11 @@ public class IdleState : BaseState
 
     public override void Perform()
     {
-        if (enemy.CanSeePlayer()) { stateMachine.ChangeState(new AttackState()); return; }
+        if (enemy.CanSeePlayer()) 
+        { 
+            stateMachine.ChangeState(new AttackState());
+        }
+
         else
         {
             Waiting();

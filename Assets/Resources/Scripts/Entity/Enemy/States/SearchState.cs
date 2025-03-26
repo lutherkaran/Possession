@@ -22,7 +22,6 @@ public class SearchState : BaseState
         if (enemy.CanSeePlayer())
         {
             stateMachine.ChangeState(new AttackState());
-            return;
         }
 
         if (enemy.Agent.remainingDistance <= enemy.Agent.stoppingDistance)

@@ -97,11 +97,13 @@ public class Enemy : Entity, IPossessable, IDamageable
     {
         Debug.Log($"Possessing {go.name}");
         possessedByPlayer = PossessionManager.Instance.GetCurrentPossessable();
+        stateMachine.ChangeState(new PossessedState());
     }
 
     public void Depossessing(GameObject go)
     {
         Debug.Log($"DePossessing {go.name}");
+        stateMachine.ChangeState(new IdleState());
     }
 
     // IDamageable Implementation
@@ -110,7 +112,7 @@ public class Enemy : Entity, IPossessable, IDamageable
         if (enemyHealthUI.GetHealth() > 0)
         {
             enemyHealthUI.TakeDamage(damage);
-            OnEnemyHealthChanged?.Invoke(this, enemyHealthUI.GetHealth());
+            OnEnemyHealthChanged?.Invoke(this, GetHealth());
         }
     }
 

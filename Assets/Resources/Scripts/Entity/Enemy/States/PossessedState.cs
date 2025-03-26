@@ -11,10 +11,7 @@ public class PossessedState : BaseState
 
     public override void Perform()
     {
-        if (PossessionManager.Instance.GetCurrentPossessable() != enemy.possessedByPlayer)
-        {
-            stateMachine.ChangeState(new IdleState());
-        }
+
     }
 
     public override void Exit()

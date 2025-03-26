@@ -16,7 +16,6 @@ public class PatrolState : BaseState
         if (enemy.CanSeePlayer())
         {
             stateMachine.ChangeState(new AttackState());
-            return;
         }
     }
 

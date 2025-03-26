@@ -8,16 +8,6 @@ public class StateMachine : MonoBehaviour
     {
         ChangeState(new IdleState());
         activeState.enemy.OnEnemyHealthChanged += HealthChanged;
-        PossessionManager.Instance.OnPossessed += ChangeState;
-    }
-
-    private void ChangeState(object sender, GameObject possessedObject)
-    {
-        var Possessable = possessedObject.GetComponent<IPossessable>();
-        if (Possessable != null && Possessable == activeState.enemy.GetComponent<IPossessable>())
-        {
-            ChangeState(new PossessedState());
-        }
     }
 
     private void Update()
