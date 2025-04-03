@@ -56,6 +56,7 @@ public class PlayerController : Entity, IPossessable, IDamageable
 
     public override void Attack()
     {
+        if (this != possessedByPlayer) return;
         Ray ray = DrawRayFromCamera();
         if (Physics.Raycast(ray, out RaycastHit hit, RaycastHitDistance))
         {
@@ -69,7 +70,7 @@ public class PlayerController : Entity, IPossessable, IDamageable
             {
                 Debug.Log("Unable to Hit");
             }
-            else if (hit.transform.parent.CompareTag("Enemy")) // if there's an entity that has no parent then it will throw an exception. current example: NPC
+            else if (hit.transform.parent.CompareTag("Enemy")) 
             {
                 hit.transform.GetComponentInParent<Enemy>()?.TakeDamage(UnityEngine.Random.Range(10f, 20f));
             }

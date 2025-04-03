@@ -386,7 +386,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""name"": """",
                     ""id"": ""c6fff16a-3740-440d-bbd6-774dc90e6858"",
                     ""path"": ""<Keyboard>/f"",
-                    ""interactions"": ""Press(pressPoint=0.1),Hold"",
+                    ""interactions"": ""Press(pressPoint=0.2),Hold"",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Possession"",
