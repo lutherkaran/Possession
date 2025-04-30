@@ -1,17 +1,19 @@
 using System.Collections;
 using UnityEngine;
 
-[RequireComponent(typeof(InputManager), typeof(CharacterController), typeof(PlayerHealthUI))]
-[RequireComponent(typeof(PlayerInteract), typeof(PlayerUI))]
+[RequireComponent(typeof(InputManager), typeof(CharacterController))]
 
 public class PlayerController : Entity, IPossessable, IDamageable
 {
     [SerializeField] private bool isAlive = true;
+    [SerializeField] private PlayerHealthUI playerHealthUI;
 
     private CharacterController characterController;
     private InputManager inputManager;
-    private PlayerHealthUI playerHealthUI;
     public float RaycastHitDistance = 40.0f;
+
+    [SerializeField] public float health;
+    public float maxHealth = 100f;
 
     private void Start()
     {
@@ -22,7 +24,6 @@ public class PlayerController : Entity, IPossessable, IDamageable
     {
         SetPlayer(this);
         characterController = GetComponent<CharacterController>();
-        playerHealthUI = GetComponent<PlayerHealthUI>();
         inputManager = GetComponent<InputManager>();
     }
 
@@ -102,8 +103,6 @@ public class PlayerController : Entity, IPossessable, IDamageable
     public void TakeDamage(float damage) => playerHealthUI.TakeDamage(damage);
 
     public void RestoreHealth(float healAmount) => playerHealthUI.RestoreHealth(healAmount);
-
-    public PlayerHealthUI GetPlayerHealthUIReference() => playerHealthUI;
 
     public InputManager GetInputManager() => inputManager;
 

@@ -39,6 +39,7 @@ public class Enemy : Entity, IPossessable, IDamageable
     public event EventHandler<float> OnEnemyHealthChanged;
 
     private EnemyHealthUI enemyHealthUI;
+    private float health;
 
     private void Awake()
     {

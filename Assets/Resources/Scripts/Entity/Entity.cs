@@ -17,9 +17,6 @@ public abstract class Entity : MonoBehaviour
     protected bool sprinting = false;
     protected bool isGrounded = true;
 
-    [SerializeField] protected float health;
-    public float maxHealth = 100f;
-
     [SerializeField] protected LayerMask PossessableLayerMask;
 
 

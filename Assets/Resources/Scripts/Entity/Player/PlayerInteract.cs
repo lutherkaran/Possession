@@ -12,11 +12,15 @@ public class PlayerInteract : MonoBehaviour
     private PlayerUI playerUI;
     private InputManager playerInput;
 
+    private void Awake()
+    {
+        playerUI = this.GetComponent<PlayerUI>();
+        playerInput = this.GetComponent<InputManager>();
+    }
+
     private void Start()
     {
         cam = CameraManager.instance.camera;
-        playerUI = this.GetComponent<PlayerUI>();
-        playerInput = this.GetComponent<InputManager>();
     }
 
     private void Update()

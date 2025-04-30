@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public class PlayerHealthUI : MonoBehaviour
 {
-    [SerializeField] private float health;
+    [SerializeField] private PlayerController player;
     private float lerpTimer;
 
     [Header("Health Bar")]
@@ -17,22 +17,18 @@ public class PlayerHealthUI : MonoBehaviour
     public float fadeSpeed; // How quickly the image will fade.
     private float durationTimer;
 
-    private PlayerController playerController;
-
-    private void Awake()
-    {
-        playerController = GetComponent<PlayerController>();
-    }
     private void Start()
     {
-        health = playerController.maxHealth;
+        if (player == null) return;
+        player.health = player.maxHealth;
         damageOverlay.color = new Color(damageOverlay.color.r, damageOverlay.color.g, damageOverlay.color.b, 0);
     }
 
     private void Update()
     {
-        health = Mathf.Clamp(health, 0, playerController.maxHealth);
-        if (health > 0)
+        if (player == null) return;
+        player.health = Mathf.Clamp(player.health, 0, player.maxHealth);
+        if (player.health > 0)
         {
             UpdateHealthUI();
         }
@@ -43,7 +39,7 @@ public class PlayerHealthUI : MonoBehaviour
     {
         if (damageOverlay.color.a > 0)
         {
-            if (health < 30) return;
+            if (player.health < 30) return;
             durationTimer += Time.deltaTime;
             if (durationTimer > duration)
             {
@@ -58,7 +54,7 @@ public class PlayerHealthUI : MonoBehaviour
     {
         float fillF = frontHealthBar.fillAmount;
         float fillB = backHealthBar.fillAmount;
-        float hFraction = health / playerController.maxHealth;
+        float hFraction = player.health / player.maxHealth;
 
         if (fillB > hFraction)
         {
@@ -82,14 +78,14 @@ public class PlayerHealthUI : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
-        health -= damage;
+        player.health -= damage;
         lerpTimer = 0;
         durationTimer = 0;
         damageOverlay.color = new Color(damageOverlay.color.r, damageOverlay.color.g, damageOverlay.color.b, 1);
     }
     public void RestoreHealth(float healAmount)
     {
-        health += healAmount;
+        player.health += healAmount;
         lerpTimer = 0f;
     }
 }

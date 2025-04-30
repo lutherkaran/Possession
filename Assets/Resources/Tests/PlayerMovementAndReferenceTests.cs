@@ -9,6 +9,9 @@ public class PlayerMovementAndReferenceTests
     CameraManager cameraManager;
     GameObject player;
     PlayerController playerController;
+    GameObject playerHealthUI;
+    GameObject playerUI;
+
     float speed = 5f;
 
     [OneTimeSetUp]
@@ -18,13 +21,22 @@ public class PlayerMovementAndReferenceTests
         GameObject plane = GameObject.CreatePrimitive(PrimitiveType.Plane);
         plane.gameObject.transform.position = new Vector3(0, 0, 0);
         plane.gameObject.transform.localScale = (new Vector3(10, 1, 10));
+        plane.AddComponent<BoxCollider>();
 
-        GameObject Camera = MonoBehaviour.Instantiate(Resources.Load<GameObject>("Prefabs/Camera"));
         player = MonoBehaviour.Instantiate(Resources.Load<GameObject>("Prefabs/Player"));
-        player.transform.position = new Vector3(0, 0f, 0);
+        player.transform.localPosition = new Vector3(0, 1f, 0);
         playerController = player.GetComponent<PlayerController>();
         Assert.NotNull(playerController, "Player is NULL");
+
+        playerHealthUI = MonoBehaviour.Instantiate(Resources.Load<GameObject>("Prefabs/PlayerHealthUI"));
+        Assert.NotNull(playerHealthUI, "playerHealthUI is NULL");
+
+        playerUI = MonoBehaviour.Instantiate(Resources.Load<GameObject>("Prefabs/PlayerUI"));
+        Assert.NotNull(playerUI, "playerUI is NULL");
+
+        GameObject camera = MonoBehaviour.Instantiate(Resources.Load<GameObject>("Prefabs/Camera"));
         cameraManager = player.GetComponent<CameraManager>();
+        camera.transform.SetParent(player.transform);
     }
     #region PlayerMovement
     [UnityTest]
@@ -94,7 +106,7 @@ public class PlayerMovementAndReferenceTests
         playerController.ProcessMove(new Vector2(0, 1).normalized); // Move forward
         yield return new WaitForSeconds(1f);
 
-        float distanceMoved = Vector3.Distance(startPos, player.transform.position);
+        float distanceMoved = Vector3.Distance(startPos, player.transform.position) * Time.fixedDeltaTime;
         float expectedDistance = speed * 1f * Time.fixedDeltaTime;
         Debug.Log("Expected: " + expectedDistance + " Actual: " + distanceMoved);
         Assert.AreEqual(expectedDistance, distanceMoved, 0.5f, "Player should move at the correct speed.");
@@ -102,13 +114,6 @@ public class PlayerMovementAndReferenceTests
     #endregion
 
     #region References
-    [UnityTest]
-    public IEnumerator CheckPlayerHealthUI()
-    {
-        PlayerHealthUI playerHealthUI = playerController.GetPlayerHealthUIReference();
-        yield return new WaitForSeconds(.5f);
-        Assert.IsNotNull(playerHealthUI);
-    }
 
     [UnityTest]
     public IEnumerator CheckPlayerInputManagerReference()

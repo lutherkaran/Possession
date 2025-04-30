@@ -87,6 +87,8 @@ GameObject:
   - component: {fileID: 2545201677311072479}
   - component: {fileID: 1410287244979470177}
   - component: {fileID: 5574214192708231954}
+  - component: {fileID: 3675970581140575342}
+  - component: {fileID: 8819027040213255429}
   m_Layer: 5
   m_Name: PlayerUI
   m_TagString: Untagged
@@ -178,6 +180,36 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &3675970581140575342
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1835850660741089580}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3671067d8ec44647abd7ec22fa34b8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  promptText: {fileID: 5947241711577547498}
+  player: {fileID: 0}
+--- !u!114 &8819027040213255429
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1835850660741089580}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b054ee3b6bd8def4e9f60cfa8e9da419, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  distance: 3
+  layer:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!1 &6558812219711082496
 GameObject:
   m_ObjectHideFlags: 0
