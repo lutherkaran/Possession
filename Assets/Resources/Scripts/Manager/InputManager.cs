@@ -22,13 +22,11 @@ public class InputManager : MonoBehaviour
     {
         PossessionManager.Instance.OnPossessed += SetControlledEntity;
 
-        if (player != null)
-        {
-            PossessionManager.Instance.ToPossess(player.gameObject);
-            OnPossessionActions.Possession.performed += HandlePossessionInput;
-            OnFootActions.MouseInteraction.performed += ctx => CameraManager.instance.GetMouseAim()?.MouseInteraction();
-            OnFootActions.Attack.performed += ctx => player.Attack();
-        }
+        PossessionManager.Instance.ToPossess(player.gameObject);
+        OnPossessionActions.Possession.performed += HandlePossessionInput;
+        OnFootActions.MouseInteraction.performed += ctx => CameraManager.instance.GetMouseAim()?.MouseInteraction();
+        OnFootActions.Attack.performed += ctx => player.Attack();
+
     }
 
     private void SetControlledEntity(object sender, GameObject controlledEntity)

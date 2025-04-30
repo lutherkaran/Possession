@@ -17,7 +17,6 @@ public class PlayerMovementAndReferenceTests
     [OneTimeSetUp]
     public void OneTimeSetup()
     {
-
         GameObject plane = GameObject.CreatePrimitive(PrimitiveType.Plane);
         plane.gameObject.transform.position = new Vector3(0, 0, 0);
         plane.gameObject.transform.localScale = (new Vector3(10, 1, 10));
@@ -38,6 +37,7 @@ public class PlayerMovementAndReferenceTests
         cameraManager = player.GetComponent<CameraManager>();
         camera.transform.SetParent(player.transform);
     }
+
     #region PlayerMovement
     [UnityTest]
     public IEnumerator PlayerMovesForward()
