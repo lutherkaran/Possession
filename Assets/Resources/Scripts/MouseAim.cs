@@ -4,7 +4,7 @@ public class MouseAim
 {
     [Header("Mouse Controls")]
     [SerializeField] private float xRotation = 0f;
-    [SerializeField] private bool MouseControl = false;
+    [SerializeField] private bool MouseVisible = false;
     [SerializeField] private float xSensitivity = 30f;
     [SerializeField] private float ySensitivity = 30f;
 
@@ -16,18 +16,18 @@ public class MouseAim
         xRotation -= (mouseY * Time.deltaTime) * ySensitivity;
         xRotation = Mathf.Clamp(xRotation, -80f, 80f);
 
-        if (!MouseControl)
+        if (!MouseVisible)
         {
-            CameraManager.instance.camera.transform.localRotation = Quaternion.Euler(xRotation, 0, 0);
+            CameraManager.instance.cam.transform.localRotation = Quaternion.Euler(xRotation, 0, 0);
             PossessionManager.Instance.GetCurrentPossessable().GetEntity().gameObject.transform.Rotate(Vector3.up * (mouseX * Time.deltaTime) * xSensitivity);
         }
     }
 
     public void MouseInteraction()
     {
-        MouseControl = !MouseControl;
+        MouseVisible = !MouseVisible;
 
-        if (!MouseControl)
+        if (!MouseVisible)
         {
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
@@ -38,4 +38,5 @@ public class MouseAim
             Cursor.visible = true;
         }
     }
+
 }

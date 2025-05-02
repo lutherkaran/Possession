@@ -5,6 +5,7 @@ public class Possession
     private GameObject targetEntity;
     private IPossessable currentPossession;
     private bool canPossess = true;
+
     public float RaycastHitDistance = 40.0f;
 
     public Possession(IPossessable possessed)
@@ -16,7 +17,7 @@ public class Possession
     {
         if (!canPossess) return;
 
-        Ray ray = DrawRayFromCamera();
+        Ray ray = DrawRayFromCrosshair();
 
         if (Physics.Raycast(ray, out RaycastHit hit, RaycastHitDistance))
         {
@@ -58,9 +59,9 @@ public class Possession
         canPossess = true;
     }
 
-    public Ray DrawRayFromCamera()
+    public Ray DrawRayFromCrosshair()
     {
-        Ray ray = CameraManager.instance.camera.ScreenPointToRay(Input.mousePosition);
+        Ray ray = CameraManager.instance.cam.ScreenPointToRay(PlayerUI.Instance.GetCrosshairTransform().position);
         return ray;
     }
 
@@ -68,6 +69,12 @@ public class Possession
     {
         PossessionManager.Instance.ToPossess(player);
     }
+
+    //public Ray DrawRayFromCamera()
+    //{
+    //    Ray ray = CameraManager.instance.cam.ScreenPointToRay(Input.mousePosition);
+    //    return ray;
+    //}
 
     //public Ray DrawRayfromPlayerEye()
     //{

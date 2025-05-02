@@ -80,19 +80,19 @@ public class PlayerController : Entity, IPossessable, IDamageable
 
     public Ray DrawRayFromCamera()
     {
-        Ray ray = CameraManager.instance.camera.ScreenPointToRay(Input.mousePosition);
+        Ray ray = CameraManager.instance.cam.ScreenPointToRay(Input.mousePosition);
         return ray;
     }
 
     public void Possessing(GameObject go)
     {
-        Debug.Log($"Possessing... {go.name}");
+        //Debug.Log($"Possessing... {go.name}");
         possessedByPlayer = PossessionManager.Instance.GetCurrentPossessable();
     }
 
     public void Depossessing(GameObject go)
     {
-        Debug.Log($"DePossessing... {go.name}");
+        //Debug.Log($"DePossessing... {go.name}");
         possessedByPlayer = null;
     }
 

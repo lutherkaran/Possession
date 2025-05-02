@@ -96,14 +96,14 @@ public class Enemy : Entity, IPossessable, IDamageable
     // IPossessible Implementation
     public void Possessing(GameObject go)
     {
-        Debug.Log($"Possessing {go.name}");
+        //Debug.Log($"Possessing {go.name}");
         possessedByPlayer = PossessionManager.Instance.GetCurrentPossessable();
         stateMachine.ChangeState(new PossessedState());
     }
 
     public void Depossessing(GameObject go)
     {
-        Debug.Log($"DePossessing {go.name}");
+        //Debug.Log($"DePossessing {go.name}");
         stateMachine.ChangeState(new IdleState());
     }
 

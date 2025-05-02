@@ -20,7 +20,7 @@ public class PlayerInteract : MonoBehaviour
 
     private void Start()
     {
-        cam = CameraManager.instance.camera;
+        cam = CameraManager.instance.cam;
     }
 
     private void Update()

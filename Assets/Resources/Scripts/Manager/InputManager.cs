@@ -13,13 +13,13 @@ public class InputManager : MonoBehaviour
     private void Awake()
     {
         playerInput = new PlayerInput();
-        player = GetComponent<PlayerController>();
         OnFootActions = playerInput.OnFoot;
         OnPossessionActions = playerInput.OnPossession;
     }
 
     public void Start()
     {
+        player = GetComponent<PlayerController>();
         PossessionManager.Instance.OnPossessed += SetControlledEntity;
 
         PossessionManager.Instance.ToPossess(player.gameObject);
