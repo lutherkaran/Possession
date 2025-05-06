@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -6,25 +7,26 @@ using UnityEngine;
 public class PlayerController : Entity, IPossessable, IDamageable
 {
     [SerializeField] private bool isAlive = true;
-    [SerializeField] private PlayerHealthUI playerHealthUI;
+    [SerializeField] private HealthUI playerHealthUI;
 
     private CharacterController characterController;
     private InputManager inputManager;
     public float RaycastHitDistance = 40.0f;
 
-    [SerializeField] public float health;
-    public float maxHealth = 100f;
+    [SerializeField] private float currentHealth;
+    [SerializeField] private float maxHealth = 100f;
+
+    public event EventHandler<IDamageable.OnDamagedEventArgs> OnDamaged;
+
+    private void Awake()
+    {
+        characterController = GetComponent<CharacterController>();
+        inputManager = GetComponent<InputManager>();
+    }
 
     private void Start()
     {
-        PostInitialize();
-    }
-
-    private void PostInitialize()
-    {
         SetPlayer(this);
-        characterController = GetComponent<CharacterController>();
-        inputManager = GetComponent<InputManager>();
     }
 
     private void Update()
@@ -58,7 +60,7 @@ public class PlayerController : Entity, IPossessable, IDamageable
     public override void Attack()
     {
         if (this != possessedByPlayer) return;
-        Ray ray = DrawRayFromCamera();
+        Ray ray = DrawRayFromCrosshair();
         if (Physics.Raycast(ray, out RaycastHit hit, RaycastHitDistance))
         {
             string tag = hit.transform.gameObject.tag;
@@ -71,16 +73,16 @@ public class PlayerController : Entity, IPossessable, IDamageable
             {
                 Debug.Log("Unable to Hit");
             }
-            else if (hit.transform.parent.CompareTag("Enemy")) 
+            else if (hit.transform.parent.CompareTag("Enemy"))
             {
-                hit.transform.GetComponentInParent<Enemy>()?.TakeDamage(UnityEngine.Random.Range(10f, 20f));
+                hit.transform.GetComponentInParent<Enemy>()?.HealthChanged(UnityEngine.Random.Range(-10f, -20f));
             }
         }
     }
 
-    public Ray DrawRayFromCamera()
+    public Ray DrawRayFromCrosshair()
     {
-        Ray ray = CameraManager.instance.cam.ScreenPointToRay(Input.mousePosition);
+        Ray ray = CameraManager.instance.cam.ScreenPointToRay(PlayerUI.Instance.GetCrosshairTransform().position);
         return ray;
     }
 
@@ -96,16 +98,16 @@ public class PlayerController : Entity, IPossessable, IDamageable
         possessedByPlayer = null;
     }
 
-    public override bool IsAlive() => isAlive;
+    public void HealthChanged(float healthChangedValue)
+    {
+        OnDamaged?.Invoke(this, new IDamageable.OnDamagedEventArgs { health = healthChangedValue, maxHealth = this.maxHealth });
+    }
+
+    public override bool IsAlive() => playerHealthUI.GetCurrentHealth()>0;
 
     public Entity GetEntity() => this;
-
-    public void TakeDamage(float damage) => playerHealthUI.TakeDamage(damage);
-
-    public void RestoreHealth(float healAmount) => playerHealthUI.RestoreHealth(healAmount);
 
     public InputManager GetInputManager() => inputManager;
 
     public CharacterController GetCharacterControllerReference() => characterController;
-
 }

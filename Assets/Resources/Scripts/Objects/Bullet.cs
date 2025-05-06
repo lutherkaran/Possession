@@ -10,7 +10,7 @@ public class Bullet : MonoBehaviour
         if (hitTransform.CompareTag("Player"))
         {
             if (hitTransform.GetComponent<IDamageable>() is PlayerController player)
-                player.TakeDamage(UnityEngine.Random.Range(5f, 10f));
+                player.HealthChanged(UnityEngine.Random.Range(5f, 10f));
         }
 
         Destroy(gameObject);

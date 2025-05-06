@@ -4,11 +4,6 @@ using UnityEngine.AI;
 
 public class Enemy : Entity, IPossessable, IDamageable
 {
-    // Public Properties
-    public Vector3 LastKnownPos { get; set; }
-    public NavMeshAgent Agent { get; private set; }
-    public GameObject player;
-
     // Constants
     public const string IS_IDLE = "IsIdle";
     public const string IS_PATROLLING = "IsPatrolling";
@@ -16,8 +11,13 @@ public class Enemy : Entity, IPossessable, IDamageable
     public const string IS_ATTACKING = "IsAttacking";
     public const string IS_FLEEING = "IsFleeing";
 
+    // Public Properties
+    public GameObject player;
+
     [Header("Pathfinding")]
     [SerializeField] public EnemyPath enemyPath;
+    [SerializeField] public Vector3 LastKnownPos { get; set; }
+    [SerializeField] public NavMeshAgent Agent { get; private set; }
 
     // Serialized Fields
     [Header("Sight Values")]
@@ -31,15 +31,18 @@ public class Enemy : Entity, IPossessable, IDamageable
 
     // Private Fields
     private Rigidbody rb;
+    [Header("State Machine")]
     [SerializeField] private string currentState;
-    private StateMachine stateMachine;
+    [SerializeField] private StateMachine stateMachine;
+
+
+    [SerializeField] private HealthUI healthUI;
 
     public Animator anim;
     public Vector3 defaultVelocity = Vector3.zero;
     public event EventHandler<float> OnEnemyHealthChanged;
 
-    private EnemyHealthUI enemyHealthUI;
-    private float health;
+    public event EventHandler<IDamageable.OnDamagedEventArgs> OnDamaged;
 
     private void Awake()
     {
@@ -55,25 +58,20 @@ public class Enemy : Entity, IPossessable, IDamageable
     {
         rb = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
-        enemyHealthUI = GetComponent<EnemyHealthUI>();
-        health = enemyHealthUI.GetMaxHealth();
         stateMachine = GetComponent<StateMachine>();
         Agent = GetComponent<NavMeshAgent>();
+        defaultVelocity = Agent.velocity;
     }
 
     private void PostInitialize()
     {
-        defaultVelocity = Agent.velocity;
         player = FindAnyObjectByType<PlayerController>().gameObject;
-        stateMachine.Initialise();
+        healthUI = GetComponentInChildren<HealthUI>();
     }
 
     private void Update()
     {
-        if (enemyHealthUI.GetHealth() >= 0)
-        {
-            currentState = stateMachine?.activeState?.ToString() ?? "None";
-        }
+        //currentState = stateMachine?.activeState?.ToString() ?? "None";
     }
 
     // Public Overrides
@@ -108,18 +106,10 @@ public class Enemy : Entity, IPossessable, IDamageable
     }
 
     // IDamageable Implementation
-    public void TakeDamage(float damage)
+    public void HealthChanged(float healthChangedValue)
     {
-        if (enemyHealthUI.GetHealth() > 0)
-        {
-            enemyHealthUI.TakeDamage(damage);
-            OnEnemyHealthChanged?.Invoke(this, GetHealth());
-        }
-    }
-
-    public void RestoreHealth(float healAmount)
-    {
-        enemyHealthUI.RestoreHealth(healAmount);
+        OnDamaged?.Invoke(this, new IDamageable.OnDamagedEventArgs { health = healthChangedValue });
+        OnEnemyHealthChanged?.Invoke(this, healthUI.GetCurrentHealth());
     }
 
     // Sight and AI Logic
@@ -147,9 +137,9 @@ public class Enemy : Entity, IPossessable, IDamageable
         return false;
     }
 
-    public override bool IsAlive() => enemyHealthUI.GetHealth() > 0;
+    public override bool IsAlive() => healthUI.GetCurrentHealth() > 0;
 
-    public float GetHealth() => enemyHealthUI.GetHealth();
+    public float GetHealth() => healthUI.GetCurrentHealth();
 
     public bool IsSafe() => Vector3.Distance(transform.position, player.transform.position) >= 20f;
 
