@@ -7,25 +7,23 @@ using UnityEngine;
 public class PlayerController : Entity, IPossessable, IDamageable
 {
     [SerializeField] private bool isAlive = true;
-    [SerializeField] private HealthUI playerHealthUI;
+    [SerializeField] private HealthUI healthUI;
 
     private CharacterController characterController;
     private InputManager inputManager;
+
     public float RaycastHitDistance = 40.0f;
 
-    [SerializeField] private float currentHealth;
     [SerializeField] private float maxHealth = 100f;
+    [SerializeField] private float health;
 
     public event EventHandler<IDamageable.OnDamagedEventArgs> OnDamaged;
 
     private void Awake()
     {
+        health = maxHealth;
         characterController = GetComponent<CharacterController>();
         inputManager = GetComponent<InputManager>();
-    }
-
-    private void Start()
-    {
         SetPlayer(this);
     }
 
@@ -100,14 +98,18 @@ public class PlayerController : Entity, IPossessable, IDamageable
 
     public void HealthChanged(float healthChangedValue)
     {
-        OnDamaged?.Invoke(this, new IDamageable.OnDamagedEventArgs { health = healthChangedValue, maxHealth = this.maxHealth });
+        OnDamaged?.Invoke(this, new IDamageable.OnDamagedEventArgs { health = healthChangedValue });
+        health = healthUI.GetHealth();
     }
 
-    public override bool IsAlive() => playerHealthUI.GetCurrentHealth()>0;
+    public override bool IsAlive() => healthUI.GetHealth() > 0;
+
+    public float GetMaxHealth() => maxHealth;
 
     public Entity GetEntity() => this;
 
     public InputManager GetInputManager() => inputManager;
 
     public CharacterController GetCharacterControllerReference() => characterController;
+
 }

@@ -44,6 +44,9 @@ public class Enemy : Entity, IPossessable, IDamageable
 
     public event EventHandler<IDamageable.OnDamagedEventArgs> OnDamaged;
 
+    [SerializeField] private float maxHealth = 100f;
+    [SerializeField] private float health;
+
     private void Awake()
     {
         Initialize();
@@ -56,6 +59,7 @@ public class Enemy : Entity, IPossessable, IDamageable
 
     private void Initialize()
     {
+        health = maxHealth;
         rb = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
         stateMachine = GetComponent<StateMachine>();
@@ -91,7 +95,6 @@ public class Enemy : Entity, IPossessable, IDamageable
 
     public override void Sprint() { base.Sprint(); }
 
-    // IPossessible Implementation
     public void Possessing(GameObject go)
     {
         //Debug.Log($"Possessing {go.name}");
@@ -109,7 +112,8 @@ public class Enemy : Entity, IPossessable, IDamageable
     public void HealthChanged(float healthChangedValue)
     {
         OnDamaged?.Invoke(this, new IDamageable.OnDamagedEventArgs { health = healthChangedValue });
-        OnEnemyHealthChanged?.Invoke(this, healthUI.GetCurrentHealth());
+        OnEnemyHealthChanged?.Invoke(this, healthUI.GetHealth());
+        health = healthUI.GetHealth();
     }
 
     // Sight and AI Logic
@@ -137,9 +141,11 @@ public class Enemy : Entity, IPossessable, IDamageable
         return false;
     }
 
-    public override bool IsAlive() => healthUI.GetCurrentHealth() > 0;
+    public override bool IsAlive() => healthUI.GetHealth() > 0;
 
-    public float GetHealth() => healthUI.GetCurrentHealth();
+    public float GetHealth() => healthUI.GetHealth();
+
+    public float GetMaxHealth() => maxHealth;
 
     public bool IsSafe() => Vector3.Distance(transform.position, player.transform.position) >= 20f;
 

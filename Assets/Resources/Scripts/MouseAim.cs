@@ -1,12 +1,13 @@
 using UnityEngine;
 
+[System.Serializable]
 public class MouseAim
 {
     [Header("Mouse Controls")]
     [SerializeField] private float xRotation = 0f;
-    [SerializeField] private bool MouseVisible = false;
     [SerializeField] private float xSensitivity = 30f;
     [SerializeField] private float ySensitivity = 30f;
+    [SerializeField] private bool MouseVisible = false;
 
     public void ProcessLook(Vector2 input)
     {
@@ -39,4 +40,9 @@ public class MouseAim
         }
     }
 
+    public void OnFocus()
+    {
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+    }
 }

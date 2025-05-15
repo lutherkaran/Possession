@@ -4,7 +4,8 @@ using System.Collections;
 public class CameraManager : MonoBehaviour
 {
     private GameObject currentlyPossessed;
-    private MouseAim mouseAim;
+
+    [SerializeField] private MouseAim mouseAim;
 
     [Header("Camera Settings")]
     [SerializeField] private float smoothTime = 0.3f; // Adjust for desired speed
@@ -32,9 +33,14 @@ public class CameraManager : MonoBehaviour
 
     private void Start()
     {
-        mouseAim = new MouseAim();
-        Cursor.visible = false;
         cam = GetComponent<Camera>();
+        InitializingMouse();
+    }
+
+    private void InitializingMouse()
+    {
+        mouseAim = new MouseAim();
+        mouseAim.OnFocus();
     }
 
     private void AttachCameraToPossessedObject(object sender, GameObject possessedObject)

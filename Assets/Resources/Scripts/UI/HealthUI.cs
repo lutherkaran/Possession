@@ -10,8 +10,10 @@ public class HealthUI : MonoBehaviour
     [SerializeField] private Image frontHealthBar;
     [SerializeField] private Image backHealthBar;
     [SerializeField] private float lerpTimer;
-    [SerializeField] private float currentHealth;
-    [SerializeField] private const float MAX_HEALTH = 100f;
+
+    [Header("Health")]
+    [SerializeField] private float health;
+    [SerializeField] private float maxHealth;
 
     [Header("Damage Overlay")]
     [SerializeField] private Image damageOverlay;
@@ -22,19 +24,16 @@ public class HealthUI : MonoBehaviour
     [SerializeField] private GameObject damagableObject;
     private IDamageable hasDamagable;
 
-
-    private void Awake()
-    {
-        currentHealth = MAX_HEALTH;
-    }
-
     private void Start()
     {
         hasDamagable = damagableObject.GetComponent<IDamageable>();
+
         if (hasDamagable == null) return;
 
+        health = maxHealth = hasDamagable.GetMaxHealth();
+
         hasDamagable.OnDamaged += HasDamagable_OnDamaged;
-        UpdateHealth(currentHealth);
+
         damageOverlay.color = new Color(damageOverlay.color.r, damageOverlay.color.g, damageOverlay.color.b, 0);
     }
 
@@ -43,55 +42,58 @@ public class HealthUI : MonoBehaviour
         HealthChange(e.health);
     }
 
-    IEnumerator UpdateHealth(float health)
+    private void Update()
     {
-        health = Mathf.Clamp(health, 0, MAX_HEALTH);
+        UpdateHealth(health);
+    }
 
-        while (lerpTimer < chipSpeed)
+    void UpdateHealth(float health)
+    {
+        float fillF = frontHealthBar.fillAmount;
+        float fillB = backHealthBar.fillAmount;
+        float hFraction = health / maxHealth;
+
+        if (fillB > hFraction)
         {
-            float fillF = frontHealthBar.fillAmount;
-            float fillB = backHealthBar.fillAmount;
-            float hFraction = health / MAX_HEALTH;
-
-            if (fillB > hFraction)
-            {
-                frontHealthBar.fillAmount = hFraction;
-                backHealthBar.color = Color.red;
-                lerpTimer += Time.deltaTime;
-                float percentComplete = lerpTimer / chipSpeed;
-                percentComplete = percentComplete * percentComplete;
-                backHealthBar.fillAmount = Mathf.Lerp(fillB, hFraction, percentComplete);
-            }
-            else
-            {
-                backHealthBar.fillAmount = hFraction;
-                backHealthBar.color = Color.green;
-                lerpTimer += Time.deltaTime;
-                float percentComplete = lerpTimer / chipSpeed;
-                percentComplete = percentComplete * percentComplete;
-                frontHealthBar.fillAmount = Mathf.Lerp(fillF, hFraction, percentComplete);
-            }
-            yield return null;
+            frontHealthBar.fillAmount = hFraction;
+            backHealthBar.color = Color.red;
+            lerpTimer += Time.deltaTime;
+            float percentComplete = lerpTimer / chipSpeed;
+            percentComplete = percentComplete * percentComplete;
+            backHealthBar.fillAmount = Mathf.Lerp(fillB, hFraction, percentComplete);
         }
+        else
+        {
+            backHealthBar.fillAmount = hFraction;
+            backHealthBar.color = Color.green;
+            lerpTimer += Time.deltaTime;
+            float percentComplete = lerpTimer / chipSpeed;
+            percentComplete = percentComplete * percentComplete;
+            frontHealthBar.fillAmount = Mathf.Lerp(fillF, hFraction, percentComplete);
+        }
+
     }
 
     public void HealthChange(float healthChangeValue)
     {
-        currentHealth += healthChangeValue;
+        health += healthChangeValue;
         lerpTimer = 0;
-        StartCoroutine(UpdateHealth(currentHealth));
+
+        if (health > 100 || health < 0)
+            health = Mathf.Clamp(health, 0, maxHealth);
 
         durationTimer = 0;
         damageOverlay.color = new Color(damageOverlay.color.r, damageOverlay.color.g, damageOverlay.color.b, 1);
+
     }
 
-    public float GetCurrentHealth() => currentHealth;
+    public float GetHealth() => health;
 
     private void DamageOverlay()
     {
         if (damageOverlay.color.a > 0)
         {
-            if (currentHealth < 30) return;
+            if (health < 30) return;
             durationTimer += Time.deltaTime;
             if (durationTimer > duration)
             {
