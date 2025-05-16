@@ -12,6 +12,8 @@ public class PatrolState : BaseState
 
     public override void Perform()
     {
+        if (stateMachine.activeState is PossessedState) return;
+
         PatrolCycle();
         if (enemy.CanSeePlayer())
         {

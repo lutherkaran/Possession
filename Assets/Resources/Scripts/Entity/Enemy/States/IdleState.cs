@@ -11,6 +11,7 @@ public class IdleState : BaseState
         enemy.Agent.velocity = Vector3.zero;
         enemy.fieldOfView = 90f;
         duration = Random.Range(4f, 10f);
+        enemy.Agent.isStopped = false;
     }
 
     public override void Perform()
@@ -19,7 +20,6 @@ public class IdleState : BaseState
         { 
             stateMachine.ChangeState(new AttackState());
         }
-
         else
         {
             Waiting();

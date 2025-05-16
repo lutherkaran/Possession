@@ -60,11 +60,16 @@ public class Enemy : Entity, IPossessable, IDamageable
     private void Initialize()
     {
         health = maxHealth;
+        
         rb = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
-        stateMachine = GetComponent<StateMachine>();
+        
         Agent = GetComponent<NavMeshAgent>();
         defaultVelocity = Agent.velocity;
+
+        stateMachine = GetComponent<StateMachine>();
+        stateMachine.Initialise();
+
     }
 
     private void PostInitialize()
@@ -75,11 +80,14 @@ public class Enemy : Entity, IPossessable, IDamageable
 
     private void Update()
     {
-        //currentState = stateMachine?.activeState?.ToString() ?? "None";
+        currentState = stateMachine?.activeState?.ToString() ?? "None";
     }
 
     // Public Overrides
-    public override void Attack() { /* Implement attack logic */ }
+    public override void Attack()
+    {
+        stateMachine.ChangeState(new AttackState());
+    }
 
     public override void ProcessJump()
     {
@@ -89,26 +97,21 @@ public class Enemy : Entity, IPossessable, IDamageable
     public override void ProcessMove(Vector2 input)
     {
         base.ProcessMove(input);
-        if (PossessionManager.Instance.GetCurrentPossessable() == possessedByPlayer)
-            transform.Translate(moveDirection * speed * Time.deltaTime);
     }
 
     public override void Sprint() { base.Sprint(); }
 
     public void Possessing(GameObject go)
     {
-        //Debug.Log($"Possessing {go.name}");
         possessedByPlayer = PossessionManager.Instance.GetCurrentPossessable();
         stateMachine.ChangeState(new PossessedState());
     }
 
     public void Depossessing(GameObject go)
     {
-        //Debug.Log($"DePossessing {go.name}");
         stateMachine.ChangeState(new IdleState());
     }
 
-    // IDamageable Implementation
     public void HealthChanged(float healthChangedValue)
     {
         OnDamaged?.Invoke(this, new IDamageable.OnDamagedEventArgs { health = healthChangedValue });
@@ -116,7 +119,6 @@ public class Enemy : Entity, IPossessable, IDamageable
         health = healthUI.GetHealth();
     }
 
-    // Sight and AI Logic
     public bool CanSeePlayer()
     {
         if (PossessionManager.Instance.GetCurrentPossessable() == possessedByPlayer) return false;

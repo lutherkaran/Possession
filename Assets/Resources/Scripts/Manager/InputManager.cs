@@ -20,9 +20,10 @@ public class InputManager : MonoBehaviour
     public void Start()
     {
         player = GetComponent<PlayerController>();
-        PossessionManager.Instance.OnPossessed += SetControlledEntity;
 
+        PossessionManager.Instance.OnPossessed += SetControlledEntity;
         PossessionManager.Instance.ToPossess(player.gameObject);
+        
         OnPossessionActions.Possession.performed += HandlePossessionInput;
         OnFootActions.MouseInteraction.performed += ctx => CameraManager.instance.GetMouseAim()?.MouseInteraction();
         OnFootActions.Attack.performed += ctx => player.Attack();
