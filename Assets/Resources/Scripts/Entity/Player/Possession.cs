@@ -31,10 +31,10 @@ public class Possession
 
     private void HandlePossession(RaycastHit hit)
     {
-        var possessableEntity = hit.transform.GetComponentInParent<IPossessable>();
+        IPossessable possessableEntity = hit.transform.GetComponent<IPossessable>();
         if (possessableEntity == null) return;
 
-        targetEntity = hit.transform.GetComponentInParent<Entity>()?.gameObject;
+        targetEntity = possessableEntity.GetEntity().gameObject;
 
         if (currentPossession.GetEntity() is PlayerController)
         {

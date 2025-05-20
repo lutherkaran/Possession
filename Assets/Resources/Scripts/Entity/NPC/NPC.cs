@@ -59,4 +59,7 @@ public class NPC : Entity, IPossessable
     }
 
     public Entity GetEntity() => this;
+
+    public override Transform GetCameraAttachPoint() => cameraAttachPoint;
+
 }

@@ -71,9 +71,9 @@ public class PlayerController : Entity, IPossessable, IDamageable
             {
                 Debug.Log("Unable to Hit");
             }
-            else if (hit.transform.parent.CompareTag("Enemy"))
+            else if (hit.transform.CompareTag("Enemy"))
             {
-                hit.transform.GetComponentInParent<Enemy>()?.HealthChanged(UnityEngine.Random.Range(-10f, -20f));
+                hit.transform.GetComponent<Enemy>()?.HealthChanged(UnityEngine.Random.Range(-10f, -20f));
             }
         }
     }
@@ -111,5 +111,7 @@ public class PlayerController : Entity, IPossessable, IDamageable
     public InputManager GetInputManager() => inputManager;
 
     public CharacterController GetCharacterControllerReference() => characterController;
+
+    public override Transform GetCameraAttachPoint() => cameraAttachPoint;
 
 }

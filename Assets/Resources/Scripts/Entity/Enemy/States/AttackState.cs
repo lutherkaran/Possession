@@ -8,12 +8,12 @@ public class AttackState : BaseState
 
     public override void Enter()
     {
-        enemy.anim.SetBool(Enemy.IS_ATTACKING, true);
+        enemy.GetAnimator().SetBool(Enemy.IS_ATTACKING, true);
     }
 
     public override void Exit()
     {
-        enemy.anim.SetBool(Enemy.IS_ATTACKING, false);
+        enemy.GetAnimator().SetBool(Enemy.IS_ATTACKING, false);
         enemy.Agent.velocity = enemy.defaultVelocity;
         moveTimer = 0;
         losePlayerTimer = 0;
@@ -56,7 +56,7 @@ public class AttackState : BaseState
     public void Shoot()
     {
         Transform gunBarrel = enemy.gunBarrel;
-        GameObject bullet = GameObject.Instantiate(Resources.Load("Prefabs/Bullet") as GameObject, gunBarrel.position, enemy.transform.rotation);
+        GameObject bullet = GameObject.Instantiate(Resources.Load("Prefabs/Bullet") as GameObject, gunBarrel.position, gunBarrel.rotation);
         Vector3 shootDirection = (enemy.player.transform.position - gunBarrel.transform.position).normalized;
         bullet.GetComponent<Rigidbody>().velocity = Quaternion.AngleAxis(Random.Range(-3f, 3f), Vector3.up) * shootDirection * 30f;
         //Debug.Log("Shoot");

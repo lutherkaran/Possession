@@ -7,7 +7,7 @@ public class FleeState : BaseState
 
     public override void Enter()
     {
-        enemy.anim.SetBool(Enemy.IS_FLEEING, true);
+        enemy.GetAnimator().SetBool(Enemy.IS_FLEEING, true);
         enemy.Agent.velocity = enemy.defaultVelocity * 4f;
     }
 
@@ -31,7 +31,7 @@ public class FleeState : BaseState
 
     public override void Exit()
     {
-        enemy.anim.SetBool(Enemy.IS_FLEEING, false);
+        enemy.GetAnimator().SetBool(Enemy.IS_FLEEING, false);
         enemy.Agent.velocity = enemy.defaultVelocity;
     }
 }

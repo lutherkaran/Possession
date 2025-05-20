@@ -7,6 +7,7 @@ public class Bullet : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         Transform hitTransform = collision.transform;
+        Debug.Log(hitTransform.name);
         if (hitTransform.CompareTag("Player"))
         {
             if (hitTransform.GetComponent<IDamageable>() is PlayerController player)

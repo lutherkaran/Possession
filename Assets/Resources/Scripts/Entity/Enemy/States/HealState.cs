@@ -35,7 +35,7 @@ public class HealState : BaseState
     {
         isHealing = true;
         _interactable?.BaseInteract();
-        enemy.anim.Play("Idle");// (Enemy.IS_IDLE, true); // Should be Heal Animation
+        enemy.GetAnimator().Play("Idle");// (Enemy.IS_IDLE, true); // Should be Heal Animation
         yield return new WaitForSeconds(10f);
         stateMachine.ChangeState(new PatrolState());
     }

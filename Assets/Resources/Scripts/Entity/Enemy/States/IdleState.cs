@@ -7,7 +7,7 @@ public class IdleState : BaseState
 
     public override void Enter()
     {
-        enemy.anim.SetBool(Enemy.IS_IDLE, true);
+        enemy.GetAnimator().SetBool(Enemy.IS_IDLE, true);
         enemy.Agent.velocity = Vector3.zero;
         enemy.fieldOfView = 90f;
         duration = Random.Range(4f, 10f);
@@ -28,7 +28,7 @@ public class IdleState : BaseState
 
     public override void Exit()
     {
-        enemy.anim.SetBool(Enemy.IS_IDLE, false);
+        enemy.GetAnimator().SetBool(Enemy.IS_IDLE, false);
         waitTimer = 0;
         enemy.Agent.velocity = enemy.defaultVelocity;
     }

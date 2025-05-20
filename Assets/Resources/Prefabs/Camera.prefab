@@ -28,7 +28,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2580842188363157645}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.09210471, y: -0, z: -0, w: 0.9957494}
+  m_LocalRotation: {x: 0.0921012, y: 0, z: 0, w: 0.99574965}
   m_LocalPosition: {x: 0, y: 4.52, z: 176.88}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -150,10 +150,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c69924f0560f83541bbe9c8a59f5b6a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cam: {fileID: 5394740781402814406}
-  xRotation: 0
-  MouseControl: 0
-  xSensitivity: 30
-  ySensitivity: 30
+  mouseAim:
+    xRotation: 0
+    xSensitivity: 30
+    ySensitivity: 30
+    MouseVisible: 0
   smoothTime: 0.3
   DefaultPosition: {x: 0, y: 0.6, z: 0}
+  cam: {fileID: 5394740781402814406}

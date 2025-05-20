@@ -4,7 +4,7 @@ public class PatrolState : BaseState
 {
     public override void Enter()
     {
-        enemy.anim.SetBool(Enemy.IS_PATROLLING, true);
+        enemy.GetAnimator().SetBool(Enemy.IS_PATROLLING, true);
         enemy.Agent.velocity = enemy.defaultVelocity;
         enemy.Agent.SetDestination(enemy.enemyPath.Waypoints[Random.Range(0, enemy.enemyPath.Waypoints.Count - 1)].position);
         enemy.fieldOfView = 150f;
@@ -23,7 +23,7 @@ public class PatrolState : BaseState
 
     public override void Exit()
     {
-        enemy.anim.SetBool(Enemy.IS_PATROLLING, false);
+        enemy.GetAnimator().SetBool(Enemy.IS_PATROLLING, false);
     }
 
     public void PatrolCycle()

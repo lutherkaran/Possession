@@ -10,7 +10,7 @@ public class SearchState : BaseState
 
     public override void Enter()
     {
-        enemy.anim.SetBool(Enemy.IS_SEARCHING, true);
+        enemy.GetAnimator().SetBool(Enemy.IS_SEARCHING, true);
         enemy.Agent.SetDestination(enemy.LastKnownPos);
         enemy.Agent.velocity = enemy.defaultVelocity * 2f;
         enemy.fieldOfView = 180f;
@@ -43,7 +43,7 @@ public class SearchState : BaseState
 
     public override void Exit()
     {
-        enemy.anim.SetBool(Enemy.IS_SEARCHING, false);
+        enemy.GetAnimator().SetBool(Enemy.IS_SEARCHING, false);
         searchTimer = 0;
         moveTimer = 0;
         isSettingIdle = false;
@@ -55,7 +55,7 @@ public class SearchState : BaseState
     private IEnumerator SettingUpIdle()
     {
         isSettingIdle = true;
-        enemy.anim.Play("Idle");
+        enemy.GetAnimator().Play("Idle");
         yield return new WaitForSeconds(3f);
         isSettingIdle = false; // Allow future idles
         enemy.Agent.SetDestination(enemy.transform.position + (Random.insideUnitSphere * 30f));

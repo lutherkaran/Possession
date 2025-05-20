@@ -4,18 +4,18 @@ using System.Collections;
 public class CameraManager : MonoBehaviour
 {
     private GameObject currentlyPossessed;
+    private Vector3 targetPosition;
+    private Vector3 velocity = Vector3.zero;
 
     [SerializeField] private MouseAim mouseAim;
 
     [Header("Camera Settings")]
     [SerializeField] private float smoothTime = 0.3f; // Adjust for desired speed
     [SerializeField] private Vector3 DefaultPosition = new Vector3(0, .6f, 0);
+    private Transform cameraAttachPoint;
 
     public Camera cam;
     public static CameraManager instance;
-
-    Vector3 targetPosition = Vector3.zero;
-    Vector3 velocity = Vector3.zero;
 
     private void OnEnable()
     {
@@ -43,17 +43,20 @@ public class CameraManager : MonoBehaviour
         mouseAim.OnFocus();
     }
 
-    private void AttachCameraToPossessedObject(object sender, GameObject possessedObject)
+    private void AttachCameraToPossessedObject(object sender, IPossessable possessedObject)
     {
-        currentlyPossessed = possessedObject;
-        StartCoroutine(MovetoPosition(currentlyPossessed));
-        cam.transform.SetParent(currentlyPossessed.transform);
+        currentlyPossessed = possessedObject.GetEntity().gameObject;
+        cameraAttachPoint = possessedObject.GetEntity().GetCameraAttachPoint();
+
+        StartCoroutine(MovetoPosition(cameraAttachPoint.gameObject));
+        cam.transform.SetParent(cameraAttachPoint);
     }
 
     public IEnumerator MovetoPosition(GameObject currentlyPossessed)
     {
         InputManager.OnFootActions.Disable();
-        targetPosition = currentlyPossessed.transform.position + DefaultPosition;
+        targetPosition = Vector3.zero;
+        targetPosition = cameraAttachPoint.position;
 
         while (Vector3.Distance(cam.transform.position, targetPosition) > 0.1f)
         {

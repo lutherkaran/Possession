@@ -16,6 +16,8 @@ public abstract class Entity : MonoBehaviour
     protected bool sprinting = false;
     protected bool isGrounded = true;
 
+    [SerializeField] protected Transform cameraAttachPoint;
+
     [SerializeField] protected LayerMask PossessableLayerMask;
 
 
@@ -46,6 +48,7 @@ public abstract class Entity : MonoBehaviour
 
     public abstract void Attack();
     public abstract bool IsAlive();
+    public abstract Transform GetCameraAttachPoint();
 }
 //TODO Any enitity should be able to use these methods
 //TODO Depends which entity is currently possessed, get it's GameObject's type and then make it perform movement's actions.

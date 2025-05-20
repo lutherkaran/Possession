@@ -31,14 +31,15 @@ public class Enemy : Entity, IPossessable, IDamageable
 
     // Private Fields
     private Rigidbody rb;
-    [Header("State Machine")]
-    [SerializeField] private string currentState;
-    [SerializeField] private StateMachine stateMachine;
-
 
     [SerializeField] private HealthUI healthUI;
 
-    public Animator anim;
+    [Header("State Machine")]
+    [SerializeField] private string currentState;
+    private StateMachine stateMachine;
+
+
+    private Animator anim;
     public Vector3 defaultVelocity = Vector3.zero;
     public event EventHandler<float> OnEnemyHealthChanged;
 
@@ -60,10 +61,10 @@ public class Enemy : Entity, IPossessable, IDamageable
     private void Initialize()
     {
         health = maxHealth;
-        
+
         rb = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
-        
+
         Agent = GetComponent<NavMeshAgent>();
         defaultVelocity = Agent.velocity;
 
@@ -125,7 +126,7 @@ public class Enemy : Entity, IPossessable, IDamageable
 
         if (player != null && Vector3.Distance(transform.position, player.transform.position) < sightDistance)
         {
-            Vector3 targetDirection = player.transform.position - transform.position - (Vector3.up * eyeHeight);
+            Vector3 targetDirection = player.transform.position - transform.position;
             float angleToPlayer = Vector3.Angle(targetDirection, transform.forward);
 
             if (angleToPlayer >= -fieldOfView && angleToPlayer <= fieldOfView)
@@ -152,5 +153,12 @@ public class Enemy : Entity, IPossessable, IDamageable
     public bool IsSafe() => Vector3.Distance(transform.position, player.transform.position) >= 20f;
 
     public Entity GetEntity() => this;
+
+    public override Transform GetCameraAttachPoint() => cameraAttachPoint;
+
+    public Animator GetAnimator()
+    {
+        return anim;
+    }
 
 }

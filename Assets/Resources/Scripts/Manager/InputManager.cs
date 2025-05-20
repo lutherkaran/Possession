@@ -30,9 +30,9 @@ public class InputManager : MonoBehaviour
 
     }
 
-    private void SetControlledEntity(object sender, GameObject controlledEntity)
+    private void SetControlledEntity(object sender, IPossessable controlledEntity)
     {
-        this.controlledEntity = controlledEntity.GetComponent<Entity>();
+        this.controlledEntity = controlledEntity.GetEntity();
     }
 
     private void HandlePossessionInput(UnityEngine.InputSystem.InputAction.CallbackContext obj)
