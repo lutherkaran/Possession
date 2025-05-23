@@ -1,7 +1,4 @@
-using Codice.Client.BaseCommands;
 using UnityEngine;
-using UnityEngine.InputSystem.HID;
-using UnityEngine.UIElements;
 
 public class Bullet : MonoBehaviour
 {

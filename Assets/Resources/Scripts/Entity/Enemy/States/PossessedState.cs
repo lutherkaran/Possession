@@ -1,10 +1,4 @@
-using Codice.CM.Common;
-using log4net.Util;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using static PlayerInput;
 
 public class PossessedState : BaseState
 {
