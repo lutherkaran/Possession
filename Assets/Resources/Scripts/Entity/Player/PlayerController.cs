@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 [RequireComponent(typeof(InputManager), typeof(CharacterController))]
 
@@ -14,6 +15,7 @@ public class PlayerController : Entity, IPossessable, IDamageable
 
     public float RaycastHitDistance = 40.0f;
 
+    [SerializeField] private Transform gunBarrel;
     [SerializeField] private float maxHealth = 100f;
     [SerializeField] private float health;
 
@@ -58,23 +60,14 @@ public class PlayerController : Entity, IPossessable, IDamageable
     public override void Attack()
     {
         if (this != possessedByPlayer) return;
+
         Ray ray = DrawRayFromCrosshair();
+
         if (Physics.Raycast(ray, out RaycastHit hit, RaycastHitDistance))
         {
-            string tag = hit.transform.gameObject.tag;
-
-            if (hit.transform.CompareTag("Npc"))
-            {
-                Debug.Log("Hiittt to NPC: ");
-            }
-            else if (hit.transform.CompareTag("Player"))
-            {
-                Debug.Log("Unable to Hit");
-            }
-            else if (hit.transform.CompareTag("Enemy"))
-            {
-                hit.transform.GetComponent<Enemy>()?.HealthChanged(UnityEngine.Random.Range(-10f, -20f));
-            }
+            Vector3 shootDirection = (hit.point - gunBarrel.position).normalized;
+            
+            Bullet.Shoot(playerController, hit, gunBarrel.transform, shootDirection);
         }
     }
 
@@ -106,7 +99,9 @@ public class PlayerController : Entity, IPossessable, IDamageable
 
     public float GetMaxHealth() => maxHealth;
 
-    public Entity GetEntity() => this;
+    public Entity GetPossessedEntity() => this;
+
+    public override Entity GetEntity() => this;
 
     public InputManager GetInputManager() => inputManager;
 

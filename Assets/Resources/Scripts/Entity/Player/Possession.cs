@@ -34,21 +34,21 @@ public class Possession
         IPossessable possessableEntity = hit.transform.GetComponent<IPossessable>();
         if (possessableEntity == null) return;
 
-        targetEntity = possessableEntity.GetEntity().gameObject;
+        targetEntity = possessableEntity.GetPossessedEntity().gameObject;
 
-        if (currentPossession.GetEntity() is PlayerController)
+        if (currentPossession.GetPossessedEntity() is PlayerController)
         {
             if (possessableEntity is Enemy && !IsBehindEnemy(targetEntity)) return;
         }
 
         PossessionManager.Instance.ToPossess(targetEntity);
-        currentPossession.GetEntity().StartCoroutine(CameraManager.instance.MovetoPosition(targetEntity));
+        currentPossession.GetPossessedEntity().StartCoroutine(CameraManager.instance.MovetoPosition(targetEntity));
         canPossess = false;
     }
 
     private bool IsBehindEnemy(GameObject enemy)
     {
-        float dotProduct = Vector3.Dot(enemy.transform.forward.normalized, (currentPossession.GetEntity().transform.position - enemy.transform.position).normalized);
+        float dotProduct = Vector3.Dot(enemy.transform.forward.normalized, (currentPossession.GetPossessedEntity().transform.position - enemy.transform.position).normalized);
 
         return dotProduct < 0;
     }

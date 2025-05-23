@@ -32,7 +32,7 @@ public class InputManager : MonoBehaviour
 
     private void SetControlledEntity(object sender, IPossessable controlledEntity)
     {
-        this.controlledEntity = controlledEntity.GetEntity();
+        this.controlledEntity = controlledEntity.GetPossessedEntity();
     }
 
     private void HandlePossessionInput(UnityEngine.InputSystem.InputAction.CallbackContext obj)

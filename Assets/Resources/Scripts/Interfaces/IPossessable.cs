@@ -4,5 +4,5 @@ public interface IPossessable
 {
     void Possessing(GameObject gameObject);
     void Depossessing(GameObject gameObject);
-    Entity GetEntity();
+    Entity GetPossessedEntity();
 }

@@ -45,8 +45,8 @@ public class CameraManager : MonoBehaviour
 
     private void AttachCameraToPossessedObject(object sender, IPossessable possessedObject)
     {
-        currentlyPossessed = possessedObject.GetEntity().gameObject;
-        cameraAttachPoint = possessedObject.GetEntity().GetCameraAttachPoint();
+        currentlyPossessed = possessedObject.GetPossessedEntity().gameObject;
+        cameraAttachPoint = possessedObject.GetPossessedEntity().GetCameraAttachPoint();
 
         StartCoroutine(MovetoPosition(cameraAttachPoint.gameObject));
         cam.transform.SetParent(cameraAttachPoint);

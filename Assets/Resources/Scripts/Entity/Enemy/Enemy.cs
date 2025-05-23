@@ -27,7 +27,6 @@ public class Enemy : Entity, IPossessable, IDamageable
 
     [Header("Weapon Values")]
     public Transform gunBarrel;
-    [SerializeField, Range(0.1f, 10f)] public float fireRate;
 
     // Private Fields
     private Rigidbody rb;
@@ -152,7 +151,9 @@ public class Enemy : Entity, IPossessable, IDamageable
 
     public bool IsSafe() => Vector3.Distance(transform.position, player.transform.position) >= 20f;
 
-    public Entity GetEntity() => this;
+    public Entity GetPossessedEntity() => this;
+
+    public override Entity GetEntity() => this;
 
     public override Transform GetCameraAttachPoint() => cameraAttachPoint;
 

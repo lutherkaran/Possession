@@ -49,6 +49,7 @@ public abstract class Entity : MonoBehaviour
     public abstract void Attack();
     public abstract bool IsAlive();
     public abstract Transform GetCameraAttachPoint();
+    public abstract Entity GetEntity();
 }
 //TODO Any enitity should be able to use these methods
 //TODO Depends which entity is currently possessed, get it's GameObject's type and then make it perform movement's actions.

@@ -58,7 +58,9 @@ public class NPC : Entity, IPossessable
         possessedByPlayer = null;
     }
 
-    public Entity GetEntity() => this;
+    public Entity GetPossessedEntity() => this;
+
+    public override Entity GetEntity() => this;
 
     public override Transform GetCameraAttachPoint() => cameraAttachPoint;
 

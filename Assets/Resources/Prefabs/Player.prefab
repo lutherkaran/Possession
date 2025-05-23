@@ -65,6 +65,7 @@ Transform:
   m_Children:
   - {fileID: 353991182923917877}
   - {fileID: 2676502654155841020}
+  - {fileID: 3387817135395831899}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6159895554935778177
@@ -124,8 +125,40 @@ MonoBehaviour:
   isAlive: 1
   healthUI: {fileID: 0}
   RaycastHitDistance: 40
+  gunBarrel: {fileID: 3387817135395831899}
   maxHealth: 100
   health: 100
+--- !u!1 &5588010878165388471
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3387817135395831899}
+  m_Layer: 0
+  m_Name: GunBarrel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3387817135395831899
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5588010878165388471}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1, y: 2, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7724560283665629164}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &244065637774757342
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -189,6 +222,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Body
       objectReference: {fileID: 0}
+    - target: {fileID: 4172256284338775833, guid: e595ec89310e2644595e09a90f8d3d61,
+        type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: 267ce3daaaaffe7459a4addfbd10eed0, type: 2}
     - target: {fileID: 4865205182590925122, guid: e595ec89310e2644595e09a90f8d3d61,
         type: 3}
       propertyPath: m_LocalPosition.y

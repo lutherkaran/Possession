@@ -15,7 +15,7 @@ public class PossessionManager
         if (possessable)
         {
             if (currentPossessable != null)
-                ToDepossess(currentPossessable.GetEntity().gameObject);
+                ToDepossess(currentPossessable.GetPossessedEntity().gameObject);
 
             currentPossessable = possessable.GetComponent<IPossessable>();
             currentPossessable.Possessing(possessable);
