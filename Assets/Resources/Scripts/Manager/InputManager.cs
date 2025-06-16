@@ -1,17 +1,25 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem.Interactions;
 
 public class InputManager : MonoBehaviour
 {
+    public static InputManager Instance { get; private set; }
+
     public PlayerInput playerInput;
-    public PlayerInput.OnPossessionActions OnPossessionActions;
-    public static PlayerInput.OnFootActions OnFootActions;
+
+    private PlayerInput.OnFootActions OnFootActions;
+    private PlayerInput.OnPossessionActions OnPossessionActions;
 
     private PlayerController player;
     private Entity controlledEntity;
 
+    public event EventHandler OnGamePaused;
+
     private void Awake()
     {
+        Instance = this;
+
         playerInput = new PlayerInput();
         OnFootActions = playerInput.OnFoot;
         OnPossessionActions = playerInput.OnPossession;
@@ -23,11 +31,17 @@ public class InputManager : MonoBehaviour
 
         PossessionManager.Instance.OnPossessed += SetControlledEntity;
         PossessionManager.Instance.ToPossess(player.gameObject);
-        
-        OnPossessionActions.Possession.performed += HandlePossessionInput;
-        OnFootActions.MouseInteraction.performed += ctx => CameraManager.instance.GetMouseAim()?.MouseInteraction();
-        OnFootActions.Attack.performed += ctx => player.Attack();
 
+        OnPossessionActions.Possession.performed += HandlePossessionInput;
+        OnFootActions.MouseInteraction.performed += ctx => CameraManager.instance.GetMouseAim()?.ToggleMouseInteraction();
+        OnFootActions.Attack.performed += ctx => player.Attack();
+        OnFootActions.Pause.performed += Pause_performed;
+
+    }
+
+    private void Pause_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    {
+        OnGamePaused?.Invoke(this, EventArgs.Empty);
     }
 
     private void SetControlledEntity(object sender, IPossessable controlledEntity)
@@ -80,4 +94,7 @@ public class InputManager : MonoBehaviour
     {
         PossessionManager.Instance.OnPossessed -= SetControlledEntity;
     }
+
+    public PlayerInput.OnFootActions GetOnFootActions() => OnFootActions;
+    public PlayerInput.OnPossessionActions GetOnPossessionActions() => OnPossessionActions;
 }

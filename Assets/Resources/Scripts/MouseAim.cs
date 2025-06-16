@@ -24,19 +24,19 @@ public class MouseAim
         }
     }
 
-    public void MouseInteraction()
+    public void ToggleMouseInteraction()
     {
         MouseVisible = !MouseVisible;
 
         if (!MouseVisible)
         {
             Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
+            HideMouse();
         }
         else
         {
             Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
+            ShowMouse();
         }
     }
 
@@ -44,5 +44,15 @@ public class MouseAim
     {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+    }
+
+    public void ShowMouse()
+    {
+        Cursor.visible = true;
+    }
+
+    public void HideMouse()
+    {
+        Cursor.visible = false;
     }
 }

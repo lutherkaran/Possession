@@ -15,7 +15,7 @@ public class CameraManager : MonoBehaviour
     private Transform cameraAttachPoint;
 
     public Camera cam;
-    public static CameraManager instance;
+    public static CameraManager instance { get; private set; }
 
     private void OnEnable()
     {
@@ -54,7 +54,7 @@ public class CameraManager : MonoBehaviour
 
     public IEnumerator MovetoPosition(GameObject currentlyPossessed)
     {
-        InputManager.OnFootActions.Disable();
+        InputManager.Instance.GetOnFootActions().Disable();
         targetPosition = Vector3.zero;
         targetPosition = cameraAttachPoint.position;
 
@@ -63,7 +63,7 @@ public class CameraManager : MonoBehaviour
             cam.transform.position = Vector3.SmoothDamp(cam.transform.position, targetPosition, ref velocity, smoothTime);
             yield return null;
         }
-        InputManager.OnFootActions.Enable();
+        InputManager.Instance.GetOnFootActions().Enable();
     }
 
     public MouseAim GetMouseAim() => mouseAim;

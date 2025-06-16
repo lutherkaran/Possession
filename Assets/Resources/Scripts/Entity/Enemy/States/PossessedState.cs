@@ -13,8 +13,8 @@ public class PossessedState : BaseState
 
     public override void Perform()
     {
-        moveDirection.x = InputManager.OnFootActions.Movement.ReadValue<Vector2>().x;
-        moveDirection.z = InputManager.OnFootActions.Movement.ReadValue<Vector2>().y;
+        moveDirection.x = InputManager.Instance.GetOnFootActions().Movement.ReadValue<Vector2>().x;
+        moveDirection.z = InputManager.Instance.GetOnFootActions().Movement.ReadValue<Vector2>().y;
         moveDirection.y = 0;
 
         if (PossessionManager.Instance.GetCurrentPossessable() == enemy.possessedByPlayer)
