@@ -3,12 +3,17 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-[RequireComponent(typeof(InputManager), typeof(CharacterController))]
+[RequireComponent(typeof(CharacterController))]
 
 public class PlayerController : Entity, IPossessable, IDamageable
 {
-    [SerializeField] private bool isAlive = true;
+    public static PlayerController Instance { get; private set; }
+
     [SerializeField] private HealthUI healthUI;
+
+    private bool isAlive = true;
+
+    public bool isPossessed { get; private set; }
 
     private CharacterController characterController;
     private InputManager inputManager;
@@ -23,6 +28,15 @@ public class PlayerController : Entity, IPossessable, IDamageable
 
     private void Awake()
     {
+         if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject); // Prevent duplicates
+            return;
+        }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject); 
+
         health = maxHealth;
         characterController = GetComponent<CharacterController>();
         inputManager = GetComponent<InputManager>();
@@ -81,12 +95,14 @@ public class PlayerController : Entity, IPossessable, IDamageable
     {
         //Debug.Log($"Possessing... {go.name}");
         possessedByPlayer = PossessionManager.Instance.GetCurrentPossessable();
+        isPossessed = true;
     }
 
     public void Depossessing(GameObject go)
     {
         //Debug.Log($"DePossessing... {go.name}");
         possessedByPlayer = null;
+        isPossessed = false;
     }
 
     public void HealthChanged(float healthChangedValue)
@@ -109,4 +125,7 @@ public class PlayerController : Entity, IPossessable, IDamageable
 
     public override Transform GetCameraAttachPoint() => cameraAttachPoint;
 
+    public override float GetEntityPossessionTimerMax() => entityPossessionTimerMax;
+
+    public override float GetPossessionCooldownTimerMax() => possessionCooldownTimerMax;
 }

@@ -16,8 +16,11 @@ public abstract class Entity : MonoBehaviour
     protected bool sprinting = false;
     protected bool isGrounded = true;
 
-    [SerializeField] protected Transform cameraAttachPoint;
 
+    [SerializeField] protected float entityPossessionTimerMax;
+    [SerializeField] protected float possessionCooldownTimerMax;
+
+    [SerializeField] protected Transform cameraAttachPoint;
     [SerializeField] protected LayerMask PossessableLayerMask;
 
 
@@ -50,6 +53,8 @@ public abstract class Entity : MonoBehaviour
     public abstract bool IsAlive();
     public abstract Transform GetCameraAttachPoint();
     public abstract Entity GetEntity();
+    public abstract float GetEntityPossessionTimerMax();
+    public abstract float GetPossessionCooldownTimerMax();
 }
 //TODO Any enitity should be able to use these methods
 //TODO Depends which entity is currently possessed, get it's GameObject's type and then make it perform movement's actions.

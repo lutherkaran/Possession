@@ -35,7 +35,7 @@ public class Bullet : MonoBehaviour
 
         Vector3 spreadDirection = Quaternion.AngleAxis(Random.Range(-3f, 3f), Vector3.up) * direction;
 
-        GameObject bullet = GameObject.Instantiate(Resources.Load("Prefabs/Bullet") as GameObject, gunBarrel.position, Quaternion.LookRotation(spreadDirection));
+        GameObject bullet = GameObject.Instantiate(Resources.Load("Prefabs/Others/Bullet") as GameObject, gunBarrel.position, Quaternion.LookRotation(spreadDirection));
         rb.velocity = /*Quaternion.AngleAxis(Random.Range(-3f, 3f), Vector3.up) **/ direction.normalized * bulletSpeed;
         Debug.DrawRay(gunBarrel.position, direction * bulletSpeed, Color.red, 2f);
     }

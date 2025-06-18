@@ -31,12 +31,15 @@ public class GameManager : MonoBehaviour
     {
         if (Instance != null) { Debug.LogError("There's more than one GameManager in the Scene"); }
         Instance = this;
+        DontDestroyOnLoad(this.gameObject);
+
         gameState = GameState.WaitingToStart;
     }
 
     private void Start()
     {
         InputManager.Instance.OnGamePaused += GameManager_OnGamePaused;
+        Debug.Log("InputManager: " + InputManager.Instance);
     }
 
 
@@ -81,11 +84,13 @@ public class GameManager : MonoBehaviour
         {
             Time.timeScale = 0f;
             OnGamePaused?.Invoke(this, EventArgs.Empty);
+            CameraManager.instance.GetMouseAim().ToggleMouseInteraction();
         }
         else
         {
             Time.timeScale += 1f;
             OnGameUnpaused?.Invoke(this, EventArgs.Empty);
+            CameraManager.instance.GetMouseAim().ToggleMouseInteraction();
         }
     }
 }

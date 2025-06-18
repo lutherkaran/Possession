@@ -76,7 +76,9 @@ public class Enemy : Entity, IPossessable, IDamageable
     {
         player = FindAnyObjectByType<PlayerController>().gameObject;
         healthUI = GetComponentInChildren<HealthUI>();
+
     }
+
 
     private void Update()
     {
@@ -157,9 +159,9 @@ public class Enemy : Entity, IPossessable, IDamageable
 
     public override Transform GetCameraAttachPoint() => cameraAttachPoint;
 
-    public Animator GetAnimator()
-    {
-        return anim;
-    }
+    public Animator GetAnimator() => anim;
 
+    public override float GetEntityPossessionTimerMax() => entityPossessionTimerMax;
+
+    public override float GetPossessionCooldownTimerMax() => possessionCooldownTimerMax;
 }

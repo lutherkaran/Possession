@@ -6,7 +6,7 @@ public class Possession
     private IPossessable currentPossession;
     private bool canPossess = true;
 
-    public float RaycastHitDistance = 40.0f;
+    private float RaycastHitDistance = 40.0f;
 
     public Possession(IPossessable possessed)
     {

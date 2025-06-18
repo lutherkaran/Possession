@@ -52,6 +52,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9660a2e7f405cce46bee87891122f542, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  possessionTimerMax: 60
+  possessionCooldownTimerMax: 8
   cameraAttachPoint: {fileID: 2507531698593563178}
   PossessableLayerMask:
     serializedVersion: 2

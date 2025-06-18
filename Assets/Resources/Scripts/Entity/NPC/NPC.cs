@@ -64,4 +64,8 @@ public class NPC : Entity, IPossessable
 
     public override Transform GetCameraAttachPoint() => cameraAttachPoint;
 
+    public override float GetEntityPossessionTimerMax() => entityPossessionTimerMax;
+
+    public override float GetPossessionCooldownTimerMax() => possessionCooldownTimerMax;
+
 }
