@@ -8,6 +8,7 @@ public class Bullet : MonoBehaviour
 
     private static Rigidbody rb;
     private static Entity attackingEntity;
+    private static GameObject bulletPrefab;
 
     private void Awake()
     {
@@ -16,13 +17,14 @@ public class Bullet : MonoBehaviour
 
     public static void Shoot(Entity entity, Transform gunBarrel, Vector3 direction)
     {
+        bulletPrefab = Resources.Load("Prefabs/Others/Bullet") as GameObject;
         shotTimer += Time.deltaTime;
 
         if (shotTimer > fireRate)
         {
             Vector3 spreadDirection = Quaternion.AngleAxis(Random.Range(-3f, 3f), Vector3.up) * direction.normalized;
 
-            GameObject bullet = GameObject.Instantiate(Resources.Load("Prefabs/Bullet") as GameObject, gunBarrel.position, Quaternion.identity);
+            GameObject.Instantiate(bulletPrefab, gunBarrel.position, Quaternion.identity);
             rb.velocity = spreadDirection * bulletSpeed;
             Debug.DrawRay(gunBarrel.position, direction * bulletSpeed, Color.red, 2f);
             shotTimer = 1;
@@ -31,11 +33,13 @@ public class Bullet : MonoBehaviour
 
     public static void Shoot(Entity entity, RaycastHit hit, Transform gunBarrel, Vector3 direction)
     {
+        bulletPrefab = Resources.Load("Prefabs/Others/Bullet") as GameObject;
+
         attackingEntity = entity;
 
         Vector3 spreadDirection = Quaternion.AngleAxis(Random.Range(-3f, 3f), Vector3.up) * direction;
 
-        GameObject bullet = GameObject.Instantiate(Resources.Load("Prefabs/Others/Bullet") as GameObject, gunBarrel.position, Quaternion.LookRotation(spreadDirection));
+        GameObject.Instantiate(bulletPrefab, gunBarrel.position, Quaternion.LookRotation(spreadDirection));
         rb.velocity = /*Quaternion.AngleAxis(Random.Range(-3f, 3f), Vector3.up) **/ direction.normalized * bulletSpeed;
         Debug.DrawRay(gunBarrel.position, direction * bulletSpeed, Color.red, 2f);
     }

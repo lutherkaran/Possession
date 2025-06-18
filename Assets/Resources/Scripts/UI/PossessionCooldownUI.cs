@@ -47,11 +47,11 @@ public class PossessionCooldownUI : MonoBehaviour
         if (coolingDown)
         {
             cooldownTimer += Time.deltaTime;
-            cooldownTimerImage.fillAmount = cooldownTimer / possessionCooldownTimerMax;
+            cooldownTimerImage.fillAmount = 1 - cooldownTimer / possessionCooldownTimerMax;
 
             if (cooldownTimer >= possessionCooldownTimerMax)
             {
-                cooldownTimerImage.fillAmount = 0;
+                cooldownTimerImage.fillAmount = 1;
                 cooldownTimer = 0;
 
                 coolingDown = false;
