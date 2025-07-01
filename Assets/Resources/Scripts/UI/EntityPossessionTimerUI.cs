@@ -2,17 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+
 /*
- * For how long a player can possess an entity and keep the possession. if the player posseses an entity having 10s then possession time is of 10s and in this 10s player can possess other
- * entities before getting depossessed automatically.
+ * For how long a player can possess an entity and keep the possession. if the player posseses an entity having 10s 
+ * then possession time is of 10s so the player will deposess the enitity automatically and reposesss itself.
  */
-public class PossessionTimerUI : MonoBehaviour
+
+public class EntityPossessionTimerUI : MonoBehaviour
 {
     [SerializeField] private Image possessionTimerImage;
     [SerializeField] private PlayerController player;
 
     private float entityPossessionTimerMax;
-    private float defaultPossessionTimerMax;
     private float possessionTimer;
 
     private bool possession = false;
@@ -52,12 +53,6 @@ public class PossessionTimerUI : MonoBehaviour
     {
         if (possession)
         {
-            defaultPossessionTimerMax -= Time.deltaTime;
-            if (defaultPossessionTimerMax <= 0)
-            {
-                PossessionManager.Instance.GetCurrentPossession()?.RepossessPlayer(player.gameObject);
-            }
-            else
             {
                 if (isTimerOn)
                 {
@@ -82,7 +77,6 @@ public class PossessionTimerUI : MonoBehaviour
     {
         isTimerOn = false;
         possession = false;
-        defaultPossessionTimerMax = 25f;
         possessionTimerImage.fillAmount = 1f;
         possessionTimer = 1f;
     }

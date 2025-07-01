@@ -39,9 +39,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         InputManager.Instance.OnGamePaused += GameManager_OnGamePaused;
-        Debug.Log("InputManager: " + InputManager.Instance);
     }
-
 
     private void Update()
     {
@@ -69,7 +67,6 @@ public class GameManager : MonoBehaviour
                 break;
         }
     }
-
 
     private void GameManager_OnGamePaused(object sender, System.EventArgs e)
     {

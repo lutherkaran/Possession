@@ -3,9 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PossessionCooldownUI : MonoBehaviour
+/*
+ Summary: This class implements a cooldown logic i.e unique to all entities For example when a player possesses an entity then during this
+ cooldown the player cannot possess another entity and this cooldown timer is different for each entity.
+ */
+
+public class EntityPossessionCooldownUI : MonoBehaviour
 {
-    public static PossessionCooldownUI Instance { get; private set; }
+    public static EntityPossessionCooldownUI Instance { get; private set; }
 
     [SerializeField] private Image cooldownTimerImage;
     [SerializeField] private PlayerController player;

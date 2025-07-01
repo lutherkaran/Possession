@@ -28,14 +28,14 @@ public class PlayerController : Entity, IPossessable, IDamageable
 
     private void Awake()
     {
-         if (Instance != null && Instance != this)
+        if (Instance != null && Instance != this)
         {
             Destroy(gameObject); // Prevent duplicates
             return;
         }
 
         Instance = this;
-        DontDestroyOnLoad(gameObject); 
+        DontDestroyOnLoad(gameObject);
 
         health = maxHealth;
         characterController = GetComponent<CharacterController>();
@@ -80,7 +80,7 @@ public class PlayerController : Entity, IPossessable, IDamageable
         if (Physics.Raycast(ray, out RaycastHit hit, RaycastHitDistance))
         {
             Vector3 shootDirection = (hit.point - gunBarrel.position).normalized;
-            
+
             Bullet.Shoot(playerController, hit, gunBarrel.transform, shootDirection);
         }
     }

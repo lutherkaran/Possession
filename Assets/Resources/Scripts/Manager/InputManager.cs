@@ -51,7 +51,7 @@ public class InputManager : MonoBehaviour
 
     private void HandlePossessionInput(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        if (PossessionCooldownUI.Instance.GetCoolingDown()) return; // if can't possess then return
+        if (EntityPossessionCooldownUI.Instance.GetCoolingDown()) return; // if can't possess then return
 
         if (obj.interaction is PressInteraction)
         {
