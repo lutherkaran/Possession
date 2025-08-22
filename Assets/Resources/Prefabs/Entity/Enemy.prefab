@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 2442049557484612298}
   - component: {fileID: 8833404179622063895}
   - component: {fileID: 8482208531808861374}
-  - component: {fileID: 6911675451125383817}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -52,13 +51,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9660a2e7f405cce46bee87891122f542, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  possessionTimerMax: 60
+  entityPossessionTimerMax: 0
   possessionCooldownTimerMax: 8
   cameraAttachPoint: {fileID: 2507531698593563178}
   PossessableLayerMask:
     serializedVersion: 2
     m_Bits: 256
   player: {fileID: 0}
+  enemyAnimator: {fileID: 1844821719531932094}
   enemyPath: {fileID: 0}
   fieldOfView: 180
   sightDistance: 20
@@ -103,7 +103,7 @@ CapsuleCollider:
   m_Radius: 0.7
   m_Height: 3.5
   m_Direction: 1
-  m_Center: {x: 0, y: 2, z: 0}
+  m_Center: {x: 0, y: 1.5, z: 0}
 --- !u!195 &8482208531808861374
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -123,30 +123,9 @@ NavMeshAgent:
   m_AutoBraking: 1
   m_AutoRepath: 1
   m_Height: 3
-  m_BaseOffset: -0.25
+  m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!95 &6911675451125383817
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2005181207684669656}
-  m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: fdd090b0f28059b4e94398471c2234af, type: 3}
-  m_Controller: {fileID: 9100000, guid: cc9c0c566cd3ce149900d88c84f1aa4e, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &4670296490969198329
 GameObject:
   m_ObjectHideFlags: 0
@@ -513,7 +492,12 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: e595ec89310e2644595e09a90f8d3d61,
         type: 3}
       propertyPath: m_Name
-      value: Body
+      value: EnemyVisual
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e595ec89310e2644595e09a90f8d3d61,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4172256284338775833, guid: e595ec89310e2644595e09a90f8d3d61,
         type: 3}
@@ -528,8 +512,55 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e595ec89310e2644595e09a90f8d3d61,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8989774017728209360}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e595ec89310e2644595e09a90f8d3d61,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1844821719531932094}
   m_SourcePrefab: {fileID: 100100000, guid: e595ec89310e2644595e09a90f8d3d61, type: 3}
+--- !u!1 &8406583943806785185 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: e595ec89310e2644595e09a90f8d3d61,
+    type: 3}
+  m_PrefabInstance: {fileID: 8677106482859617264}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &8989774017728209360
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8406583943806785185}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: fdd090b0f28059b4e94398471c2234af, type: 3}
+  m_Controller: {fileID: 9100000, guid: cc9c0c566cd3ce149900d88c84f1aa4e, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1844821719531932094
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8406583943806785185}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0a1ef5fcda36844a911cecea6746a77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &9214926834266491931 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: e595ec89310e2644595e09a90f8d3d61,

@@ -1540,7 +1540,7 @@ PrefabInstance:
     - target: {fileID: 722940052348616811, guid: 7736b7b037a34f3499ac34c62c098cc4,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -0.000061035156
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 722940052348616811, guid: 7736b7b037a34f3499ac34c62c098cc4,
         type: 3}
@@ -3254,6 +3254,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4670296490969198329, guid: 6293859972d35e545b5cb195625faf4d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5219655988053613314, guid: 6293859972d35e545b5cb195625faf4d,
         type: 3}
       propertyPath: enemyPath
@@ -3263,6 +3268,11 @@ PrefabInstance:
         type: 3}
       propertyPath: entityPossessionTimerMax
       value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 9214926834266491931, guid: 6293859972d35e545b5cb195625faf4d,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

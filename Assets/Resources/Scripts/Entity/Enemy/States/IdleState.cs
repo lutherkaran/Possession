@@ -2,12 +2,20 @@ using UnityEngine;
 
 public class IdleState : BaseState
 {
+    private Enemy enemy;
+    private EnemyAnimator enemyAnimator;
+
+    public IdleState(Enemy _enemy) : base(_enemy.gameObject)
+    {
+        enemy = _enemy;
+    }
+
     public float waitTimer = 0;
     public float duration = 0;
 
     public override void Enter()
     {
-        enemy.GetAnimator().SetBool(Enemy.IS_IDLE, true);
+        enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Idle, true);
         enemy.Agent.velocity = Vector3.zero;
         enemy.fieldOfView = 90f;
         duration = Random.Range(4f, 10f);
@@ -16,9 +24,9 @@ public class IdleState : BaseState
 
     public override void Perform()
     {
-        if (enemy.CanSeePlayer()) 
-        { 
-            stateMachine.ChangeState(new AttackState());
+        if (enemy.CanSeePlayer())
+        {
+            stateMachine.ChangeState(new AttackState(enemy));
         }
         else
         {
@@ -28,7 +36,7 @@ public class IdleState : BaseState
 
     public override void Exit()
     {
-        enemy.GetAnimator().SetBool(Enemy.IS_IDLE, false);
+        enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Idle, false);
         waitTimer = 0;
         enemy.Agent.velocity = enemy.defaultVelocity;
     }
@@ -38,7 +46,7 @@ public class IdleState : BaseState
         waitTimer += Time.deltaTime;
         if (waitTimer > duration)
         {
-            stateMachine.ChangeState(new PatrolState());
+            stateMachine.ChangeState(new PatrolState(enemy));
         }
     }
 }

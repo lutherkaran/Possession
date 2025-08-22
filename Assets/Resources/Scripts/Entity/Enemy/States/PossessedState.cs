@@ -5,6 +5,13 @@ public class PossessedState : BaseState
     private readonly float WalkSpeed = 10f;
     private Vector3 moveDirection;
 
+    private Enemy enemy;
+
+    public PossessedState(Enemy _enemy) : base(_enemy.gameObject)
+    {
+        enemy = _enemy;
+    }
+
     public override void Enter()
     {
         enemy.Agent.velocity = Vector3.zero;

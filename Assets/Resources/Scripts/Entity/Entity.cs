@@ -24,7 +24,7 @@ public abstract class Entity : MonoBehaviour
     [SerializeField] protected LayerMask PossessableLayerMask;
 
 
-    public void SetPlayer(PlayerController player)
+    protected void SetPlayer(PlayerController player)
     {
         playerController = player;
     }
@@ -50,6 +50,7 @@ public abstract class Entity : MonoBehaviour
     }
 
     public abstract void Attack();
+    
     public abstract bool IsAlive();
     public abstract Transform GetCameraAttachPoint();
     public abstract Entity GetEntity();

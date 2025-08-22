@@ -1,25 +1,19 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class Enemy : Entity, IPossessable, IDamageable
 {
-    // Constants
-    public const string IS_IDLE = "IsIdle";
-    public const string IS_PATROLLING = "IsPatrolling";
-    public const string IS_SEARCHING = "IsSearching";
-    public const string IS_ATTACKING = "IsAttacking";
-    public const string IS_FLEEING = "IsFleeing";
-
     // Public Properties
     public GameObject player;
+    [SerializeField] private EnemyAnimator enemyAnimator;
 
     [Header("Pathfinding")]
     [SerializeField] public EnemyPath enemyPath;
     [SerializeField] public Vector3 LastKnownPos { get; set; }
     [SerializeField] public NavMeshAgent Agent { get; private set; }
 
-    // Serialized Fields
     [Header("Sight Values")]
     public float fieldOfView = 90f;
     [SerializeField] private float sightDistance = 20f;
@@ -37,8 +31,6 @@ public class Enemy : Entity, IPossessable, IDamageable
     [SerializeField] private string currentState;
     private StateMachine stateMachine;
 
-
-    private Animator anim;
     public Vector3 defaultVelocity = Vector3.zero;
     public event EventHandler<float> OnEnemyHealthChanged;
 
@@ -46,6 +38,8 @@ public class Enemy : Entity, IPossessable, IDamageable
 
     [SerializeField] private float maxHealth = 100f;
     [SerializeField] private float health;
+
+    private Dictionary<Type, BaseState> statesDictionary;
 
     private void Awake()
     {
@@ -55,30 +49,39 @@ public class Enemy : Entity, IPossessable, IDamageable
     private void Start()
     {
         PostInitialize();
+        InitializeStatesDictionary();
+        stateMachine.Initialise(this);
     }
 
     private void Initialize()
     {
         health = maxHealth;
-
         rb = GetComponent<Rigidbody>();
-        anim = GetComponent<Animator>();
-
         Agent = GetComponent<NavMeshAgent>();
         defaultVelocity = Agent.velocity;
-
-        stateMachine = GetComponent<StateMachine>();
-        stateMachine.Initialise();
-
     }
 
     private void PostInitialize()
     {
+        enemyAnimator = GetComponentInChildren<EnemyAnimator>();
         player = FindAnyObjectByType<PlayerController>().gameObject;
         healthUI = GetComponentInChildren<HealthUI>();
-
+        stateMachine = GetComponent<StateMachine>();
     }
 
+    private void InitializeStatesDictionary()
+    {
+        statesDictionary = new Dictionary<Type, BaseState>()
+        {
+            {typeof(IdleState), new IdleState(this) },
+            {typeof(PatrolState), new PatrolState(this) },
+            {typeof(AttackState), new AttackState(this) },
+            {typeof(HealState), new HealState(this) },
+            {typeof(FleeState), new FleeState(this) },
+            {typeof(SearchState), new SearchState(this) },
+            {typeof(PossessedState), new PossessedState(this) },
+        };
+    }
 
     private void Update()
     {
@@ -88,7 +91,7 @@ public class Enemy : Entity, IPossessable, IDamageable
     // Public Overrides
     public override void Attack()
     {
-        stateMachine.ChangeState(new AttackState());
+        //stateMachine.ChangeState(new AttackState());
     }
 
     public override void ProcessJump()
@@ -106,12 +109,12 @@ public class Enemy : Entity, IPossessable, IDamageable
     public void Possessing(GameObject go)
     {
         possessedByPlayer = PossessionManager.Instance.GetCurrentPossessable();
-        stateMachine.ChangeState(new PossessedState());
+        stateMachine.ChangeState(new PossessedState(this));
     }
 
     public void Depossessing(GameObject go)
     {
-        stateMachine.ChangeState(new IdleState());
+        stateMachine.ChangeState(new IdleState(this));
     }
 
     public void HealthChanged(float healthChangedValue)
@@ -159,7 +162,7 @@ public class Enemy : Entity, IPossessable, IDamageable
 
     public override Transform GetCameraAttachPoint() => cameraAttachPoint;
 
-    public Animator GetAnimator() => anim;
+    public EnemyAnimator GetAnimator() => enemyAnimator;
 
     public override float GetEntityPossessionTimerMax() => entityPossessionTimerMax;
 

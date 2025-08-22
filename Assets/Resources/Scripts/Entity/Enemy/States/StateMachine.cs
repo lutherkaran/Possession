@@ -3,11 +3,16 @@ using UnityEngine;
 public class StateMachine : MonoBehaviour
 {
     public BaseState activeState;
+    private Enemy enemy;
 
-    public void Initialise()
+    public void Initialise<T>(T type) where T : Entity
     {
-        ChangeState(new IdleState());
-        activeState.enemy.OnEnemyHealthChanged += HealthChanged;
+        if (type is Enemy)
+        {
+            enemy = type.GetComponent<Enemy>();
+            enemy.OnEnemyHealthChanged += HealthChanged;
+            ChangeState(new IdleState(enemy));
+        }
     }
 
     private void Update()
@@ -35,7 +40,7 @@ public class StateMachine : MonoBehaviour
         if (activeState != null)
         {
             activeState.stateMachine = this;
-            activeState.enemy = GetComponent<Enemy>();
+            //activeState.enemy = GetComponent<Enemy>();
             activeState.Enter();
         }
     }
@@ -44,12 +49,12 @@ public class StateMachine : MonoBehaviour
     {
         if (health > 30 && health < 50)
         {
-            ChangeState(new FleeState());
+            ChangeState(new FleeState(enemy));
         }
 
         else if (health < 30)
         {
-            ChangeState(new HealState());
+            ChangeState(new HealState(enemy));
         }
     }
 }

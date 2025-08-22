@@ -3,6 +3,13 @@ using UnityEngine;
 
 public class SearchState : BaseState
 {
+    private Enemy enemy;
+
+    public SearchState(Enemy _enemy): base(_enemy.gameObject)
+    {
+        enemy = _enemy;
+    }
+
     private float searchTimer;
     private float moveTimer;
     private bool isSettingIdle;
@@ -10,7 +17,8 @@ public class SearchState : BaseState
 
     public override void Enter()
     {
-        enemy.GetAnimator().SetBool(Enemy.IS_SEARCHING, true);
+        enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Searching, true);
+
         enemy.Agent.SetDestination(enemy.LastKnownPos);
         enemy.Agent.velocity = enemy.defaultVelocity * 2f;
         enemy.fieldOfView = 180f;
@@ -21,7 +29,7 @@ public class SearchState : BaseState
     {
         if (enemy.CanSeePlayer())
         {
-            stateMachine.ChangeState(new AttackState());
+            stateMachine.ChangeState(new AttackState(enemy));
         }
 
         if (enemy.Agent.remainingDistance <= enemy.Agent.stoppingDistance)
@@ -37,13 +45,14 @@ public class SearchState : BaseState
 
         if (searchTimer > searchDuration)
         {
-            stateMachine.ChangeState(new PatrolState());
+            stateMachine.ChangeState(new PatrolState(enemy));
         }
     }
 
     public override void Exit()
     {
-        enemy.GetAnimator().SetBool(Enemy.IS_SEARCHING, false);
+        enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Searching, false);
+
         searchTimer = 0;
         moveTimer = 0;
         isSettingIdle = false;
@@ -55,7 +64,8 @@ public class SearchState : BaseState
     private IEnumerator SettingUpIdle()
     {
         isSettingIdle = true;
-        enemy.GetAnimator().Play("Idle");
+        enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Idle, true);
+
         yield return new WaitForSeconds(3f);
         isSettingIdle = false; // Allow future idles
         enemy.Agent.SetDestination(enemy.transform.position + (Random.insideUnitSphere * 30f));

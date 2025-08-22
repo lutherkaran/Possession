@@ -3,6 +3,13 @@ using UnityEngine;
 
 public class HealState : BaseState
 {
+    private Enemy enemy;
+
+    public HealState(Enemy _enemy) : base(_enemy.gameObject)
+    {
+        enemy = _enemy;
+    }
+
     EventOnlyInteractable interactable;
     bool isHealing;
     Vector3 healingPosition;
@@ -35,9 +42,11 @@ public class HealState : BaseState
     {
         isHealing = true;
         _interactable?.BaseInteract();
-        enemy.GetAnimator().Play("Idle");// (Enemy.IS_IDLE, true); // Should be Heal Animation
+        //enemy.GetAnimator().Play("Idle");// (Enemy.IS_IDLE, true); // Should be Heal Animation
+        enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Idle, true);
+
         yield return new WaitForSeconds(10f);
-        stateMachine.ChangeState(new PatrolState());
+        stateMachine.ChangeState(new PatrolState(enemy));
     }
 }
 

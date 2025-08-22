@@ -2,17 +2,24 @@ using UnityEngine;
 
 public class AttackState : BaseState
 {
+    private Enemy enemy;
+
+    public AttackState(Enemy _enemy) : base(_enemy.gameObject)
+    {
+        enemy = _enemy;
+    }
+
     private float moveTimer;
     private float losePlayerTimer;
 
     public override void Enter()
     {
-        enemy.GetAnimator().SetBool(Enemy.IS_ATTACKING, true);
+        enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Attacking, true);
     }
 
     public override void Exit()
     {
-        enemy.GetAnimator().SetBool(Enemy.IS_ATTACKING, false);
+        enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Attacking, false);
         enemy.Agent.velocity = enemy.defaultVelocity;
         moveTimer = 0;
         losePlayerTimer = 0;
@@ -42,7 +49,7 @@ public class AttackState : BaseState
             if (losePlayerTimer > 5)
             {
                 enemy.LastKnownPos = enemy.player.transform.position;
-                stateMachine.ChangeState(new SearchState());
+                stateMachine.ChangeState(new SearchState(enemy));
             }
         }
     }
