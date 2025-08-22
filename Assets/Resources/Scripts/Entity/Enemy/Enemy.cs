@@ -5,37 +5,34 @@ using UnityEngine.AI;
 
 public class Enemy : Entity, IPossessable, IDamageable
 {
-    // Public Properties
-    public GameObject player;
-    [SerializeField] private EnemyAnimator enemyAnimator;
 
-    [Header("Pathfinding")]
+    public event EventHandler<IDamageable.OnDamagedEventArgs> OnDamaged;
+
+    public GameObject player;
+
+    [SerializeField] private EnemyAnimator enemyAnimator;
+    [SerializeField] private HealthUI healthUI;
+    
+    private StateMachine stateMachine;
+
+    [Header("Pathfinding Properties")]
     [SerializeField] public EnemyPath enemyPath;
     [SerializeField] public Vector3 LastKnownPos { get; set; }
     [SerializeField] public NavMeshAgent Agent { get; private set; }
+    [SerializeField] public Vector3 defaultVelocity = Vector3.zero;
 
-    [Header("Sight Values")]
+    [Header("Sight Properties")]
     public float fieldOfView = 90f;
     [SerializeField] private float sightDistance = 20f;
     [SerializeField] private float eyeHeight;
 
-    [Header("Weapon Values")]
+    [Header("Weapon Properties")]
     public Transform gunBarrel;
-
-    // Private Fields
-    private Rigidbody rb;
-
-    [SerializeField] private HealthUI healthUI;
 
     [Header("State Machine")]
     [SerializeField] private string currentState;
-    private StateMachine stateMachine;
 
-    public Vector3 defaultVelocity = Vector3.zero;
-    public event EventHandler<float> OnEnemyHealthChanged;
-
-    public event EventHandler<IDamageable.OnDamagedEventArgs> OnDamaged;
-
+    [Header("Health Properties")]
     [SerializeField] private float maxHealth = 100f;
     [SerializeField] private float health;
 
@@ -56,7 +53,6 @@ public class Enemy : Entity, IPossessable, IDamageable
     private void Initialize()
     {
         health = maxHealth;
-        rb = GetComponent<Rigidbody>();
         Agent = GetComponent<NavMeshAgent>();
         defaultVelocity = Agent.velocity;
     }
@@ -120,7 +116,6 @@ public class Enemy : Entity, IPossessable, IDamageable
     public void HealthChanged(float healthChangedValue)
     {
         OnDamaged?.Invoke(this, new IDamageable.OnDamagedEventArgs { health = healthChangedValue });
-        OnEnemyHealthChanged?.Invoke(this, healthUI.GetHealth());
         health = healthUI.GetHealth();
     }
 

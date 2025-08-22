@@ -10,8 +10,21 @@ public class StateMachine : MonoBehaviour
         if (type is Enemy)
         {
             enemy = type.GetComponent<Enemy>();
-            enemy.OnEnemyHealthChanged += HealthChanged;
+            enemy.OnDamaged += Enemy_OnDamaged;
             ChangeState(new IdleState(enemy));
+        }
+    }
+
+    private void Enemy_OnDamaged(object sender, IDamageable.OnDamagedEventArgs e)
+    {
+        if (enemy.GetHealth() > 30 && enemy.GetHealth() < 50)
+        {
+            ChangeState(new FleeState(enemy));
+        }
+
+        else if (enemy.GetHealth() < 30)
+        {
+            ChangeState(new HealState(enemy));
         }
     }
 
@@ -42,19 +55,6 @@ public class StateMachine : MonoBehaviour
             activeState.stateMachine = this;
             //activeState.enemy = GetComponent<Enemy>();
             activeState.Enter();
-        }
-    }
-
-    private void HealthChanged(object sender, float health)
-    {
-        if (health > 30 && health < 50)
-        {
-            ChangeState(new FleeState(enemy));
-        }
-
-        else if (health < 30)
-        {
-            ChangeState(new HealState(enemy));
         }
     }
 }

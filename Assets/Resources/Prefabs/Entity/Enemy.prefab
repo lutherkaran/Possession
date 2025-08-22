@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 2286950462992427975}
   - component: {fileID: 5219655988053613314}
-  - component: {fileID: 2442049557484612298}
   - component: {fileID: 8833404179622063895}
   - component: {fileID: 8482208531808861374}
+  - component: {fileID: 2692998146641383005}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -59,28 +59,17 @@ MonoBehaviour:
     m_Bits: 256
   player: {fileID: 0}
   enemyAnimator: {fileID: 1844821719531932094}
+  healthUI: {fileID: 520791666268907717}
+  stateMachine: {fileID: 0}
   enemyPath: {fileID: 0}
+  defaultVelocity: {x: 0, y: 0, z: 0}
   fieldOfView: 180
   sightDistance: 20
   eyeHeight: 1.4
   gunBarrel: {fileID: 2098210427522331679}
-  healthUI: {fileID: 520791666268907717}
   currentState: 
-  defaultVelocity: {x: 0, y: 0, z: 0}
   maxHealth: 100
   health: 0
---- !u!114 &2442049557484612298
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2005181207684669656}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fb5736e5c23f6a146849e5c59f958680, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!136 &8833404179622063895
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -126,6 +115,18 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &2692998146641383005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2005181207684669656}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb5736e5c23f6a146849e5c59f958680, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4670296490969198329
 GameObject:
   m_ObjectHideFlags: 0

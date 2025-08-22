@@ -40,12 +40,12 @@ public class HealState : BaseState
 
     IEnumerator Interacting(Interactable _interactable)
     {
+        enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Idle, true);
         isHealing = true;
         _interactable?.BaseInteract();
-        //enemy.GetAnimator().Play("Idle");// (Enemy.IS_IDLE, true); // Should be Heal Animation
-        enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Idle, true);
+        yield return new WaitForSeconds(5f);
 
-        yield return new WaitForSeconds(10f);
+        enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Idle, false);
         stateMachine.ChangeState(new PatrolState(enemy));
     }
 }
