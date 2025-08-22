@@ -12,12 +12,12 @@ public class AttackState : BaseState
     private float moveTimer;
     private float losePlayerTimer;
 
-    public override void Enter()
+    protected override void EnterState()
     {
         enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Attacking, true);
     }
 
-    public override void Exit()
+    protected override void ExitState()
     {
         enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Attacking, false);
         enemy.Agent.velocity = enemy.defaultVelocity;
@@ -25,7 +25,7 @@ public class AttackState : BaseState
         losePlayerTimer = 0;
     }
 
-    public override void Perform()
+    protected override void PerformState()
     {
         if (enemy.CanSeePlayer())
         {

@@ -12,13 +12,13 @@ public class PossessedState : BaseState
         enemy = _enemy;
     }
 
-    public override void Enter()
+    protected override void EnterState()
     {
         enemy.Agent.velocity = Vector3.zero;
         enemy.Agent.isStopped = true;
     }
 
-    public override void Perform()
+    protected override void PerformState()
     {
         moveDirection.x = InputManager.Instance.GetOnFootActions().Movement.ReadValue<Vector2>().x;
         moveDirection.z = InputManager.Instance.GetOnFootActions().Movement.ReadValue<Vector2>().y;
@@ -28,9 +28,9 @@ public class PossessedState : BaseState
             enemy.transform.Translate(moveDirection * WalkSpeed * Time.deltaTime);
     }
 
-    public override void Exit()
+    protected override void ExitState()
     {
-
+        stateMachine.ChangeState(stateMachine.lastActiveState);
     }
 
 }

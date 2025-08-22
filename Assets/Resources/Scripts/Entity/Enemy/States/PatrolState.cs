@@ -9,7 +9,7 @@ public class PatrolState : BaseState
         enemy = _enemy;
     }
 
-    public override void Enter()
+    protected override void EnterState()
     {
         enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Patrolling, true);
 
@@ -18,7 +18,7 @@ public class PatrolState : BaseState
         enemy.fieldOfView = 150f;
     }
 
-    public override void Perform()
+    protected override void PerformState()
     {
         if (stateMachine.activeState is PossessedState) return;
 
@@ -29,7 +29,7 @@ public class PatrolState : BaseState
         }
     }
 
-    public override void Exit()
+    protected override void ExitState()
     {
         enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Patrolling, false);
     }

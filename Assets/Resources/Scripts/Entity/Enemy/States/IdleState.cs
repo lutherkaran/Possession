@@ -13,7 +13,7 @@ public class IdleState : BaseState
     public float waitTimer = 0;
     public float duration = 0;
 
-    public override void Enter()
+    protected override void EnterState()
     {
         enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Idle, true);
         enemy.Agent.velocity = Vector3.zero;
@@ -22,7 +22,7 @@ public class IdleState : BaseState
         enemy.Agent.isStopped = false;
     }
 
-    public override void Perform()
+    protected override void PerformState()
     {
         if (enemy.CanSeePlayer())
         {
@@ -34,7 +34,7 @@ public class IdleState : BaseState
         }
     }
 
-    public override void Exit()
+    protected override void ExitState()
     {
         enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Idle, false);
         waitTimer = 0;
@@ -43,10 +43,13 @@ public class IdleState : BaseState
 
     public void Waiting()
     {
-        waitTimer += Time.deltaTime;
-        if (waitTimer > duration)
+        if (!enemy.CanSeePlayer())
         {
-            stateMachine.ChangeState(new PatrolState(enemy));
+            waitTimer += Time.deltaTime;
+            if (waitTimer > duration)
+            {
+                stateMachine.ChangeState(new PatrolState(enemy));
+            }
         }
     }
 }

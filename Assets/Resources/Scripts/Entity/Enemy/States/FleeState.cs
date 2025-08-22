@@ -12,14 +12,14 @@ public class FleeState : BaseState
     Vector3 fleeDirection = Vector3.zero;
     float FleeDistance = 10f;
 
-    public override void Enter()
+    protected override void EnterState()
     {
         enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Running, true);
 
         enemy.Agent.velocity = enemy.defaultVelocity * 4f;
     }
 
-    public override void Perform()
+    protected override void PerformState()
     {
         if (!enemy.IsSafe() && enemy.CanSeePlayer())
         {
@@ -37,7 +37,7 @@ public class FleeState : BaseState
         enemy.Agent.SetDestination(enemy.transform.position + fleeDirection * FleeDistance);
     }
 
-    public override void Exit()
+    protected override void ExitState()
     {
         enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Running, false);
         enemy.Agent.velocity = enemy.defaultVelocity;

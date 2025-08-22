@@ -1,12 +1,19 @@
+using System;
+using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 public class StateMachine : MonoBehaviour
 {
     public BaseState activeState;
-    private Enemy enemy;
+    public BaseState lastActiveState;
 
-    public void Initialise<T>(T type) where T : Entity
+    private Enemy enemy;
+    private Dictionary<Type, BaseState> availableStates;
+
+    public void Initialise<T>(T type, Dictionary<Type, BaseState> _availableStates) where T : Entity
     {
+        availableStates = _availableStates;
+
         if (type is Enemy)
         {
             enemy = type.GetComponent<Enemy>();
@@ -45,6 +52,15 @@ public class StateMachine : MonoBehaviour
 
         if (activeState != null)
         {
+            if (activeState != new PossessedState(enemy))
+            {
+                lastActiveState = activeState;
+            }
+            else
+            {
+                lastActiveState = null;
+            }
+
             activeState.Exit();
         }
 

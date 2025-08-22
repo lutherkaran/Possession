@@ -12,7 +12,7 @@ public class Enemy : Entity, IPossessable, IDamageable
 
     [SerializeField] private EnemyAnimator enemyAnimator;
     [SerializeField] private HealthUI healthUI;
-    
+
     private StateMachine stateMachine;
 
     [Header("Pathfinding Properties")]
@@ -47,7 +47,6 @@ public class Enemy : Entity, IPossessable, IDamageable
     {
         PostInitialize();
         InitializeStatesDictionary();
-        stateMachine.Initialise(this);
     }
 
     private void Initialize()
@@ -77,6 +76,8 @@ public class Enemy : Entity, IPossessable, IDamageable
             {typeof(SearchState), new SearchState(this) },
             {typeof(PossessedState), new PossessedState(this) },
         };
+
+        stateMachine.Initialise(this, statesDictionary);
     }
 
     private void Update()
@@ -84,7 +85,6 @@ public class Enemy : Entity, IPossessable, IDamageable
         currentState = stateMachine?.activeState?.ToString() ?? "None";
     }
 
-    // Public Overrides
     public override void Attack()
     {
         //stateMachine.ChangeState(new AttackState());

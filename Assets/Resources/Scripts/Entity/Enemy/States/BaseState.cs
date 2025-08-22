@@ -1,9 +1,12 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class BaseState
 {
     protected GameObject gameObject;
     protected EnemyAnimator animator;
+    protected Dictionary<Type, BaseState> availableStates;
 
     protected BaseState(GameObject _gameObject)
     {
@@ -16,11 +19,24 @@ public abstract class BaseState
         animator = _animator;
     }
 
+    protected BaseState(GameObject _gameObject, EnemyAnimator _animator, Dictionary<Type, BaseState> _availableStates)
+    {
+        gameObject = _gameObject;
+        animator = _animator;
+        availableStates = _availableStates;
+    }
+
     public StateMachine stateMachine;
 
-    public abstract void Enter();
-    public abstract void Perform();
-    public abstract void Exit();
+    protected virtual void EnterState() { }
+    protected virtual void PerformState() { }
+    protected virtual void ExitState() { }
+
+    public void Enter() => EnterState();
+    public void Perform() => PerformState();
+    public void Exit() => ExitState();
 
     public GameObject GetGameObject() { return gameObject; }
+    public EnemyAnimator GetAnimator() { return animator; }
+    public Dictionary<Type, BaseState> GetAvailableStates() { return availableStates; }
 }

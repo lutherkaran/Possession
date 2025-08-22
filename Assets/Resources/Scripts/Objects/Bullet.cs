@@ -3,7 +3,7 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
     private static float bulletSpeed = 25f;
-    private static float shotTimer = 1f;
+    private static float shotTimer = .5f;
     private static float fireRate = 3f;
 
     private static Rigidbody rb;

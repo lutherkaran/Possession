@@ -15,7 +15,7 @@ public class SearchState : BaseState
     private bool isSettingIdle;
     private float searchDuration = 10f;
 
-    public override void Enter()
+    protected override void EnterState()
     {
         enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Searching, true);
 
@@ -25,7 +25,7 @@ public class SearchState : BaseState
         isSettingIdle = false;
     }
 
-    public override void Perform()
+    protected override void PerformState()
     {
         if (enemy.CanSeePlayer())
         {
@@ -49,7 +49,7 @@ public class SearchState : BaseState
         }
     }
 
-    public override void Exit()
+    protected override void ExitState()
     {
         enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Searching, false);
 

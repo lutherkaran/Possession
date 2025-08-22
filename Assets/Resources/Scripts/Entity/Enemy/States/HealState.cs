@@ -14,7 +14,7 @@ public class HealState : BaseState
     bool isHealing;
     Vector3 healingPosition;
 
-    public override void Enter()
+    protected override void EnterState()
     {
         interactable = GameObject.FindGameObjectWithTag("Interactable").GetComponent<EventOnlyInteractable>();
         healingPosition = this.interactable.gameObject.transform.position;
@@ -22,7 +22,7 @@ public class HealState : BaseState
         enemy.fieldOfView = 180f;
     }
 
-    public override void Perform()
+    protected override void PerformState()
     {
         if (enemy.Agent.remainingDistance <= 1f && !isHealing)//if (enemy.Agent.remainingDistance < 0.2f)
         {
@@ -30,7 +30,7 @@ public class HealState : BaseState
         }
     }
 
-    public override void Exit()
+    protected override void ExitState()
     {
         enemy.Agent.velocity = enemy.defaultVelocity;
         enemy.StopAllCoroutines();
