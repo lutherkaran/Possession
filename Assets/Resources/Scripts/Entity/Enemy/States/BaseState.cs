@@ -4,6 +4,10 @@ using UnityEngine;
 
 public abstract class BaseState
 {
+    public StateMachine stateMachine;
+
+    public Dictionary<Type, BaseState> GetAvailableStates() { return availableStates; }
+
     protected GameObject gameObject;
     protected EnemyAnimator animator;
     protected Dictionary<Type, BaseState> availableStates;
@@ -26,8 +30,6 @@ public abstract class BaseState
         availableStates = _availableStates;
     }
 
-    public StateMachine stateMachine;
-
     protected virtual void EnterState() { }
     protected virtual void PerformState() { }
     protected virtual void ExitState() { }
@@ -36,7 +38,6 @@ public abstract class BaseState
     public void Perform() => PerformState();
     public void Exit() => ExitState();
 
-    public GameObject GetGameObject() { return gameObject; }
-    public EnemyAnimator GetAnimator() { return animator; }
-    public Dictionary<Type, BaseState> GetAvailableStates() { return availableStates; }
+    public GameObject GetGameObject() => gameObject;
+    public EnemyAnimator GetAnimator() => animator;
 }

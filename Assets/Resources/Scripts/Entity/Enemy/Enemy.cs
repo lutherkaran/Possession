@@ -38,6 +38,8 @@ public class Enemy : Entity, IPossessable, IDamageable
 
     private Dictionary<Type, BaseState> statesDictionary;
 
+    private bool canMove = false;
+
     private void Awake()
     {
         Initialize();
@@ -83,6 +85,10 @@ public class Enemy : Entity, IPossessable, IDamageable
     private void Update()
     {
         currentState = stateMachine?.activeState?.ToString() ?? "None";
+       
+        float enemyHeight = 1.5f;
+        float enemyRadius = .8f;
+        canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * enemyHeight, enemyRadius, transform.forward, 2f);
     }
 
     public override void Attack()
@@ -142,8 +148,9 @@ public class Enemy : Entity, IPossessable, IDamageable
 
         return false;
     }
+    protected override Entity GetEntity() => this;
 
-    public override bool IsAlive() => healthUI.GetHealth() > 0;
+    protected override bool IsAlive() => healthUI.GetHealth() > 0;
 
     public float GetHealth() => healthUI.GetHealth();
 
@@ -153,8 +160,6 @@ public class Enemy : Entity, IPossessable, IDamageable
 
     public Entity GetPossessedEntity() => this;
 
-    public override Entity GetEntity() => this;
-
     public override Transform GetCameraAttachPoint() => cameraAttachPoint;
 
     public EnemyAnimator GetAnimator() => enemyAnimator;
@@ -162,4 +167,6 @@ public class Enemy : Entity, IPossessable, IDamageable
     public override float GetEntityPossessionTimerMax() => entityPossessionTimerMax;
 
     public override float GetPossessionCooldownTimerMax() => possessionCooldownTimerMax;
+
+    public bool CanMove() { return canMove; }
 }

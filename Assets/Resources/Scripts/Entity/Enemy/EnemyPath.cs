@@ -5,7 +5,9 @@ using UnityEngine;
 public class EnemyPath : MonoBehaviour
 {
     public List<Transform> Waypoints = new List<Transform>();
-    // Start is called before the first frame update
+
+    [SerializeField] private Enemy enemy;
+
     void Start()
     {
 
@@ -14,6 +16,11 @@ public class EnemyPath : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        if (enemy.CanMove()) return;
+        
+        else
+        {
+            
+        }
     }
 }

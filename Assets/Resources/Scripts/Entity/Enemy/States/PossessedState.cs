@@ -2,10 +2,10 @@ using UnityEngine;
 
 public class PossessedState : BaseState
 {
+    private Enemy enemy;
+
     private readonly float WalkSpeed = 10f;
     private Vector3 moveDirection;
-
-    private Enemy enemy;
 
     public PossessedState(Enemy _enemy) : base(_enemy.gameObject)
     {
@@ -16,6 +16,7 @@ public class PossessedState : BaseState
     {
         enemy.Agent.velocity = Vector3.zero;
         enemy.Agent.isStopped = true;
+        // play possessed Animation..
     }
 
     protected override void PerformState()

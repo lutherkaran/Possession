@@ -5,14 +5,14 @@ public class HealState : BaseState
 {
     private Enemy enemy;
 
+    private EventOnlyInteractable interactable;
+    private bool isHealing;
+    private Vector3 healingPosition;
+
     public HealState(Enemy _enemy) : base(_enemy.gameObject)
     {
         enemy = _enemy;
     }
-
-    EventOnlyInteractable interactable;
-    bool isHealing;
-    Vector3 healingPosition;
 
     protected override void EnterState()
     {
@@ -38,7 +38,7 @@ public class HealState : BaseState
         interactable = null;
     }
 
-    IEnumerator Interacting(Interactable _interactable)
+    private IEnumerator Interacting(Interactable _interactable)
     {
         enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Idle, true);
         isHealing = true;

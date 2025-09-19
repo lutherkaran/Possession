@@ -47,7 +47,7 @@ public class HealthUI : MonoBehaviour
         UpdateHealth(health);
     }
 
-    void UpdateHealth(float health)
+    private void UpdateHealth(float health)
     {
         float fillF = frontHealthBar.fillAmount;
         float fillB = backHealthBar.fillAmount;
@@ -74,7 +74,7 @@ public class HealthUI : MonoBehaviour
 
     }
 
-    public void HealthChange(float healthChangeValue)
+    private void HealthChange(float healthChangeValue)
     {
         health += healthChangeValue;
         lerpTimer = 0;

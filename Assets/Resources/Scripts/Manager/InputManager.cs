@@ -36,7 +36,6 @@ public class InputManager : MonoBehaviour
         OnFootActions.MouseInteraction.performed += ctx => CameraManager.instance.GetMouseAim()?.ToggleMouseInteraction();
         OnFootActions.Attack.performed += ctx => player.Attack();
         OnFootActions.Pause.performed += Pause_performed;
-
     }
 
     private void Pause_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)

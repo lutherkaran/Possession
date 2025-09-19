@@ -19,7 +19,7 @@ public class NPC : Entity, IPossessable
 
     }
 
-    public override bool IsAlive()
+    protected override bool IsAlive()
     {
         return false;
     }
@@ -60,7 +60,7 @@ public class NPC : Entity, IPossessable
 
     public Entity GetPossessedEntity() => this;
 
-    public override Entity GetEntity() => this;
+    protected override Entity GetEntity() => this;
 
     public override Transform GetCameraAttachPoint() => cameraAttachPoint;
 

@@ -28,6 +28,7 @@ public class CameraManager : MonoBehaviour
         {
             Destroy(instance);
         }
+
         instance = this;
     }
 

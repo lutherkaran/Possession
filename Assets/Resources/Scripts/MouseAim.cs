@@ -42,7 +42,7 @@ public class MouseAim
 
     public void OnFocus()
     {
-        Cursor.visible = false;
+        HideMouse();
         Cursor.lockState = CursorLockMode.Locked;
     }
 

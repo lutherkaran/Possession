@@ -3559,6 +3559,11 @@ PrefabInstance:
       propertyPath: m_Carve
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4404565704032153386, guid: becd1a03283041043bceec75e70583e4,
+        type: 3}
+      propertyPath: enemy
+      value: 
+      objectReference: {fileID: 2037147097}
     - target: {fileID: 4462061436258148784, guid: becd1a03283041043bceec75e70583e4,
         type: 3}
       propertyPath: m_Carve

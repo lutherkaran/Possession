@@ -5,6 +5,11 @@ using UnityEngine;
 
 public class EnemyAnimator : MonoBehaviour
 {
+    public enum AnimationStates
+    {
+        Idle, Patrolling, Running, Searching, Attacking, Fleeing
+    };
+
     private const string IS_IDLE = "IsIdle";
     private const string IS_PATROLLING = "IsPatrolling";
     private const string IS_SEARCHING = "IsSearching";
@@ -14,34 +19,7 @@ public class EnemyAnimator : MonoBehaviour
 
     private Animator enemyAnimator;
 
-    public enum AnimationStates
-    {
-        Idle, Patrolling, Running, Searching, Attacking, Fleeing
-    };
-
     private Dictionary<AnimationStates, string> animationStatesDictionary;
-
-    private AnimationStates animationStates;
-
-    private void Awake()
-    {
-        enemyAnimator = GetComponent<Animator>();
-
-        InitializingAnimationStatesDictionary();
-    }
-
-    public AnimationStates GetAnimationStates()
-    {
-        return animationStates;
-    }
-
-    public void SetAnimations(AnimationStates state, bool value)
-    {
-        if (animationStatesDictionary.TryGetValue(state, out string param))
-        {
-            enemyAnimator.SetBool(param, value);
-        }
-    }
 
     private void InitializingAnimationStatesDictionary()
     {
@@ -54,5 +32,20 @@ public class EnemyAnimator : MonoBehaviour
         { AnimationStates.Attacking, IS_ATTACKING },
         { AnimationStates.Fleeing, IS_FLEEING }
      };
+    }
+
+    private void Awake()
+    {
+        enemyAnimator = GetComponent<Animator>();
+
+        InitializingAnimationStatesDictionary();
+    }
+
+    public void SetAnimations(AnimationStates state, bool value)
+    {
+        if (animationStatesDictionary.TryGetValue(state, out string param))
+        {
+            enemyAnimator.SetBool(param, value);
+        }
     }
 }

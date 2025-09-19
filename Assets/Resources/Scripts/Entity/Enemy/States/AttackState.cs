@@ -4,13 +4,13 @@ public class AttackState : BaseState
 {
     private Enemy enemy;
 
+    private float moveTimer;
+    private float losePlayerTimer;
+
     public AttackState(Enemy _enemy) : base(_enemy.gameObject)
     {
         enemy = _enemy;
     }
-
-    private float moveTimer;
-    private float losePlayerTimer;
 
     protected override void EnterState()
     {
@@ -54,7 +54,7 @@ public class AttackState : BaseState
         }
     }
 
-    public void Shoot()
+    private void Shoot()
     {
         Transform gunBarrel = enemy.gunBarrel;
         Vector3 shootDirection = (enemy.player.transform.position - gunBarrel.transform.position).normalized;

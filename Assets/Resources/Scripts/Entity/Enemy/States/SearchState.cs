@@ -5,15 +5,15 @@ public class SearchState : BaseState
 {
     private Enemy enemy;
 
-    public SearchState(Enemy _enemy): base(_enemy.gameObject)
-    {
-        enemy = _enemy;
-    }
-
     private float searchTimer;
     private float moveTimer;
     private bool isSettingIdle;
     private float searchDuration = 10f;
+
+    public SearchState(Enemy _enemy): base(_enemy.gameObject)
+    {
+        enemy = _enemy;
+    }
 
     protected override void EnterState()
     {

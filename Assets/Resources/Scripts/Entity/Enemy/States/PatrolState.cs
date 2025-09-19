@@ -4,7 +4,7 @@ public class PatrolState : BaseState
 {
     private Enemy enemy;
 
-    public PatrolState(Enemy _enemy): base(_enemy.gameObject)
+    public PatrolState(Enemy _enemy) : base(_enemy.gameObject)
     {
         enemy = _enemy;
     }
@@ -20,9 +20,8 @@ public class PatrolState : BaseState
 
     protected override void PerformState()
     {
-        if (stateMachine.activeState is PossessedState) return;
-
         PatrolCycle();
+
         if (enemy.CanSeePlayer())
         {
             stateMachine.ChangeState(new AttackState(enemy));

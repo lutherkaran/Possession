@@ -59,7 +59,7 @@ public class Possession
         canPossess = true;
     }
 
-    public Ray DrawRayFromCrosshair()
+    private Ray DrawRayFromCrosshair()
     {
         Ray ray = CameraManager.instance.cam.ScreenPointToRay(PlayerUI.Instance.GetCrosshairTransform().position);
         return ray;

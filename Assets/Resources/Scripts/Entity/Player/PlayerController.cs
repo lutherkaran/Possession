@@ -111,13 +111,13 @@ public class PlayerController : Entity, IPossessable, IDamageable
         health = healthUI.GetHealth();
     }
 
-    public override bool IsAlive() => healthUI.GetHealth() > 0;
+    protected override bool IsAlive() => healthUI.GetHealth() > 0;
 
     public float GetMaxHealth() => maxHealth;
 
     public Entity GetPossessedEntity() => this;
 
-    public override Entity GetEntity() => this;
+    protected override Entity GetEntity() => this;
 
     public InputManager GetInputManager() => inputManager;
 

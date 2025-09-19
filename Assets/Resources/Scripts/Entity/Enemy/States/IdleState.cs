@@ -5,13 +5,13 @@ public class IdleState : BaseState
     private Enemy enemy;
     private EnemyAnimator enemyAnimator;
 
+    private float waitTimer = 0;
+    private float duration = 0;
+
     public IdleState(Enemy _enemy) : base(_enemy.gameObject)
     {
         enemy = _enemy;
     }
-
-    public float waitTimer = 0;
-    public float duration = 0;
 
     protected override void EnterState()
     {
@@ -41,7 +41,7 @@ public class IdleState : BaseState
         enemy.Agent.velocity = enemy.defaultVelocity;
     }
 
-    public void Waiting()
+    private void Waiting()
     {
         if (!enemy.CanSeePlayer())
         {
