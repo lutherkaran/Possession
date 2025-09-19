@@ -14,8 +14,8 @@ public class PossessedState : BaseState
 
     protected override void EnterState()
     {
-        enemy.Agent.velocity = Vector3.zero;
-        enemy.Agent.isStopped = true;
+        enemy.GetEnemyAgent().velocity = Vector3.zero;
+        enemy.GetEnemyAgent().isStopped = true;
         // play possessed Animation..
     }
 

@@ -20,7 +20,8 @@ public class AttackState : BaseState
     protected override void ExitState()
     {
         enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Attacking, false);
-        enemy.Agent.velocity = enemy.defaultVelocity;
+        enemy.GetEnemyAgent().velocity = enemy.defaultVelocity;
+
         moveTimer = 0;
         losePlayerTimer = 0;
     }
@@ -30,6 +31,7 @@ public class AttackState : BaseState
         if (enemy.CanSeePlayer())
         {
             enemy.transform.LookAt(enemy.player.transform);
+
             Shoot();
 
             losePlayerTimer = 0;
@@ -37,7 +39,7 @@ public class AttackState : BaseState
 
             if (moveTimer > Random.Range(3, 7))
             {
-                enemy.Agent.SetDestination(enemy.transform.position + (Random.insideUnitSphere * 5));
+                enemy.GetEnemyAgent().SetDestination(enemy.transform.position + (Random.insideUnitSphere * 5));
                 moveTimer = 0;
             }
         }
@@ -46,9 +48,8 @@ public class AttackState : BaseState
         {
             losePlayerTimer += Time.deltaTime;
 
-            if (losePlayerTimer > 5)
+            if (losePlayerTimer > 3)
             {
-                enemy.LastKnownPos = enemy.player.transform.position;
                 stateMachine.ChangeState(new SearchState(enemy));
             }
         }

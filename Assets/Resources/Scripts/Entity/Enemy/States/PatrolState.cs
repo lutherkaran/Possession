@@ -3,6 +3,7 @@ using UnityEngine;
 public class PatrolState : BaseState
 {
     private Enemy enemy;
+    private EnemyPath enemyPath;
 
     public PatrolState(Enemy _enemy) : base(_enemy.gameObject)
     {
@@ -11,10 +12,12 @@ public class PatrolState : BaseState
 
     protected override void EnterState()
     {
+        enemyPath = enemy.GetEnemyPath();
+
         enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Patrolling, true);
 
-        enemy.Agent.velocity = enemy.defaultVelocity;
-        enemy.Agent.SetDestination(enemy.enemyPath.Waypoints[Random.Range(0, enemy.enemyPath.Waypoints.Count - 1)].position);
+        enemy.GetEnemyAgent().velocity = enemy.defaultVelocity;
+        enemy.GetEnemyAgent().SetDestination(enemyPath.GetRandomPathPosition());
         enemy.fieldOfView = 150f;
     }
 
@@ -35,7 +38,7 @@ public class PatrolState : BaseState
 
     protected void PatrolCycle()
     {
-        if (enemy.Agent.remainingDistance <= enemy.Agent.stoppingDistance)//0.2f && (enemy.Agent.remainingDistance >= 0.1f))
+        if (enemy.GetEnemyAgent().remainingDistance <= enemy.GetEnemyAgent().stoppingDistance)//0.2f && (enemy.Agent.remainingDistance >= 0.1f))
         {
             stateMachine.ChangeState(new IdleState(enemy));
         }

@@ -12,14 +12,13 @@ public class Enemy : Entity, IPossessable, IDamageable
 
     [SerializeField] private EnemyAnimator enemyAnimator;
     [SerializeField] private HealthUI healthUI;
+    [SerializeField] private EnemyPath enemyPath;
 
+    private NavMeshAgent Agent;
     private StateMachine stateMachine;
 
-    [Header("Pathfinding Properties")]
-    [SerializeField] public EnemyPath enemyPath;
-    [SerializeField] public Vector3 LastKnownPos { get; set; }
-    [SerializeField] public NavMeshAgent Agent { get; private set; }
-    [SerializeField] public Vector3 defaultVelocity = Vector3.zero;
+    public Vector3 defaultVelocity { get; private set; }
+    public Vector3 targetLastLocation { get; private set; }
 
     [Header("Sight Properties")]
     public float fieldOfView = 90f;
@@ -34,8 +33,6 @@ public class Enemy : Entity, IPossessable, IDamageable
     [SerializeField] private float currentHealth;
 
     private Dictionary<Type, BaseState> statesDictionary;
-
-    private bool canMove = false;
 
     private void Awake()
     {
@@ -80,10 +77,8 @@ public class Enemy : Entity, IPossessable, IDamageable
     }
 
     private void Update()
-    {      
-        float enemyHeight = 1.5f;
-        float enemyRadius = .8f;
-        canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * enemyHeight, enemyRadius, transform.forward, 2f);
+    {
+
     }
 
     public override void Attack()
@@ -132,9 +127,13 @@ public class Enemy : Entity, IPossessable, IDamageable
             if (angleToPlayer >= -fieldOfView && angleToPlayer <= fieldOfView)
             {
                 Ray ray = new Ray(transform.position + (Vector3.up * eyeHeight), targetDirection);
+
                 if (Physics.Raycast(ray, out RaycastHit hitInfo, sightDistance) && hitInfo.transform.gameObject == player)
                 {
-                    LastKnownPos = player.transform.position;
+                    targetLastLocation = player.transform.position;
+
+                    Vector3.RotateTowards(transform.forward, targetDirection.normalized, 1, 2);
+
                     Debug.DrawRay(ray.origin, ray.direction * sightDistance, Color.red);
                     return true;
                 }
@@ -143,6 +142,7 @@ public class Enemy : Entity, IPossessable, IDamageable
 
         return false;
     }
+
     protected override Entity GetEntity() => this;
 
     protected override bool IsAlive() => healthUI.GetHealth() > 0;
@@ -163,5 +163,7 @@ public class Enemy : Entity, IPossessable, IDamageable
 
     public override float GetPossessionCooldownTimerMax() => possessionCooldownTimerMax;
 
-    public bool CanMove() { return canMove; }
+    public NavMeshAgent GetEnemyAgent() => Agent;
+
+    public EnemyPath GetEnemyPath() => enemyPath;
 }

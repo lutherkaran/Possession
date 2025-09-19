@@ -18,13 +18,13 @@ public class HealState : BaseState
     {
         interactable = GameObject.FindGameObjectWithTag("Interactable").GetComponent<EventOnlyInteractable>();
         healingPosition = this.interactable.gameObject.transform.position;
-        enemy.Agent.SetDestination(healingPosition);
+        enemy.GetEnemyAgent().SetDestination(healingPosition);
         enemy.fieldOfView = 180f;
     }
 
     protected override void PerformState()
     {
-        if (enemy.Agent.remainingDistance <= 1f && !isHealing)//if (enemy.Agent.remainingDistance < 0.2f)
+        if (enemy.GetEnemyAgent().remainingDistance <= 1f && !isHealing)//if (enemy.Agent.remainingDistance < 0.2f)
         {
             enemy.StartCoroutine(Interacting(interactable));
         }
@@ -32,7 +32,7 @@ public class HealState : BaseState
 
     protected override void ExitState()
     {
-        enemy.Agent.velocity = enemy.defaultVelocity;
+        enemy.GetEnemyAgent().velocity = enemy.defaultVelocity;
         enemy.StopAllCoroutines();
         isHealing = false;
         interactable = null;

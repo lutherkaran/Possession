@@ -3,23 +3,16 @@ using UnityEngine;
 
 public class EnemyPath : MonoBehaviour
 {
-    public List<Transform> Waypoints = new List<Transform>();
+    [Header("Pathfinding Properties")]
+    [SerializeField] private List<Transform> Waypoints = new List<Transform>();
 
-    [SerializeField] private Enemy enemy;
-
-    void Start()
+    public List<Transform> GetPath()
     {
-
+        return Waypoints;
     }
 
-    // Update is called once per frame
-    void Update()
+    public Vector3 GetRandomPathPosition()
     {
-        if (enemy.CanMove()) return;
-        
-        else
-        {
-            
-        }
+        return Waypoints[Random.Range(0, Waypoints.Count - 1)].position;
     }
 }
