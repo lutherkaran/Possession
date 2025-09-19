@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditorInternal;
 using UnityEngine;
 public class StateMachine : MonoBehaviour
 {
@@ -9,6 +10,9 @@ public class StateMachine : MonoBehaviour
 
     private Enemy enemy;
     private Dictionary<Type, BaseState> availableStates;
+
+    [Header("State Machine")]
+    [SerializeField] private string currentState;
 
     public void Initialise<T>(T type, Dictionary<Type, BaseState> _availableStates) where T : Entity
     {
@@ -69,8 +73,8 @@ public class StateMachine : MonoBehaviour
         if (activeState != null)
         {
             activeState.stateMachine = this;
-            //activeState.enemy = GetComponent<Enemy>();
             activeState.Enter();
+            currentState = activeState?.ToString() ?? "None";
         }
     }
 }

@@ -29,12 +29,9 @@ public class Enemy : Entity, IPossessable, IDamageable
     [Header("Weapon Properties")]
     public Transform gunBarrel;
 
-    [Header("State Machine")]
-    [SerializeField] private string currentState;
-
     [Header("Health Properties")]
     [SerializeField] private float maxHealth = 100f;
-    [SerializeField] private float health;
+    [SerializeField] private float currentHealth;
 
     private Dictionary<Type, BaseState> statesDictionary;
 
@@ -53,7 +50,7 @@ public class Enemy : Entity, IPossessable, IDamageable
 
     private void Initialize()
     {
-        health = maxHealth;
+        currentHealth = maxHealth;
         Agent = GetComponent<NavMeshAgent>();
         defaultVelocity = Agent.velocity;
     }
@@ -83,9 +80,7 @@ public class Enemy : Entity, IPossessable, IDamageable
     }
 
     private void Update()
-    {
-        currentState = stateMachine?.activeState?.ToString() ?? "None";
-       
+    {      
         float enemyHeight = 1.5f;
         float enemyRadius = .8f;
         canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * enemyHeight, enemyRadius, transform.forward, 2f);
@@ -122,7 +117,7 @@ public class Enemy : Entity, IPossessable, IDamageable
     public void HealthChanged(float healthChangedValue)
     {
         OnDamaged?.Invoke(this, new IDamageable.OnDamagedEventArgs { health = healthChangedValue });
-        health = healthUI.GetHealth();
+        currentHealth = healthUI.GetHealth();
     }
 
     public bool CanSeePlayer()
