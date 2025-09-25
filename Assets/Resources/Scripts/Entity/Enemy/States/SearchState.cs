@@ -9,9 +9,6 @@ public class SearchState : BaseState
     private float maxSearchDuration = 20f;
     private float searchTimer;
 
-    private float maxWaitingTime = 5f;
-    private float waitTimer;
-
     public SearchState(Enemy _enemy) : base(_enemy.gameObject)
     {
         enemy = _enemy;
@@ -20,7 +17,7 @@ public class SearchState : BaseState
     protected override void EnterState()
     {
         enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Searching, true);
-        enemy.GetEnemyAgent().SetDestination(enemy.targetLastLocation);
+        enemy.GetEnemyAgent().SetDestination(enemy.targetsLastPosition);
         enemy.GetEnemyAgent().velocity = enemy.defaultVelocity * 4f;
         enemy.fieldOfView = 180f;
     }
@@ -57,6 +54,6 @@ public class SearchState : BaseState
 
     private void FindAnotherDestinationNearby()
     {
-        enemy.GetEnemyAgent().SetDestination(enemy.targetLastLocation + (Random.insideUnitSphere * 10f));
+        enemy.GetEnemyAgent().SetDestination(enemy.targetsLastPosition + (Random.insideUnitSphere * 20f));
     }
 }

@@ -112,7 +112,7 @@ NavMeshSettings:
     agentClimb: 0.4
     ledgeDropHeight: 0
     maxJumpAcrossDistance: 0
-    minRegionArea: 2
+    minRegionArea: 1
     manualCellSize: 0
     cellSize: 0.06666667
     manualTileSize: 0
@@ -3000,16 +3000,6 @@ PrefabInstance:
       propertyPath: healthUI
       value: 
       objectReference: {fileID: 1093353757087948732}
-    - target: {fileID: 4508922199834146025, guid: 2a037210eac07484f84c04710f3e1d3f,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4508922199834146025, guid: 2a037210eac07484f84c04710f3e1d3f,
-        type: 3}
-      propertyPath: possessionCooldownTimerMax
-      value: 5
-      objectReference: {fileID: 0}
     - target: {fileID: 4862739883664804337, guid: 2a037210eac07484f84c04710f3e1d3f,
         type: 3}
       propertyPath: m_Name
@@ -3269,11 +3259,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4670296490969198329, guid: 6293859972d35e545b5cb195625faf4d,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 5219655988053613314, guid: 6293859972d35e545b5cb195625faf4d,
         type: 3}
       propertyPath: enemyPath
@@ -3281,16 +3266,10 @@ PrefabInstance:
       objectReference: {fileID: 965996198}
     - target: {fileID: 5219655988053613314, guid: 6293859972d35e545b5cb195625faf4d,
         type: 3}
-      propertyPath: entityPossessionTimerMax
-      value: 30
-      objectReference: {fileID: 0}
-    - target: {fileID: 9214926834266491931, guid: 6293859972d35e545b5cb195625faf4d,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 2442049557484612298, guid: 6293859972d35e545b5cb195625faf4d, type: 3}
+      propertyPath: playerController
+      value: 
+      objectReference: {fileID: 20009271}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

@@ -42,7 +42,7 @@ GameObject:
   - component: {fileID: 7724560283665629164}
   - component: {fileID: 1693467392649985820}
   - component: {fileID: 4508922199834146025}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -105,8 +105,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b466e2d93acb79c4d831918e5f6b00a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  possessionTimerMax: 0
-  possessionCooldownTimerMax: 0
+  playerController: {fileID: 0}
+  entityPossessionTimerMax: 0
+  possessionCooldownTimerMax: 5
   cameraAttachPoint: {fileID: 2676502654155841020}
   PossessableLayerMask:
     serializedVersion: 2

@@ -30,7 +30,7 @@ public class AttackState : BaseState
     {
         if (enemy.CanSeePlayer())
         {
-            enemy.transform.LookAt(enemy.player.transform);
+            enemy.transform.LookAt(enemy.GetTargetPlayerTransform());
 
             Shoot();
 
@@ -57,8 +57,8 @@ public class AttackState : BaseState
 
     private void Shoot()
     {
-        Transform gunBarrel = enemy.gunBarrel;
-        Vector3 shootDirection = (enemy.player.transform.position - gunBarrel.transform.position).normalized;
-        Bullet.Shoot(enemy, enemy.gunBarrel, shootDirection);
+        Transform gunBarrel = enemy.GetGunBarrelTransform();
+        Vector3 shootDirection = (enemy.GetTargetPlayerTransform().position - gunBarrel.transform.position).normalized;
+        Bullet.Shoot(enemy, enemy.GetGunBarrelTransform(), shootDirection);
     }
 }

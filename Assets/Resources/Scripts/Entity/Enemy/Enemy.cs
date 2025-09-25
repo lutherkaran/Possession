@@ -5,10 +5,7 @@ using UnityEngine.AI;
 
 public class Enemy : Entity, IPossessable, IDamageable
 {
-
     public event EventHandler<IDamageable.OnDamagedEventArgs> OnDamaged;
-
-    public GameObject player;
 
     [SerializeField] private EnemyAnimator enemyAnimator;
     [SerializeField] private HealthUI healthUI;
@@ -18,21 +15,24 @@ public class Enemy : Entity, IPossessable, IDamageable
     private StateMachine stateMachine;
 
     public Vector3 defaultVelocity { get; private set; }
-    public Vector3 targetLastLocation { get; private set; }
+    public Vector3 targetsLastPosition { get; private set; }
 
     [Header("Sight Properties")]
-    public float fieldOfView = 90f;
     [SerializeField] private float sightDistance = 20f;
     [SerializeField] private float eyeHeight;
+    [SerializeField] private LayerMask targetLayerMask;
+    public float fieldOfView = 90f;
 
     [Header("Weapon Properties")]
-    public Transform gunBarrel;
+    [SerializeField] private Transform gunBarrel;
 
     [Header("Health Properties")]
     [SerializeField] private float maxHealth = 100f;
     [SerializeField] private float currentHealth;
 
     private Dictionary<Type, BaseState> statesDictionary;
+    private Transform targetTransform;
+
 
     private void Awake()
     {
@@ -47,15 +47,15 @@ public class Enemy : Entity, IPossessable, IDamageable
 
     private void Initialize()
     {
-        currentHealth = maxHealth;
         Agent = GetComponent<NavMeshAgent>();
+
+        currentHealth = maxHealth;
         defaultVelocity = Agent.velocity;
     }
 
     private void PostInitialize()
     {
         enemyAnimator = GetComponentInChildren<EnemyAnimator>();
-        player = FindAnyObjectByType<PlayerController>().gameObject;
         healthUI = GetComponentInChildren<HealthUI>();
         stateMachine = GetComponent<StateMachine>();
     }
@@ -119,18 +119,19 @@ public class Enemy : Entity, IPossessable, IDamageable
     {
         if (PossessionManager.Instance.GetCurrentPossessable() == possessedByPlayer) return false;
 
-        if (player != null && Vector3.Distance(transform.position, player.transform.position) < sightDistance)
+        if (playerController.transform != null && Vector3.Distance(transform.position, playerController.transform.position) < sightDistance)
         {
-            Vector3 targetDirection = player.transform.position - transform.position;
+            Vector3 targetDirection = playerController.transform.position - transform.position;
             float angleToPlayer = Vector3.Angle(targetDirection, transform.forward);
 
             if (angleToPlayer >= -fieldOfView && angleToPlayer <= fieldOfView)
             {
                 Ray ray = new Ray(transform.position + (Vector3.up * eyeHeight), targetDirection);
 
-                if (Physics.Raycast(ray, out RaycastHit hitInfo, sightDistance) && hitInfo.transform.gameObject == player)
+                if (Physics.Raycast(ray, out RaycastHit hitInfo, sightDistance, targetLayerMask))
                 {
-                    targetLastLocation = player.transform.position;
+                    targetTransform = hitInfo.transform;
+                    targetsLastPosition = targetTransform.position;
 
                     Vector3.RotateTowards(transform.forward, targetDirection.normalized, 1, 2);
 
@@ -151,7 +152,7 @@ public class Enemy : Entity, IPossessable, IDamageable
 
     public float GetMaxHealth() => maxHealth;
 
-    public bool IsSafe() => Vector3.Distance(transform.position, player.transform.position) >= 20f;
+    public bool IsSafe() => Vector3.Distance(transform.position, targetTransform.position) >= 20f;
 
     public Entity GetPossessedEntity() => this;
 
@@ -166,4 +167,8 @@ public class Enemy : Entity, IPossessable, IDamageable
     public NavMeshAgent GetEnemyAgent() => Agent;
 
     public EnemyPath GetEnemyPath() => enemyPath;
+
+    public Transform GetGunBarrelTransform() => gunBarrel;
+
+    public Transform GetTargetPlayerTransform() => targetTransform;
 }

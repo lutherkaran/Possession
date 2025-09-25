@@ -7,16 +7,16 @@ public class PlayerController : Entity, IPossessable, IDamageable
 {
     public static PlayerController Instance { get; private set; }
 
-    [SerializeField] private HealthUI healthUI;
-
     private bool isAlive = true;
 
     public bool isPossessed { get; private set; }
 
+    [SerializeField] private HealthUI healthUI;
+
     private CharacterController characterController;
     private InputManager inputManager;
 
-    public float RaycastHitDistance = 40.0f;
+    [SerializeField] private float RaycastHitDistance = 40.0f;
 
     [SerializeField] private Transform gunBarrel;
     [SerializeField] private float maxHealth = 100f;
