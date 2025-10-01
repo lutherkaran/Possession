@@ -9,9 +9,9 @@ public abstract class Entity : MonoBehaviour
     protected Vector3 moveDirection = Vector3.zero;
     protected Vector3 velocity = Vector3.zero;
 
+    [SerializeField] protected float speed = 5f;
     protected float jumpHeight = 1.5f;
     protected float gravity = -9.8f;
-    protected float speed = 5f;
 
     protected bool sprinting = false;
     protected bool isGrounded = true;

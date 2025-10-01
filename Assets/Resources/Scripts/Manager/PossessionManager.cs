@@ -3,12 +3,13 @@ using UnityEngine;
 
 public class PossessionManager
 {
+    public event EventHandler<IPossessable> OnPossessed;
+
     private static PossessionManager instance;
+    public static PossessionManager Instance { get { return instance == null ? instance = new PossessionManager() : instance; } }
+   
     private Possession currentPossession;
     private IPossessable currentPossessable;
-
-    public static PossessionManager Instance { get { return instance == null ? instance = new PossessionManager() : instance; } }
-    public event EventHandler<IPossessable> OnPossessed;
 
     public Possession ToPossess(GameObject possessable)
     {
@@ -23,8 +24,8 @@ public class PossessionManager
             currentPossession = new Possession(currentPossessable);
             OnPossessed?.Invoke(this, currentPossessable);
             return currentPossession;
-
         }
+
         return null;
     }
 
@@ -38,7 +39,6 @@ public class PossessionManager
             currentPossessable = null;
             currentPossession = null;
         }
-
     }
 
     public Possession GetCurrentPossession() => currentPossession;

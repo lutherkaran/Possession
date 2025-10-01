@@ -15,7 +15,7 @@ public class FleeState : BaseState
     protected override void EnterState()
     {
         enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Running, true);
-
+        enemy.GetAnimator().RunBlend();
         enemy.GetEnemyAgent().velocity = enemy.defaultVelocity * 4f;
     }
 

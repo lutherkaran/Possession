@@ -5,7 +5,6 @@ public class IdleState : BaseState
     private Enemy enemy;
     private EnemyAnimator enemyAnimator;
 
-    private float waitTimer = 0;
     private float duration = 0;
 
     public IdleState(Enemy _enemy) : base(_enemy.gameObject)
@@ -17,6 +16,8 @@ public class IdleState : BaseState
     {
         enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Idle, true);
         enemy.GetEnemyAgent().velocity = Vector3.zero;
+        enemy.GetAnimator().ResetBlend();
+
         enemy.fieldOfView = 90f;
         duration = Random.Range(4f, 10f);
         enemy.GetEnemyAgent().isStopped = false;
@@ -30,26 +31,13 @@ public class IdleState : BaseState
         }
         else
         {
-            Waiting();
+            stateMachine.Waiting(new PatrolState(enemy), duration);
         }
     }
 
     protected override void ExitState()
     {
         enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Idle, false);
-        waitTimer = 0;
         enemy.GetEnemyAgent().velocity = enemy.defaultVelocity;
-    }
-
-    private void Waiting()
-    {
-        if (!enemy.CanSeePlayer())
-        {
-            waitTimer += Time.deltaTime;
-            if (waitTimer > duration)
-            {
-                stateMachine.ChangeState(new PatrolState(enemy));
-            }
-        }
     }
 }

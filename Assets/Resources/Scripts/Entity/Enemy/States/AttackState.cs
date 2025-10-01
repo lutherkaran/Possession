@@ -15,13 +15,14 @@ public class AttackState : BaseState
     protected override void EnterState()
     {
         enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Attacking, true);
+        enemy.GetAnimator().AttackingBlend();
     }
 
     protected override void ExitState()
     {
         enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Attacking, false);
         enemy.GetEnemyAgent().velocity = enemy.defaultVelocity;
-
+ 
         moveTimer = 0;
         losePlayerTimer = 0;
     }
@@ -32,7 +33,7 @@ public class AttackState : BaseState
         {
             enemy.transform.LookAt(enemy.GetTargetPlayerTransform());
 
-            Shoot();
+            enemy.Attack();
 
             losePlayerTimer = 0;
             moveTimer += Time.deltaTime;
@@ -53,12 +54,5 @@ public class AttackState : BaseState
                 stateMachine.ChangeState(new SearchState(enemy));
             }
         }
-    }
-
-    private void Shoot()
-    {
-        Transform gunBarrel = enemy.GetGunBarrelTransform();
-        Vector3 shootDirection = (enemy.GetTargetPlayerTransform().position - gunBarrel.transform.position).normalized;
-        Bullet.Shoot(enemy, enemy.GetGunBarrelTransform(), shootDirection);
     }
 }

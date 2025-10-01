@@ -5,7 +5,9 @@ using UnityEngine;
 
 public class PlayerController : Entity, IPossessable, IDamageable
 {
-    public static PlayerController Instance { get; private set; }
+    public event EventHandler<IDamageable.OnDamagedEventArgs> OnDamaged;
+
+    public static PlayerController instance { get; private set; }
 
     private bool isAlive = true;
 
@@ -15,6 +17,7 @@ public class PlayerController : Entity, IPossessable, IDamageable
 
     private CharacterController characterController;
     private InputManager inputManager;
+    private Bullet bullet;
 
     [SerializeField] private float RaycastHitDistance = 40.0f;
 
@@ -22,17 +25,16 @@ public class PlayerController : Entity, IPossessable, IDamageable
     [SerializeField] private float maxHealth = 100f;
     [SerializeField] private float health;
 
-    public event EventHandler<IDamageable.OnDamagedEventArgs> OnDamaged;
 
     private void Awake()
     {
-        if (Instance != null && Instance != this)
+        if (instance != null && instance != this)
         {
             Destroy(gameObject); // Prevent duplicates
             return;
         }
 
-        Instance = this;
+        instance = this;
         DontDestroyOnLoad(gameObject);
 
         health = maxHealth;
@@ -73,13 +75,19 @@ public class PlayerController : Entity, IPossessable, IDamageable
     {
         if (this != possessedByPlayer) return;
 
+        Shoot();
+    }
+
+    private void Shoot()
+    {
         Ray ray = DrawRayFromCrosshair();
 
         if (Physics.Raycast(ray, out RaycastHit hit, RaycastHitDistance))
         {
             Vector3 shootDirection = (hit.point - gunBarrel.position).normalized;
 
-            Bullet.Shoot(playerController, hit, gunBarrel.transform, shootDirection);
+            BulletManager.instance.Shoot(this, gunBarrel.transform, shootDirection);
+
         }
     }
 

@@ -10,6 +10,8 @@ public class StateMachine : MonoBehaviour
     private Enemy enemy;
     private Dictionary<Type, BaseState> availableStates;
 
+    private float waitTimer = 0;
+
     [Header("State Machine")]
     [SerializeField] private string currentState;
 
@@ -74,6 +76,17 @@ public class StateMachine : MonoBehaviour
             activeState.stateMachine = this;
             activeState.Enter();
             currentState = activeState?.ToString() ?? "None";
+        }
+    }
+
+    public void Waiting(BaseState newState, float duration)
+    {
+        waitTimer += Time.deltaTime;
+
+        if (waitTimer > duration)
+        {
+            ChangeState(newState);
+            waitTimer = 0;
         }
     }
 }

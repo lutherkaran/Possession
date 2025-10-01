@@ -20,6 +20,7 @@ public class HealthUI : MonoBehaviour
     [SerializeField] private float durationTimer;
 
     [SerializeField] private GameObject damagableObject;
+
     private IDamageable hasDamagable;
 
     private void Start()

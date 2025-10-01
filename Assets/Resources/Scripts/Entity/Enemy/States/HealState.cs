@@ -17,6 +17,7 @@ public class HealState : BaseState
     protected override void EnterState()
     {
         interactable = GameObject.FindGameObjectWithTag("Interactable").GetComponent<EventOnlyInteractable>();
+        enemy.GetAnimator().RunBlend();
         healingPosition = this.interactable.gameObject.transform.position;
         enemy.GetEnemyAgent().SetDestination(healingPosition);
         enemy.fieldOfView = 180f;
@@ -42,6 +43,7 @@ public class HealState : BaseState
     {
         enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Idle, true);
         isHealing = true;
+        enemy.GetAnimator().ResetBlend();
         _interactable?.BaseInteract();
         yield return new WaitForSeconds(5f);
 

@@ -7,15 +7,26 @@ public class Enemy : Entity, IPossessable, IDamageable
 {
     public event EventHandler<IDamageable.OnDamagedEventArgs> OnDamaged;
 
+    public event EventHandler<OnShootEventArgs> onShoot;
+
+    public class OnShootEventArgs : EventArgs
+    {
+        public Entity _entity;
+        public Transform _gunBarrel;
+        public Vector3 _direction;
+    }
+
     [SerializeField] private EnemyAnimator enemyAnimator;
     [SerializeField] private HealthUI healthUI;
     [SerializeField] private EnemyPath enemyPath;
 
     private NavMeshAgent Agent;
     private StateMachine stateMachine;
+    private Bullet bullet;
 
     public Vector3 defaultVelocity { get; private set; }
     public Vector3 targetsLastPosition { get; private set; }
+    public Vector3 shootDirection { get; private set; }
 
     [Header("Sight Properties")]
     [SerializeField] private float sightDistance = 20f;
@@ -83,7 +94,13 @@ public class Enemy : Entity, IPossessable, IDamageable
 
     public override void Attack()
     {
-        //stateMachine.ChangeState(new AttackState());
+        Shoot();
+    }
+
+    private void Shoot()
+    {
+        shootDirection = (GetTargetPlayerTransform().position - GetGunBarrelTransform().position).normalized;
+        onShoot?.Invoke(this, new OnShootEventArgs { _entity = this, _direction = shootDirection, _gunBarrel = gunBarrel });
     }
 
     public override void ProcessJump()

@@ -15,9 +15,11 @@ public class EnemyAnimator : MonoBehaviour
     private const string IS_ATTACKING = "IsAttacking";
     private const string IS_FLEEING = "IsFleeing";
 
+    private Enemy enemy;
     private Animator enemyAnimator;
 
     private Dictionary<AnimationStates, string> animationStatesDictionary;
+
 
     private void InitializingAnimationStatesDictionary()
     {
@@ -35,6 +37,7 @@ public class EnemyAnimator : MonoBehaviour
     private void Awake()
     {
         enemyAnimator = GetComponent<Animator>();
+        enemy = GetComponentInParent<Enemy>();
 
         InitializingAnimationStatesDictionary();
     }
@@ -45,5 +48,34 @@ public class EnemyAnimator : MonoBehaviour
         {
             enemyAnimator.SetBool(param, value);
         }
+    }
+
+    public void Shoot()
+    {
+        BulletManager.instance.Shoot(enemy, enemy.GetGunBarrelTransform(), enemy.shootDirection);
+    }
+
+    public void AttackingBlend()
+    {
+        enemyAnimator.SetFloat("Blend", 0.3f);
+        enemyAnimator.SetLayerWeight(1, 1f);
+    }
+
+    public void RunBlend()
+    {
+        enemyAnimator.SetFloat("Blend", 2f);
+        enemyAnimator.SetLayerWeight(1, 0f);
+    }
+
+    public void WalkBlend()
+    {
+        enemyAnimator.SetFloat("Blend", .5f);
+        enemyAnimator.SetLayerWeight(1, 0f);
+    }
+
+    public void ResetBlend()
+    {
+        enemyAnimator.SetFloat("Blend", .0f);
+        enemyAnimator.SetLayerWeight(1, 0f);
     }
 }

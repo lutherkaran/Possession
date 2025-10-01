@@ -15,6 +15,7 @@ public class PatrolState : BaseState
         enemyPath = enemy.GetEnemyPath();
 
         enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Patrolling, true);
+        enemy.GetAnimator().WalkBlend();
 
         enemy.GetEnemyAgent().velocity = enemy.defaultVelocity;
         enemy.GetEnemyAgent().SetDestination(enemyPath.GetRandomPathPosition());

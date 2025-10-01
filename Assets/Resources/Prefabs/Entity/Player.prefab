@@ -106,6 +106,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerController: {fileID: 0}
+  speed: 5
   entityPossessionTimerMax: 0
   possessionCooldownTimerMax: 5
   cameraAttachPoint: {fileID: 2676502654155841020}

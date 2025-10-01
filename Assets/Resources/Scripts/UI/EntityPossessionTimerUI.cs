@@ -29,7 +29,7 @@ public class EntityPossessionTimerUI : MonoBehaviour
 
     private void SetTimer_OnPossessed(object sender, IPossessable e)
     {
-        if (PlayerController.Instance.isPossessed) { ResetFillAmount(); return; }
+        if (PlayerController.instance.isPossessed) { ResetFillAmount(); return; }
 
         possession = true;
 

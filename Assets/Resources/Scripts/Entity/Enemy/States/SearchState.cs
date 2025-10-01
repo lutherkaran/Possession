@@ -17,6 +17,7 @@ public class SearchState : BaseState
     protected override void EnterState()
     {
         enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Searching, true);
+        enemy.GetAnimator().RunBlend();
         enemy.GetEnemyAgent().SetDestination(enemy.targetsLastPosition);
         enemy.GetEnemyAgent().velocity = enemy.defaultVelocity * 4f;
         enemy.fieldOfView = 180f;
@@ -35,6 +36,7 @@ public class SearchState : BaseState
 
             if (enemy.GetEnemyAgent().remainingDistance <= enemy.GetEnemyAgent().stoppingDistance)
             {
+                stateMachine.Waiting(new IdleState(enemy), 3);
                 FindAnotherDestinationNearby();
             }
         }
@@ -54,6 +56,7 @@ public class SearchState : BaseState
 
     private void FindAnotherDestinationNearby()
     {
+        stateMachine.ChangeState(new SearchState(enemy));
         enemy.GetEnemyAgent().SetDestination(enemy.targetsLastPosition + (Random.insideUnitSphere * 20f));
     }
 }

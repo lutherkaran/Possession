@@ -27,7 +27,7 @@ public class InputManager : MonoBehaviour
 
     public void Start()
     {
-        player = PlayerController.Instance.GetComponent<PlayerController>();
+        player = PlayerController.instance.GetComponent<PlayerController>();
 
         PossessionManager.Instance.OnPossessed += SetControlledEntity;
         PossessionManager.Instance.ToPossess(player.gameObject);
