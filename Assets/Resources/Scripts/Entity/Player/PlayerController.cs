@@ -123,8 +123,6 @@ public class PlayerController : Entity, IPossessable, IDamageable
 
     public Entity GetPossessedEntity() => this;
 
-    protected override Entity GetEntity() => this;
-
     public InputManager GetInputManager() => inputManager;
 
     public CharacterController GetCharacterControllerReference() => characterController;

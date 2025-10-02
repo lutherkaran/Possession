@@ -60,8 +60,6 @@ public class NPC : Entity, IPossessable
 
     public Entity GetPossessedEntity() => this;
 
-    protected override Entity GetEntity() => this;
-
     public override Transform GetCameraAttachPoint() => cameraAttachPoint;
 
     public override float GetEntityPossessionTimerMax() => entityPossessionTimerMax;

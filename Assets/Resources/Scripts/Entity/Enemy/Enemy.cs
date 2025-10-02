@@ -20,10 +20,9 @@ public class Enemy : Entity, IPossessable, IDamageable
     [SerializeField] private HealthUI healthUI;
     [SerializeField] private EnemyPath enemyPath;
 
-    private NavMeshAgent Agent;
+    private NavMeshAgent agent;
     private StateMachine stateMachine;
-    private Bullet bullet;
-
+   
     public Vector3 defaultVelocity { get; private set; }
     public Vector3 targetsLastPosition { get; private set; }
     public Vector3 shootDirection { get; private set; }
@@ -60,10 +59,10 @@ public class Enemy : Entity, IPossessable, IDamageable
 
     private void Initialize()
     {
-        Agent = GetComponent<NavMeshAgent>();
+        agent = GetComponent<NavMeshAgent>();
 
         currentHealth = maxHealth;
-        defaultVelocity = Agent.velocity;
+        defaultVelocity = agent.velocity;
     }
 
     private void PostInitialize()
@@ -136,8 +135,6 @@ public class Enemy : Entity, IPossessable, IDamageable
 
     public bool CanSeePlayer()
     {
-        if (PossessionManager.Instance.GetCurrentPossessable() == possessedByPlayer) return false;
-
         if (playerController.transform != null && Vector3.Distance(transform.position, playerController.transform.position) < sightDistance)
         {
             Vector3 targetDirection = playerController.transform.position - transform.position;
@@ -163,8 +160,6 @@ public class Enemy : Entity, IPossessable, IDamageable
         return false;
     }
 
-    protected override Entity GetEntity() => this;
-
     protected override bool IsAlive() => healthUI.GetHealth() > 0;
 
     public float GetHealth() => healthUI.GetHealth();
@@ -177,13 +172,13 @@ public class Enemy : Entity, IPossessable, IDamageable
 
     public override Transform GetCameraAttachPoint() => cameraAttachPoint;
 
-    public EnemyAnimator GetAnimator() => enemyAnimator;
-
     public override float GetEntityPossessionTimerMax() => entityPossessionTimerMax;
 
     public override float GetPossessionCooldownTimerMax() => possessionCooldownTimerMax;
+    
+    public EnemyAnimator GetAnimator() => enemyAnimator;
 
-    public NavMeshAgent GetEnemyAgent() => Agent;
+    public NavMeshAgent GetEnemyAgent() => agent;
 
     public EnemyPath GetEnemyPath() => enemyPath;
 

@@ -31,6 +31,7 @@ public class PossessedState : BaseState
 
     protected override void ExitState()
     {
+        enemy.GetAnimator().WalkBlend();
         stateMachine.ChangeState(stateMachine.lastActiveState);
     }
 

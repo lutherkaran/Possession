@@ -52,7 +52,6 @@ public abstract class Entity : MonoBehaviour
     public abstract void Attack();
     
     protected abstract bool IsAlive();
-    protected abstract Entity GetEntity();
     
     public abstract Transform GetCameraAttachPoint();
     public abstract float GetEntityPossessionTimerMax();
