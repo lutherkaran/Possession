@@ -34,7 +34,9 @@ public class Enemy : Entity, IPossessable, IDamageable
     [SerializeField] private LayerMask targetLayerMask;
     public float fieldOfView = 90f;
 
-    [Header("Weapon Properties")]
+    [Range(1f, 1.8f)]
+    [SerializeField] private float targetHeight;
+
     [SerializeField] private Transform gunBarrel;
 
     [Header("Health Properties")]
@@ -99,7 +101,7 @@ public class Enemy : Entity, IPossessable, IDamageable
 
     private void Shoot()
     {
-        shootDirection = (GetTargetPlayerTransform().position - GetGunBarrelTransform().position).normalized;
+        shootDirection = (GetTargetPlayerTransform().position + Vector3.up * (UnityEngine.Random.Range(1f, 1.5f)) - GetGunBarrelTransform().position).normalized;
         onShoot?.Invoke(this, new OnShootEventArgs { _entity = this, _direction = shootDirection, _gunBarrel = gunBarrel });
     }
 

@@ -2126,8 +2126,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletSpeed: 25
-  shotTimer: 0.5
-  fireRate: 0.5
 --- !u!4 &1891088500
 Transform:
   m_ObjectHideFlags: 0
@@ -3601,6 +3599,11 @@ PrefabInstance:
       propertyPath: enemyPath
       value: 
       objectReference: {fileID: 965996198}
+    - target: {fileID: 5219655988053613314, guid: 6293859972d35e545b5cb195625faf4d,
+        type: 3}
+      propertyPath: targetHeight
+      value: 1.332
+      objectReference: {fileID: 0}
     - target: {fileID: 5219655988053613314, guid: 6293859972d35e545b5cb195625faf4d,
         type: 3}
       propertyPath: playerController
