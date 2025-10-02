@@ -30,6 +30,6 @@ public class Bullet : MonoBehaviour
                 player.HealthChanged(UnityEngine.Random.Range(-5f, -10f));
         }
 
-        Destroy(gameObject);
+        Destroy(this.gameObject);
     }
 }

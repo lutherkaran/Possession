@@ -35,12 +35,12 @@ public class BulletManager : MonoBehaviour
 
         spreadDirection = Quaternion.AngleAxis(Random.Range(-3f, 3f), Vector3.up) * direction.normalized;
 
-        rb = bulletGameObject.GetComponentInChildren<Rigidbody>();
+        rb = bulletGameObject.GetComponent<Rigidbody>();
         rb.velocity = spreadDirection * bulletSpeed;
     }
 
     private GameObject InstantiateBullet(Transform gunBarrel)
     {
-        return GameObject.Instantiate(bulletPrefab, gunBarrel.position, Quaternion.identity);
+        return GameObject.Instantiate(bulletPrefab, gunBarrel.position, Quaternion.identity, this.transform);
     }
 }
