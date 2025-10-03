@@ -4,38 +4,40 @@ using UnityEngine.InputSystem.Interactions;
 
 public class InputManager : MonoBehaviour
 {
-    public static InputManager Instance { get; private set; }
+    public static InputManager instance { get; private set; }
 
-    public PlayerInput playerInput;
+    public event EventHandler OnGamePaused;
 
-    private PlayerInput.OnFootActions OnFootActions;
-    private PlayerInput.OnPossessionActions OnPossessionActions;
+    private PlayerInput playerInput;
 
     private PlayerController player;
     private Entity controlledEntity;
 
-    public event EventHandler OnGamePaused;
-
     private void Awake()
     {
-        Instance = this;
+        if (instance != null && instance == this)
+        {
+            Destroy(gameObject);
+        }
+
+        instance = this;
 
         playerInput = new PlayerInput();
-        OnFootActions = playerInput.OnFoot;
-        OnPossessionActions = playerInput.OnPossession;
+
+        playerInput.OnFoot.Enable();
+        playerInput.OnPossession.Enable();
     }
 
     public void Start()
     {
-        player = PlayerController.instance.GetComponent<PlayerController>();
+        player = PlayerController.instance.GetPlayer();
 
-        PossessionManager.Instance.OnPossessed += SetControlledEntity;
-        PossessionManager.Instance.ToPossess(player.gameObject);
+        PossessionManager.instance.OnPossessed += SetControlledEntity;
 
-        OnPossessionActions.Possession.performed += HandlePossessionInput;
-        OnFootActions.MouseInteraction.performed += ctx => CameraManager.instance.GetMouseAim()?.ToggleMouseInteraction();
-        OnFootActions.Attack.performed += ctx => player.Attack();
-        OnFootActions.Pause.performed += Pause_performed;
+        playerInput.OnPossession.Possession.performed += HandlePossessionInput;
+        playerInput.OnFoot.MouseInteraction.performed += ctx => CameraManager.instance.GetMouseAim()?.ToggleMouseInteraction();
+        playerInput.OnFoot.Attack.performed += ctx => player?.Attack();
+        playerInput.OnFoot.Pause.performed += Pause_performed;
     }
 
     private void Pause_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
@@ -54,48 +56,41 @@ public class InputManager : MonoBehaviour
 
         if (obj.interaction is PressInteraction)
         {
-            PossessionManager.Instance.GetCurrentPossession()?.PossessEntities();
+            PossessionManager.instance.GetCurrentPossession()?.PossessEntities();
         }
         else if (obj.interaction is HoldInteraction)
         {
-            PossessionManager.Instance.GetCurrentPossession()?.RepossessPlayer(player.gameObject);
+            PossessionManager.instance.GetCurrentPossession()?.RepossessPlayer(player.gameObject);
         }
     }
 
     private void Update()
     {
-        OnFootActions.Sprint.performed += ctx => controlledEntity.Sprint();
-        OnFootActions.Jump.performed += ctx => controlledEntity.ProcessJump();
+        playerInput.OnFoot.Sprint.performed += ctx => controlledEntity.Sprint();
+        playerInput.OnFoot.Jump.performed += ctx => controlledEntity.ProcessJump();
     }
 
     private void FixedUpdate()
     {
-        controlledEntity.ProcessMove(OnFootActions.Movement.ReadValue<Vector2>());
+        controlledEntity.ProcessMove(playerInput.OnFoot.Movement.ReadValue<Vector2>());
     }
 
     private void LateUpdate()
     {
-        CameraManager.instance.GetMouseAim().ProcessLook(OnFootActions.Look.ReadValue<Vector2>());
+        CameraManager.instance.GetMouseAim().ProcessLook(playerInput.OnFoot.Look.ReadValue<Vector2>());
     }
 
-    private void OnEnable()
+    void OnDestroy()
     {
-        OnFootActions.Enable();
-        OnPossessionActions.Enable();
+        PossessionManager.instance.OnPossessed -= SetControlledEntity;
+        playerInput.OnPossession.Possession.performed -= HandlePossessionInput;
+        playerInput.OnFoot.MouseInteraction.performed -= ctx => CameraManager.instance.GetMouseAim()?.ToggleMouseInteraction();
+        playerInput.OnFoot.Attack.performed -= ctx => player?.Attack();
+        playerInput.OnFoot.Pause.performed -= Pause_performed;
+
+        playerInput.Dispose();
     }
 
-    private void OnDisable()
-    {
-        OnFootActions.Disable();
-        OnPossessionActions.Disable();
-        UnsubscribeEvents();
-    }
-
-    private void UnsubscribeEvents()
-    {
-        PossessionManager.Instance.OnPossessed -= SetControlledEntity;
-    }
-
-    public PlayerInput.OnFootActions GetOnFootActions() => OnFootActions;
-    public PlayerInput.OnPossessionActions GetOnPossessionActions() => OnPossessionActions;
+    public PlayerInput.OnFootActions GetOnFootActions() => playerInput.OnFoot;
+    public PlayerInput.OnPossessionActions GetOnPossessionActions() => playerInput.OnPossession;
 }

@@ -31,7 +31,7 @@ public class EntityPossessionCooldownUI : MonoBehaviour
 
     public void Start()
     {
-        PossessionManager.Instance.OnPossessed += SetTimer_OnPossessed;
+        PossessionManager.instance.OnPossessed += SetTimer_OnPossessed;
     }
 
     private void SetTimer_OnPossessed(object sender, IPossessable e)

@@ -41,7 +41,7 @@ public class Possession
             if (possessableEntity is Enemy && !IsBehindEnemy(targetEntity)) return;
         }
 
-        PossessionManager.Instance.ToPossess(targetEntity);
+        PossessionManager.instance.ToPossess(targetEntity);
         currentPossession.GetPossessedEntity().StartCoroutine(CameraManager.instance.MovetoPosition(targetEntity));
         canPossess = false;
     }
@@ -67,7 +67,7 @@ public class Possession
 
     public void RepossessPlayer(GameObject player)
     {
-        PossessionManager.Instance.ToPossess(player);
+        PossessionManager.instance.ToPossess(player);
     }
 
     //public Ray DrawRayFromCamera()

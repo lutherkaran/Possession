@@ -17,11 +17,6 @@ public class CameraManager : MonoBehaviour
     public Camera cam;
     public static CameraManager instance { get; private set; }
 
-    private void OnEnable()
-    {
-        PossessionManager.Instance.OnPossessed += AttachCameraToPossessedObject;
-    }
-
     private void Awake()
     {
         if (instance != null)
@@ -30,12 +25,13 @@ public class CameraManager : MonoBehaviour
         }
 
         instance = this;
+        cam = GetComponent<Camera>();
+        InitializingMouse();
     }
 
     private void Start()
     {
-        cam = GetComponent<Camera>();
-        InitializingMouse();
+        PossessionManager.instance.OnPossessed += AttachCameraToPossessedObject;
     }
 
     private void InitializingMouse()
@@ -55,7 +51,7 @@ public class CameraManager : MonoBehaviour
 
     public IEnumerator MovetoPosition(GameObject currentlyPossessed)
     {
-        InputManager.Instance.GetOnFootActions().Disable();
+        InputManager.instance.GetOnFootActions().Disable();
         targetPosition = Vector3.zero;
         targetPosition = cameraAttachPoint.position;
 
@@ -64,13 +60,13 @@ public class CameraManager : MonoBehaviour
             cam.transform.position = Vector3.SmoothDamp(cam.transform.position, targetPosition, ref velocity, smoothTime);
             yield return null;
         }
-        InputManager.Instance.GetOnFootActions().Enable();
+        InputManager.instance.GetOnFootActions().Enable();
     }
 
     public MouseAim GetMouseAim() => mouseAim;
 
     public void OnDisable()
     {
-        PossessionManager.Instance.OnPossessed -= AttachCameraToPossessedObject;
+        PossessionManager.instance.OnPossessed -= AttachCameraToPossessedObject;
     }
 }

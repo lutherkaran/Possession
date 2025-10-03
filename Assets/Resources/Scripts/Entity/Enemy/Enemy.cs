@@ -118,7 +118,7 @@ public class Enemy : Entity, IPossessable, IDamageable
 
     public void Possessing(GameObject go)
     {
-        possessedByPlayer = PossessionManager.Instance.GetCurrentPossessable();
+        possessedByPlayer = PossessionManager.instance.GetCurrentPossessable();
         stateMachine.ChangeState(new PossessedState(this));
     }
 

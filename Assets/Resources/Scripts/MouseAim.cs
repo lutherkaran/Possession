@@ -20,7 +20,7 @@ public class MouseAim
         if (!MouseVisible)
         {
             CameraManager.instance.cam.transform.localRotation = Quaternion.Euler(xRotation, 0, 0);
-            PossessionManager.Instance.GetCurrentPossessable().GetPossessedEntity().gameObject.transform.Rotate(Vector3.up * (mouseX * Time.deltaTime) * xSensitivity);
+            PossessionManager.instance.GetCurrentPossessable().GetPossessedEntity().gameObject.transform.Rotate(Vector3.up * (mouseX * Time.deltaTime) * xSensitivity);
         }
     }
 
@@ -28,15 +28,15 @@ public class MouseAim
     {
         MouseVisible = !MouseVisible;
 
-        if (!MouseVisible)
-        {
-            Cursor.lockState = CursorLockMode.Locked;
-            HideMouse();
-        }
-        else
+        if (MouseVisible)
         {
             Cursor.lockState = CursorLockMode.None;
             ShowMouse();
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            HideMouse();
         }
     }
 

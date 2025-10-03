@@ -16,21 +16,29 @@ public class PossessedState : BaseState
     {
         enemy.GetEnemyAgent().velocity = Vector3.zero;
         enemy.GetEnemyAgent().isStopped = true;
-        // play possessed Animation..
+        enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Possessed, true);
+        PossessionManager.instance.OnPossessed += Enemy_OnPossessed;
+    }
+
+    private void Enemy_OnPossessed(object sender, IPossessable e)
+    {
+        enemy.GetAnimator().ManualBlend(WalkSpeed);
     }
 
     protected override void PerformState()
     {
-        moveDirection.x = InputManager.Instance.GetOnFootActions().Movement.ReadValue<Vector2>().x;
-        moveDirection.z = InputManager.Instance.GetOnFootActions().Movement.ReadValue<Vector2>().y;
+        moveDirection.x = InputManager.instance.GetOnFootActions().Movement.ReadValue<Vector2>().x;
+        moveDirection.z = InputManager.instance.GetOnFootActions().Movement.ReadValue<Vector2>().y;
         moveDirection.y = 0;
 
-        if (PossessionManager.Instance.GetCurrentPossessable() == enemy.possessedByPlayer)
+        if (PossessionManager.instance.GetCurrentPossessable() == enemy.possessedByPlayer)
             enemy.transform.Translate(moveDirection * WalkSpeed * Time.deltaTime);
+        //    enemy.GetAnimator().ManualBlend(WalkSpeed * Time.deltaTime);
     }
 
     protected override void ExitState()
     {
+        enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Possessed, false);
         enemy.GetAnimator().WalkBlend();
         stateMachine.ChangeState(stateMachine.lastActiveState);
     }

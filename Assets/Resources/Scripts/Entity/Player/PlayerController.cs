@@ -17,14 +17,12 @@ public class PlayerController : Entity, IPossessable, IDamageable
 
     private CharacterController characterController;
     private InputManager inputManager;
-    private Bullet bullet;
 
     [SerializeField] private float RaycastHitDistance = 40.0f;
 
     [SerializeField] private Transform gunBarrel;
     [SerializeField] private float maxHealth = 100f;
     [SerializeField] private float health;
-
 
     private void Awake()
     {
@@ -40,7 +38,6 @@ public class PlayerController : Entity, IPossessable, IDamageable
         health = maxHealth;
         characterController = GetComponent<CharacterController>();
         inputManager = GetComponent<InputManager>();
-        SetPlayer(this);
     }
 
     private void Update()
@@ -87,7 +84,6 @@ public class PlayerController : Entity, IPossessable, IDamageable
             Vector3 shootDirection = (hit.point - gunBarrel.position).normalized;
 
             BulletManager.instance.Shoot(this, gunBarrel.transform, shootDirection);
-
         }
     }
 
@@ -99,14 +95,12 @@ public class PlayerController : Entity, IPossessable, IDamageable
 
     public void Possessing(GameObject go)
     {
-        //Debug.Log($"Possessing... {go.name}");
-        possessedByPlayer = PossessionManager.Instance.GetCurrentPossessable();
+        possessedByPlayer = PossessionManager.instance.GetCurrentPossessable();
         isPossessed = true;
     }
 
     public void Depossessing(GameObject go)
     {
-        //Debug.Log($"DePossessing... {go.name}");
         possessedByPlayer = null;
         isPossessed = false;
     }
@@ -120,6 +114,8 @@ public class PlayerController : Entity, IPossessable, IDamageable
     protected override bool IsAlive() => healthUI.GetHealth() > 0;
 
     public float GetMaxHealth() => maxHealth;
+
+    public PlayerController GetPlayer() => this;
 
     public Entity GetPossessedEntity() => this;
 

@@ -27,14 +27,14 @@ public class NPC : Entity, IPossessable
     public override void ProcessMove(Vector2 input)
     {
         base.ProcessMove(input);
-        if (PossessionManager.Instance.GetCurrentPossessable() == possessedByPlayer)
+        if (PossessionManager.instance.GetCurrentPossessable() == possessedByPlayer)
             transform.Translate(moveDirection * speed * Time.deltaTime);
     }
 
     public override void ProcessJump()
     {
         base.ProcessJump();
-        if (PossessionManager.Instance.GetCurrentPossessable() == possessedByPlayer)
+        if (PossessionManager.instance.GetCurrentPossessable() == possessedByPlayer)
         {
             transform.position += velocity * Time.deltaTime;
             velocity.y = gravity * Time.deltaTime * 10;
@@ -49,7 +49,7 @@ public class NPC : Entity, IPossessable
     public void Possessing(GameObject go)
     {
         //Debug.Log("Possessing..." + go.name);
-        possessedByPlayer = PossessionManager.Instance.GetCurrentPossessable();
+        possessedByPlayer = PossessionManager.instance.GetCurrentPossessable();
     }
 
     public void Depossessing(GameObject go)

@@ -1,15 +1,32 @@
 using System;
 using UnityEngine;
 
-public class PossessionManager
+public class PossessionManager : MonoBehaviour
 {
     public event EventHandler<IPossessable> OnPossessed;
 
-    private static PossessionManager instance;
-    public static PossessionManager Instance { get { return instance == null ? instance = new PossessionManager() : instance; } }
-   
+    public static PossessionManager instance { get; private set; }
+
     private Possession currentPossession;
     private IPossessable currentPossessable;
+
+    private PlayerController playerController;
+
+    private void Awake()
+    {
+        if (instance != null)
+        {
+            Destroy(instance); instance = null;
+        }
+
+        instance = this;
+    }
+
+    private void Start()
+    {
+        playerController = PlayerController.instance.GetPlayer();
+        ToPossess(playerController.gameObject);
+    }
 
     public Possession ToPossess(GameObject possessable)
     {

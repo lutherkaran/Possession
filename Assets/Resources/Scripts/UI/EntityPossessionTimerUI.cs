@@ -24,7 +24,7 @@ public class EntityPossessionTimerUI : MonoBehaviour
 
     public void Start()
     {
-        PossessionManager.Instance.OnPossessed += SetTimer_OnPossessed;
+        PossessionManager.instance.OnPossessed += SetTimer_OnPossessed;
     }
 
     private void SetTimer_OnPossessed(object sender, IPossessable e)
@@ -59,7 +59,7 @@ public class EntityPossessionTimerUI : MonoBehaviour
 
                     if (possessionTimer <= 0)
                     {
-                        PossessionManager.Instance.GetCurrentPossession()?.RepossessPlayer(player.gameObject);
+                        PossessionManager.instance.GetCurrentPossession()?.RepossessPlayer(player.gameObject);
                         possessionTimerImage.fillAmount = 100 / entityPossessionTimerMax;
                         possessionTimer = entityPossessionTimerMax;
 

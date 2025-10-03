@@ -16,7 +16,6 @@ public abstract class Entity : MonoBehaviour
     protected bool sprinting = false;
     protected bool isGrounded = true;
 
-
     [SerializeField] protected float entityPossessionTimerMax;
     [SerializeField] protected float possessionCooldownTimerMax;
 

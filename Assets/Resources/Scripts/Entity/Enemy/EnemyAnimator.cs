@@ -5,7 +5,7 @@ public class EnemyAnimator : MonoBehaviour
 {
     public enum AnimationStates
     {
-        Idle, Patrolling, Running, Searching, Attacking, Fleeing
+        Idle, Patrolling, Running, Searching, Attacking, Fleeing, Possessed
     };
 
     private const string IS_IDLE = "IsIdle";
@@ -14,6 +14,7 @@ public class EnemyAnimator : MonoBehaviour
     private const string IS_RUNNING = "IsRunning";
     private const string IS_ATTACKING = "IsAttacking";
     private const string IS_FLEEING = "IsFleeing";
+    private const string IS_POSSESSED = "IsPossessed";
 
     private Enemy enemy;
     private Animator enemyAnimator;
@@ -30,7 +31,8 @@ public class EnemyAnimator : MonoBehaviour
         { AnimationStates.Running, IS_RUNNING},
         { AnimationStates.Searching, IS_SEARCHING },
         { AnimationStates.Attacking, IS_ATTACKING },
-        { AnimationStates.Fleeing, IS_FLEEING }
+        { AnimationStates.Fleeing, IS_FLEEING },
+        { AnimationStates.Possessed, IS_POSSESSED }
      };
     }
 
@@ -77,5 +79,12 @@ public class EnemyAnimator : MonoBehaviour
     {
         enemyAnimator.SetFloat("Blend", .0f);
         enemyAnimator.SetLayerWeight(1, 0f);
+    }
+
+    public void ManualBlend(float value)
+    {
+        enemyAnimator.SetFloat("Blend", value);
+        enemyAnimator.SetLayerWeight(1, 0f);
+
     }
 }
