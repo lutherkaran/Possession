@@ -5,4 +5,5 @@ public interface IManagable
     public void Refresh(float deltaTime);
     public void PhysicsRefresh(float fixedDeltaTime);
     public void LateRefresh(float deltaTime);
+    public void OnDemolish();
 }

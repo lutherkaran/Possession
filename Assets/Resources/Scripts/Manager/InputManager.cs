@@ -2,9 +2,11 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem.Interactions;
 
-public class InputManager : MonoBehaviour
+public class InputManager : IManagable
 {
-    public static InputManager instance { get; private set; }
+    private static InputManager Instance;
+
+    public static InputManager instance { get { return Instance == null ? Instance = new InputManager() : Instance; } }
 
     public event EventHandler OnGamePaused;
 
@@ -13,24 +15,17 @@ public class InputManager : MonoBehaviour
     private PlayerController player;
     private Entity controlledEntity;
 
-    private void Awake()
+    public void Initialize()
     {
-        if (instance != null && instance == this)
-        {
-            Destroy(gameObject);
-        }
-
-        instance = this;
-
         playerInput = new PlayerInput();
 
         playerInput.OnFoot.Enable();
         playerInput.OnPossession.Enable();
     }
 
-    public void Start()
+    public void PostInitialize()
     {
-        player = PlayerController.instance.GetPlayer();
+        player = PlayerManager.instance.GetPlayer();
 
         PossessionManager.instance.OnPossessed += SetControlledEntity;
 
@@ -38,6 +33,22 @@ public class InputManager : MonoBehaviour
         playerInput.OnFoot.MouseInteraction.performed += ctx => CameraManager.instance.GetMouseAim()?.ToggleMouseInteraction();
         playerInput.OnFoot.Attack.performed += ctx => player?.Attack();
         playerInput.OnFoot.Pause.performed += Pause_performed;
+    }
+
+    public void Refresh(float deltaTime)
+    {
+        playerInput.OnFoot.Sprint.performed += ctx => controlledEntity.Sprint();
+        playerInput.OnFoot.Jump.performed += ctx => controlledEntity.ProcessJump();
+    }
+
+    public void PhysicsRefresh(float fixedDeltaTime)
+    {
+        controlledEntity.ProcessMove(playerInput.OnFoot.Movement.ReadValue<Vector2>());
+    }
+
+    public void LateRefresh(float deltaTime)
+    {
+        CameraManager.instance.GetMouseAim().ProcessLook(playerInput.OnFoot.Look.ReadValue<Vector2>());
     }
 
     private void Pause_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
@@ -64,23 +75,7 @@ public class InputManager : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-        playerInput.OnFoot.Sprint.performed += ctx => controlledEntity.Sprint();
-        playerInput.OnFoot.Jump.performed += ctx => controlledEntity.ProcessJump();
-    }
-
-    private void FixedUpdate()
-    {
-        controlledEntity.ProcessMove(playerInput.OnFoot.Movement.ReadValue<Vector2>());
-    }
-
-    private void LateUpdate()
-    {
-        CameraManager.instance.GetMouseAim().ProcessLook(playerInput.OnFoot.Look.ReadValue<Vector2>());
-    }
-
-    void OnDestroy()
+    public void OnDemolish()
     {
         PossessionManager.instance.OnPossessed -= SetControlledEntity;
         playerInput.OnPossession.Possession.performed -= HandlePossessionInput;

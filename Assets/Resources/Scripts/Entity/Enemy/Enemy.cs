@@ -22,7 +22,7 @@ public class Enemy : Entity, IPossessable, IDamageable
 
     private NavMeshAgent agent;
     private StateMachine stateMachine;
-   
+
     public Vector3 defaultVelocity { get; private set; }
     public Vector3 targetsLastPosition { get; private set; }
     public Vector3 shootDirection { get; private set; }
@@ -45,19 +45,7 @@ public class Enemy : Entity, IPossessable, IDamageable
     private Dictionary<Type, BaseState> statesDictionary;
     private Transform targetTransform;
 
-
-    private void Awake()
-    {
-        Initialize();
-    }
-
-    private void Start()
-    {
-        PostInitialize();
-        InitializeStatesDictionary();
-    }
-
-    private void Initialize()
+    public void Initialize()
     {
         agent = GetComponent<NavMeshAgent>();
 
@@ -65,11 +53,13 @@ public class Enemy : Entity, IPossessable, IDamageable
         defaultVelocity = agent.velocity;
     }
 
-    private void PostInitialize()
+    public void PostInitialize()
     {
         enemyAnimator = GetComponentInChildren<EnemyAnimator>();
         healthUI = GetComponentInChildren<HealthUI>();
         stateMachine = GetComponent<StateMachine>();
+
+        InitializeStatesDictionary();
     }
 
     private void InitializeStatesDictionary()
@@ -88,7 +78,22 @@ public class Enemy : Entity, IPossessable, IDamageable
         stateMachine.Initialise(this, statesDictionary);
     }
 
-    private void Update()
+    public void Refresh(float deltaTime)
+    {
+
+    }
+
+    public void PhysicsRefresh(float fixedDeltaTime)
+    {
+
+    }
+
+    public void LateRefresh(float deltaTime)
+    {
+
+    }
+
+    public void OnDemolish()
     {
 
     }
@@ -98,7 +103,7 @@ public class Enemy : Entity, IPossessable, IDamageable
         Shoot();
     }
 
-    private void Shoot()
+    public void Shoot()
     {
         shootDirection = (GetTargetPlayerTransform().position + Vector3.up * (UnityEngine.Random.Range(1f, 1.5f)) - GetGunBarrelTransform().position).normalized;
         onShoot?.Invoke(this, new OnShootEventArgs { _entity = this, _direction = shootDirection, _gunBarrel = gunBarrel });
@@ -175,7 +180,7 @@ public class Enemy : Entity, IPossessable, IDamageable
     public override float GetEntityPossessionTimerMax() => entityPossessionTimerMax;
 
     public override float GetPossessionCooldownTimerMax() => possessionCooldownTimerMax;
-    
+
     public EnemyAnimator GetAnimator() => enemyAnimator;
 
     public NavMeshAgent GetEnemyAgent() => agent;
@@ -185,4 +190,5 @@ public class Enemy : Entity, IPossessable, IDamageable
     public Transform GetGunBarrelTransform() => gunBarrel;
 
     public Transform GetTargetPlayerTransform() => targetTransform;
+
 }

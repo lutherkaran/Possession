@@ -64,4 +64,8 @@ public class BulletManager : IManagable
         return GameObject.Instantiate(bulletPrefab, gunBarrel.position, Quaternion.identity, bulletParent);
     }
 
+    public void OnDemolish()
+    {
+
+    }
 }

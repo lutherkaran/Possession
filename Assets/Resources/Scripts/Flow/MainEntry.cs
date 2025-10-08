@@ -26,4 +26,9 @@ public class MainEntry : MonoBehaviour
     {
         GameFlow.instance.LateRefresh(Time.deltaTime);
     }
+
+    private void OnDestroy()
+    {
+        GameFlow.instance.OnDemolish();
+    }
 }

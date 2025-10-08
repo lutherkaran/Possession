@@ -7,16 +7,13 @@ public class PlayerController : Entity, IPossessable, IDamageable
 {
     public event EventHandler<IDamageable.OnDamagedEventArgs> OnDamaged;
 
-    public static PlayerController instance { get; private set; }
-
-    private bool isAlive = true;
+    public bool isAlive { get; private set; }
 
     public bool isPossessed { get; private set; }
 
     [SerializeField] private HealthUI healthUI;
 
     private CharacterController characterController;
-    private InputManager inputManager;
 
     [SerializeField] private float RaycastHitDistance = 40.0f;
 
@@ -24,25 +21,18 @@ public class PlayerController : Entity, IPossessable, IDamageable
     [SerializeField] private float maxHealth = 100f;
     [SerializeField] private float health;
 
-    private void Awake()
+    float currentDeltaTime;
+
+    public void Initialize()
     {
-        if (instance != null && instance != this)
-        {
-            Destroy(gameObject); // Prevent duplicates
-            return;
-        }
-
-        instance = this;
-        DontDestroyOnLoad(gameObject);
-
         health = maxHealth;
+        isAlive = true;
         characterController = GetComponent<CharacterController>();
-        inputManager = GetComponent<InputManager>();
     }
 
-    private void Update()
+    public void PostInitialize()
     {
-        isGrounded = characterController.isGrounded;
+
     }
 
     public override void ProcessJump()
@@ -59,13 +49,13 @@ public class PlayerController : Entity, IPossessable, IDamageable
     {
         base.ProcessMove(input);
 
-        characterController.Move(transform.TransformDirection(new Vector3(moveDirection.x, 0, moveDirection.z)) * speed * Time.deltaTime);
+        characterController.Move(transform.TransformDirection(new Vector3(moveDirection.x, 0, moveDirection.z)) * speed * currentDeltaTime);
         if (isGrounded && velocity.y < 0)
         {
             velocity.y = -1f;
         }
-        velocity.y += gravity * Time.deltaTime;
-        characterController.Move(velocity * Time.deltaTime);
+        velocity.y += gravity * currentDeltaTime;
+        characterController.Move(velocity * currentDeltaTime);
     }
 
     public override void Attack()
@@ -111,6 +101,27 @@ public class PlayerController : Entity, IPossessable, IDamageable
         health = healthUI.GetHealth();
     }
 
+    public void Refresh(float deltaTime)
+    {
+        currentDeltaTime = deltaTime;
+        isGrounded = characterController.isGrounded;
+    }
+
+    public void PhysicsRefresh(float fixedDeltaTime)
+    {
+
+    }
+
+    public void LateRefresh(float deltaTime)
+    {
+
+    }
+
+    public void OnDemolish()
+    {
+
+    }
+
     protected override bool IsAlive() => healthUI.GetHealth() > 0;
 
     public float GetMaxHealth() => maxHealth;
@@ -118,8 +129,6 @@ public class PlayerController : Entity, IPossessable, IDamageable
     public PlayerController GetPlayer() => this;
 
     public Entity GetPossessedEntity() => this;
-
-    public InputManager GetInputManager() => inputManager;
 
     public CharacterController GetCharacterControllerReference() => characterController;
 
