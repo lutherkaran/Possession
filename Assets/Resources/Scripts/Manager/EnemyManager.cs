@@ -7,7 +7,6 @@ public class EnemyManager : IManagable
     private static EnemyManager Instance;
     public static EnemyManager instance { get { return Instance == null ? Instance = new EnemyManager() : Instance; } }
 
-
     private List<Enemy> enemies = new List<Enemy>();
     private GameObject enemyPrefab;
 
@@ -29,7 +28,7 @@ public class EnemyManager : IManagable
     {
         for (int i = 0; i < enemiesToSpawn; i++)
         {
-            GameObject newEnemy = GameObject.Instantiate(enemyPrefab, Vector3.zero, Quaternion.identity);
+            GameObject newEnemy = GameObject.Instantiate(enemyPrefab, new Vector3(UnityEngine.Random.Range(0, 5), 0, UnityEngine.Random.Range(0, 5)), Quaternion.identity);
             enemies.Add(newEnemy.GetComponent<Enemy>());
         }
     }
@@ -48,6 +47,7 @@ public class EnemyManager : IManagable
         {
             enemy.OnDemolish();
         }
+        Instance = null;
     }
 
     public void PhysicsRefresh(float fixedDeltaTime)

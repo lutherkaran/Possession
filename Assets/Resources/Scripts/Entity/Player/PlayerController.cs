@@ -7,27 +7,26 @@ public class PlayerController : Entity, IPossessable, IDamageable
 {
     public event EventHandler<IDamageable.OnDamagedEventArgs> OnDamaged;
 
-    public bool isAlive { get; private set; }
-
-    public bool isPossessed { get; private set; }
-
+    private CharacterController characterController;
     [SerializeField] private HealthUI healthUI;
 
-    private CharacterController characterController;
+    public bool isAlive { get; private set; }
+    public bool isPossessed { get; private set; }
 
     [SerializeField] private float RaycastHitDistance = 40.0f;
-
     [SerializeField] private Transform gunBarrel;
     [SerializeField] private float maxHealth = 100f;
     [SerializeField] private float health;
 
-    float currentDeltaTime;
+    float currentFixedDeltaTime;
 
     public void Initialize()
     {
         health = maxHealth;
         isAlive = true;
+
         characterController = GetComponent<CharacterController>();
+        healthUI = GetComponent<HealthUI>();
     }
 
     public void PostInitialize()
@@ -49,13 +48,13 @@ public class PlayerController : Entity, IPossessable, IDamageable
     {
         base.ProcessMove(input);
 
-        characterController.Move(transform.TransformDirection(new Vector3(moveDirection.x, 0, moveDirection.z)) * speed * currentDeltaTime);
+        characterController.Move(transform.TransformDirection(new Vector3(moveDirection.x, 0, moveDirection.z)) * speed * currentFixedDeltaTime);
         if (isGrounded && velocity.y < 0)
         {
             velocity.y = -1f;
         }
-        velocity.y += gravity * currentDeltaTime;
-        characterController.Move(velocity * currentDeltaTime);
+        velocity.y += gravity * currentFixedDeltaTime;
+        characterController.Move(velocity * currentFixedDeltaTime);
     }
 
     public override void Attack()
@@ -98,18 +97,17 @@ public class PlayerController : Entity, IPossessable, IDamageable
     public void HealthChanged(float healthChangedValue)
     {
         OnDamaged?.Invoke(this, new IDamageable.OnDamagedEventArgs { health = healthChangedValue });
-        health = healthUI.GetHealth();
+        //health = healthUI.GetHealth();
     }
 
     public void Refresh(float deltaTime)
     {
-        currentDeltaTime = deltaTime;
         isGrounded = characterController.isGrounded;
     }
 
     public void PhysicsRefresh(float fixedDeltaTime)
     {
-
+        currentFixedDeltaTime = fixedDeltaTime;
     }
 
     public void LateRefresh(float deltaTime)

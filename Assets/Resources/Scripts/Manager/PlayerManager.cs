@@ -33,7 +33,8 @@ public class PlayerManager : IManagable
 
     public void OnDemolish()
     {
-        player.OnDemolish();
+        player?.OnDemolish();
+        Instance = null;
     }
 
     public void PhysicsRefresh(float fixedDeltaTime)

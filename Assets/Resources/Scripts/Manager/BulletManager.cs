@@ -66,6 +66,6 @@ public class BulletManager : IManagable
 
     public void OnDemolish()
     {
-
+        Instance = null;
     }
 }

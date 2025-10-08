@@ -43,13 +43,16 @@ public class Enemy : Entity, IPossessable, IDamageable
     [SerializeField] private float currentHealth;
 
     private Dictionary<Type, BaseState> statesDictionary;
+
     private Transform targetTransform;
+    private Transform player;
 
     public void Initialize()
     {
-        agent = GetComponent<NavMeshAgent>();
-
         currentHealth = maxHealth;
+
+        agent = GetComponent<NavMeshAgent>();
+        stateMachine = GetComponent<StateMachine>();
         defaultVelocity = agent.velocity;
     }
 
@@ -57,7 +60,6 @@ public class Enemy : Entity, IPossessable, IDamageable
     {
         enemyAnimator = GetComponentInChildren<EnemyAnimator>();
         healthUI = GetComponentInChildren<HealthUI>();
-        stateMachine = GetComponent<StateMachine>();
 
         InitializeStatesDictionary();
     }
@@ -80,22 +82,7 @@ public class Enemy : Entity, IPossessable, IDamageable
 
     public void Refresh(float deltaTime)
     {
-
-    }
-
-    public void PhysicsRefresh(float fixedDeltaTime)
-    {
-
-    }
-
-    public void LateRefresh(float deltaTime)
-    {
-
-    }
-
-    public void OnDemolish()
-    {
-
+        stateMachine.Refresh(deltaTime);
     }
 
     public override void Attack()
@@ -140,9 +127,10 @@ public class Enemy : Entity, IPossessable, IDamageable
 
     public bool CanSeePlayer()
     {
-        if (playerController.transform != null && Vector3.Distance(transform.position, playerController.transform.position) < sightDistance)
+        player = PlayerManager.instance.GetPlayer().transform;
+        if (Vector3.Distance(transform.position, player.position) < sightDistance)
         {
-            Vector3 targetDirection = playerController.transform.position - transform.position;
+            Vector3 targetDirection = player.position - transform.position;
             float angleToPlayer = Vector3.Angle(targetDirection, transform.forward);
 
             if (angleToPlayer >= -fieldOfView && angleToPlayer <= fieldOfView)
@@ -190,5 +178,20 @@ public class Enemy : Entity, IPossessable, IDamageable
     public Transform GetGunBarrelTransform() => gunBarrel;
 
     public Transform GetTargetPlayerTransform() => targetTransform;
+
+    public void PhysicsRefresh(float fixedDeltaTime)
+    {
+
+    }
+
+    public void LateRefresh(float deltaTime)
+    {
+
+    }
+
+    public void OnDemolish()
+    {
+
+    }
 
 }

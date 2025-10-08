@@ -3,10 +3,11 @@ using UnityEngine;
 
 public class PossessionManager : IManagable
 {
-    public event EventHandler<IPossessable> OnPossessed;
 
     private static PossessionManager Instance;
     public static PossessionManager instance { get { return Instance == null ? Instance = new PossessionManager() : Instance; } }
+
+    public event EventHandler<IPossessable> OnPossessed;
 
     private Possession currentPossession;
     private IPossessable currentPossessable;
@@ -75,7 +76,7 @@ public class PossessionManager : IManagable
 
     public void OnDemolish()
     {
-
+        Instance = null;
     }
 
 }

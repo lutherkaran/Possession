@@ -70,7 +70,6 @@ public class HealthUI : MonoBehaviour
             percentComplete = percentComplete * percentComplete;
             frontHealthBar.fillAmount = Mathf.Lerp(fillF, hFraction, percentComplete);
         }
-
     }
 
     private void HealthChange(float healthChangeValue)
@@ -83,7 +82,6 @@ public class HealthUI : MonoBehaviour
 
         durationTimer = 0;
         damageOverlay.color = new Color(damageOverlay.color.r, damageOverlay.color.g, damageOverlay.color.b, 1);
-
     }
 
     public float GetHealth() => health;

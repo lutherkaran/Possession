@@ -1,34 +1,46 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MainEntry : MonoBehaviour
 {
     void Awake()
     {
-        GameFlow.instance.Initialize();
+        if (IsGameScene())
+            GameFlow.instance.Initialize();
     }
 
     void Start()
     {
-        GameFlow.instance.PostInitialize();
+        if (IsGameScene())
+            GameFlow.instance.PostInitialize();
     }
 
     void Update()
     {
-        GameFlow.instance.Refresh(Time.deltaTime);
+        if (IsGameScene())
+            GameFlow.instance.Refresh(Time.deltaTime);
     }
 
     void FixedUpdate()
     {
-        GameFlow.instance.PhysicsRefresh(Time.fixedDeltaTime);
+        if (IsGameScene())
+            GameFlow.instance.PhysicsRefresh(Time.fixedDeltaTime);
     }
 
     void LateUpdate()
     {
-        GameFlow.instance.LateRefresh(Time.deltaTime);
+        if (IsGameScene())
+            GameFlow.instance.LateRefresh(Time.deltaTime);
     }
 
     private void OnDestroy()
     {
-        GameFlow.instance.OnDemolish();
+        if (IsGameScene())
+            GameFlow.instance.OnDemolish();
+    }
+
+    private bool IsGameScene()
+    {
+        return SceneManager.GetActiveScene().name == Loader.Scene.GameScene.ToString();
     }
 }

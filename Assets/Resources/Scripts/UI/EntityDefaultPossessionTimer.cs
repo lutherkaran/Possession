@@ -17,7 +17,12 @@ public class EntityDefaultPossessionTimer : MonoBehaviour
 
     private void Start()
     {
-        if (pickups == null) { Debug.LogError("Missing Pickups"); return; }
+        if (pickups == null) 
+        { 
+            //Debug.LogError("Missing Pickups"); 
+            return; 
+        }
+
         pickups.OnInteract += Pickups_OnInteract;
         Hide();
     }

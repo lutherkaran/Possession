@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -11,15 +12,23 @@ public static class Loader
     }
 
     private static Scene targetScene;
+    private static AsyncOperation asyncLoad;
 
-    public static void Load(Scene targetSceneName)
+    public static void Load(Scene target)
     {
-        Loader.targetScene = targetSceneName;
+        targetScene = target;
         SceneManager.LoadSceneAsync(Scene.LoadingScene.ToString());
     }
 
-    public static void LoaderCallback()
+    public static IEnumerator LoadTargetSceneAsync()
     {
-        SceneManager.LoadScene(targetScene.ToString());
+        yield return new WaitForSeconds(0.2f);
+
+        asyncLoad = SceneManager.LoadSceneAsync(targetScene.ToString());
+        asyncLoad.allowSceneActivation = false;
+
+        yield return new WaitForSeconds(0.3f);
+
+        asyncLoad.allowSceneActivation = true;
     }
 }
