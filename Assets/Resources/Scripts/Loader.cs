@@ -14,6 +14,10 @@ public static class Loader
     private static Scene targetScene;
     private static AsyncOperation asyncLoad;
 
+    public static string loadText { get; private set; } = string.Empty;
+
+    public static float loadProgress { get; private set; } = 0f;
+
     public static void Load(Scene target)
     {
         targetScene = target;
@@ -22,13 +26,22 @@ public static class Loader
 
     public static IEnumerator LoadTargetSceneAsync()
     {
-        yield return new WaitForSeconds(0.2f);
-
         asyncLoad = SceneManager.LoadSceneAsync(targetScene.ToString());
         asyncLoad.allowSceneActivation = false;
 
-        yield return new WaitForSeconds(0.3f);
+        while (!asyncLoad.isDone)
+        {
+            loadProgress = Mathf.Clamp01(asyncLoad.progress / 0.9f);
+            loadText = targetScene.ToString();
 
-        asyncLoad.allowSceneActivation = true;
+            if (asyncLoad.progress >= 0.9f)
+            {
+                yield return new WaitForSeconds(0.3f);
+                asyncLoad.allowSceneActivation = true;
+            }
+            yield return null;
+        }
+        loadProgress = 1f;
+        yield return new WaitForSeconds(0.2f);
     }
 }
