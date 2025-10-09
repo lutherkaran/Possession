@@ -15,7 +15,7 @@ public class GamePaused : MonoBehaviour
     {
         resumeButton.onClick.AddListener(() => GameManager.instance.TogglePause());
         
-        MainMenuButton.onClick.AddListener(() => Loader.Load(Loader.Scene.MainMenuScene));
+        MainMenuButton.onClick.AddListener(() => Loader.Load(Loader.Scene.MENU));
 
         settingsButton.onClick.AddListener(() =>
         {

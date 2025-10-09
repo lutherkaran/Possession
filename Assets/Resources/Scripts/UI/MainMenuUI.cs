@@ -11,7 +11,7 @@ public class MainMenuUI : MonoBehaviour
 
     private void Awake()
     {
-        playButton.onClick.AddListener(() => { Loader.Load(Loader.Scene.GameScene); });
+        playButton.onClick.AddListener(() => { Loader.Load(Loader.Scene.BEGINNING); });
 
         settingsButton.onClick.AddListener(() => { });
 

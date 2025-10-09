@@ -6,9 +6,9 @@ public static class Loader
 {
     public enum Scene
     {
-        MainMenuScene,
-        GameScene,
-        LoadingScene
+        MENU,
+        BEGINNING,
+        LOADING
     }
 
     private static Scene targetScene;
@@ -21,7 +21,7 @@ public static class Loader
     public static void Load(Scene target)
     {
         targetScene = target;
-        SceneManager.LoadSceneAsync(Scene.LoadingScene.ToString());
+        SceneManager.LoadSceneAsync(Scene.LOADING.ToString());
     }
 
     public static IEnumerator LoadTargetSceneAsync()
@@ -29,19 +29,30 @@ public static class Loader
         asyncLoad = SceneManager.LoadSceneAsync(targetScene.ToString());
         asyncLoad.allowSceneActivation = false;
 
+        loadText = "ASSETS";
+
+        yield return new WaitForSeconds(1);
+
         while (!asyncLoad.isDone)
         {
             loadProgress = Mathf.Clamp01(asyncLoad.progress / 0.9f);
-            loadText = targetScene.ToString();
+
+            if (loadProgress >= .5f)
+            {
+                loadText = "ENVIRONMENT";
+                yield return new WaitForSeconds(2);
+            }
 
             if (asyncLoad.progress >= 0.9f)
             {
-                yield return new WaitForSeconds(0.3f);
+                loadText = targetScene.ToString();
+
+                yield return new WaitForSeconds(3);
                 asyncLoad.allowSceneActivation = true;
             }
             yield return null;
         }
+
         loadProgress = 1f;
-        yield return new WaitForSeconds(0.2f);
     }
 }

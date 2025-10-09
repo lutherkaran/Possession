@@ -5,6 +5,8 @@ public class MainEntry : MonoBehaviour
 {
     void Awake()
     {
+        Application.targetFrameRate = 60;
+
         if (IsGameScene())
             GameFlow.instance.Initialize();
     }
@@ -41,6 +43,6 @@ public class MainEntry : MonoBehaviour
 
     private bool IsGameScene()
     {
-        return SceneManager.GetActiveScene().name == Loader.Scene.GameScene.ToString();
+        return SceneManager.GetActiveScene().name == Loader.Scene.BEGINNING.ToString();
     }
 }
