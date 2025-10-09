@@ -14,14 +14,15 @@ public class GamePaused : MonoBehaviour
     private void Awake()
     {
         resumeButton.onClick.AddListener(() => GameManager.instance.TogglePause());
-        
+
         MainMenuButton.onClick.AddListener(() => Loader.Load(Loader.Scene.MENU));
 
         settingsButton.onClick.AddListener(() =>
         {
             Hide();
-            //OptionsUI.Instance.Show(Show);
         });
+
+        quitButton.onClick.AddListener(() => Application.Quit());
     }
 
     private void Start()

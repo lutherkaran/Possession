@@ -10,7 +10,7 @@ public class EnemyManager : IManagable
     private List<Enemy> enemies = new List<Enemy>();
     private GameObject enemyPrefab;
 
-    private float enemiesToSpawn = 1;
+    private float enemiesToSpawn = 5;
 
     public void Initialize()
     {
@@ -28,7 +28,7 @@ public class EnemyManager : IManagable
     {
         for (int i = 0; i < enemiesToSpawn; i++)
         {
-            GameObject newEnemy = GameObject.Instantiate(enemyPrefab, new Vector3(UnityEngine.Random.Range(0, 5), 0, UnityEngine.Random.Range(0, 5)), Quaternion.identity);
+            GameObject newEnemy = GameObject.Instantiate(enemyPrefab, new Vector3(UnityEngine.Random.Range(0, 10), 0, UnityEngine.Random.Range(0, 10)), Quaternion.identity);
             enemies.Add(newEnemy.GetComponent<Enemy>());
         }
     }

@@ -43,7 +43,7 @@ public class InputManager : IManagable
 
     public void LateRefresh(float deltaTime)
     {
-        CameraManager.instance.GetMouseAim().ProcessLook(playerInput.OnFoot.Look.ReadValue<Vector2>());
+        CameraManager.instance.GetMouseAim().ProcessLook(playerInput.OnFoot.Look.ReadValue<Vector2>(), deltaTime);
     }
 
     private void Pause_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
@@ -73,7 +73,7 @@ public class InputManager : IManagable
         playerInput.OnFoot.Pause.performed -= Pause_performed;
 
         playerInput.Dispose();
-        Instance = null; 
+        Instance = null;
     }
 
     public PlayerInput.OnFootActions GetOnFootActions() => playerInput.OnFoot;

@@ -5,7 +5,6 @@ public class CameraManager : IManagable
     private static CameraManager Instance;
     public static CameraManager instance { get { return Instance == null ? Instance = new CameraManager() : Instance; } }
 
-    private GameObject currentlyPossessed;
     private Vector3 targetPosition = Vector3.zero;
     private Vector3 velocity = Vector3.zero;
 
@@ -19,8 +18,6 @@ public class CameraManager : IManagable
     public Camera myCamera { get; private set; }
 
     private bool isTransitioning = false;
-
-    private float currentLateDeltaTime = 0;
 
     public void Initialize()
     {
@@ -54,6 +51,8 @@ public class CameraManager : IManagable
 
     private void MoveCamera(float deltaTIme)
     {
+        InputManager.instance.GetOnFootActions().Disable();
+
         myCamera.transform.position = Vector3.SmoothDamp(myCamera.transform.position, targetPosition, ref velocity, smoothTime);
 
         if (Vector3.Distance(myCamera.transform.position, targetPosition) <= 0.1f)
@@ -61,6 +60,8 @@ public class CameraManager : IManagable
             myCamera.transform.position = targetPosition;
             isTransitioning = false;
         }
+
+        InputManager.instance.GetOnFootActions().Enable();
     }
 
     public void OnDemolish()
@@ -76,20 +77,15 @@ public class CameraManager : IManagable
 
     private void AttachCameraToPossessedObject(object sender, IPossessable possessedObject)
     {
-        currentlyPossessed = possessedObject.GetPossessedEntity().gameObject;
         cameraAttachPoint = possessedObject.GetPossessedEntity().GetCameraAttachPoint();
-        MoveToTargetPosition(cameraAttachPoint);
+        AttachCamera(cameraAttachPoint);
         myCamera.transform.SetParent(cameraAttachPoint);
     }
 
-    public void MoveToTargetPosition(Transform cameraAttachPoint)
+    public void AttachCamera(Transform cameraAttachPoint)
     {
-        InputManager.instance.GetOnFootActions().Disable();
-
         targetPosition = cameraAttachPoint.position;
         isTransitioning = true;
-
-        InputManager.instance.GetOnFootActions().Enable();
     }
 
     public MouseAim GetMouseAim() => mouseAim;

@@ -9,18 +9,18 @@ public class MouseAim
     [SerializeField] private float ySensitivity = 30f;
     [SerializeField] private bool MouseVisible = false;
 
-    public void ProcessLook(Vector2 input)
+    public void ProcessLook(Vector2 input, float lateDeltaTime)
     {
         float mouseX = input.x;
         float mouseY = input.y;
 
-        xRotation -= (mouseY * Time.deltaTime) * ySensitivity;
+        xRotation -= (mouseY * lateDeltaTime) * ySensitivity;
         xRotation = Mathf.Clamp(xRotation, -80f, 80f);
 
         if (!MouseVisible)
         {
             CameraManager.instance.myCamera.transform.localRotation = Quaternion.Euler(xRotation, 0, 0);
-            PossessionManager.instance.GetCurrentPossessable().GetPossessedEntity().transform.Rotate(Vector3.up * (mouseX * Time.deltaTime) * xSensitivity);
+            PossessionManager.instance.GetCurrentPossessable().GetPossessedEntity().transform.Rotate(Vector3.up * (mouseX * lateDeltaTime) * xSensitivity);
         }
     }
 

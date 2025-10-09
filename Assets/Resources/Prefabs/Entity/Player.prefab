@@ -106,7 +106,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b466e2d93acb79c4d831918e5f6b00a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerController: {fileID: 0}
   speed: 5
   entityPossessionTimerMax: 0
   possessionCooldownTimerMax: 5
@@ -357,12 +356,12 @@ PrefabInstance:
     - target: {fileID: 722940052348616811, guid: 7736b7b037a34f3499ac34c62c098cc4,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -0.000061035156
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 722940052348616811, guid: 7736b7b037a34f3499ac34c62c098cc4,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -15
       objectReference: {fileID: 0}
     - target: {fileID: 722940052348616811, guid: 7736b7b037a34f3499ac34c62c098cc4,
         type: 3}
@@ -820,7 +819,7 @@ PrefabInstance:
     - target: {fileID: 2849772801502625063, guid: 7096cc9ee7015d84280349a9ac99bed3,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -15
       objectReference: {fileID: 0}
     - target: {fileID: 2849772801502625063, guid: 7096cc9ee7015d84280349a9ac99bed3,
         type: 3}
@@ -969,12 +968,12 @@ PrefabInstance:
     - target: {fileID: 8828636670218034088, guid: 3c24ac50fdec0f9469e4746d46281165,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0.000061035156
+      value: -15
       objectReference: {fileID: 0}
     - target: {fileID: 8828636670218034088, guid: 3c24ac50fdec0f9469e4746d46281165,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -15
       objectReference: {fileID: 0}
     - target: {fileID: 8828636670218034088, guid: 3c24ac50fdec0f9469e4746d46281165,
         type: 3}
