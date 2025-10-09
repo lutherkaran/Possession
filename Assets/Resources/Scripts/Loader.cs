@@ -8,7 +8,8 @@ public static class Loader
     {
         MENU,
         BEGINNING,
-        LOADING
+        LOADING,
+        SURVIVAL
     }
 
     private static Scene targetScene;
@@ -26,6 +27,8 @@ public static class Loader
 
     public static IEnumerator LoadTargetSceneAsync()
     {
+        loadProgress = 0;
+
         asyncLoad = SceneManager.LoadSceneAsync(targetScene.ToString());
         asyncLoad.allowSceneActivation = false;
 
@@ -40,17 +43,16 @@ public static class Loader
             if (loadProgress >= .5f)
             {
                 loadText = "ENVIRONMENT";
-                yield return new WaitForSeconds(2);
+                yield return new WaitForSeconds(3);
             }
 
             if (asyncLoad.progress >= 0.9f)
             {
                 loadText = targetScene.ToString();
 
-                yield return new WaitForSeconds(3);
+                yield return new WaitForSeconds(2);
                 asyncLoad.allowSceneActivation = true;
             }
-            yield return null;
         }
 
         loadProgress = 1f;

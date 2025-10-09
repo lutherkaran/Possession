@@ -9,6 +9,11 @@ public class LoaderCallback : MonoBehaviour
 
     bool startedLoading = false;
 
+    private void Awake()
+    {
+        progressBar.fillAmount = 0;
+    }
+
     private void Update()
     {
         if (!startedLoading)
@@ -22,6 +27,6 @@ public class LoaderCallback : MonoBehaviour
             progressText.SetText("" + Loader.loadText, true);
 
         if (progressBar != null)
-            progressBar.fillAmount = Loader.loadProgress;
+            progressBar.fillAmount =+ Loader.loadProgress;
     }
 }
