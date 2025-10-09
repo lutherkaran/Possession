@@ -6,6 +6,7 @@ public class GameFlow : IManagable
     public void Initialize()
     {
         PlayerManager.instance.Initialize();
+        CameraManager.instance.Initialize();
         PossessionManager.instance.Initialize();
         EnemyManager.instance.Initialize();
         InputManager.instance.Initialize();
@@ -16,6 +17,7 @@ public class GameFlow : IManagable
     public void PostInitialize()
     {
         PlayerManager.instance.PostInitialize();
+        CameraManager.instance.PostInitialize();
         PossessionManager.instance.PostInitialize();
         EnemyManager.instance.PostInitialize();
         InputManager.instance.PostInitialize();
@@ -26,6 +28,7 @@ public class GameFlow : IManagable
     public void Refresh(float deltaTime)
     {
         PlayerManager.instance.Refresh(deltaTime);
+        CameraManager.instance.Refresh(deltaTime);
         PossessionManager.instance.Refresh(deltaTime);
         EnemyManager.instance.Refresh(deltaTime);
         InputManager.instance.Refresh(deltaTime);
@@ -36,6 +39,7 @@ public class GameFlow : IManagable
     public void PhysicsRefresh(float fixedDeltaTime)
     {
         PlayerManager.instance.PhysicsRefresh(fixedDeltaTime);
+        CameraManager.instance.PhysicsRefresh(fixedDeltaTime);
         PossessionManager.instance.PhysicsRefresh(fixedDeltaTime);
         EnemyManager.instance.PhysicsRefresh(fixedDeltaTime);
         InputManager.instance.PhysicsRefresh(fixedDeltaTime);
@@ -46,6 +50,7 @@ public class GameFlow : IManagable
     public void LateRefresh(float deltaTime)
     {
         PlayerManager.instance.LateRefresh(deltaTime);
+        CameraManager.instance.LateRefresh(deltaTime);
         PossessionManager.instance.LateRefresh(deltaTime);
         EnemyManager.instance.LateRefresh(deltaTime);
         InputManager.instance.LateRefresh(deltaTime);
@@ -56,6 +61,7 @@ public class GameFlow : IManagable
     public void OnDemolish()
     {
         PlayerManager.instance.OnDemolish();
+        CameraManager.instance.OnDemolish(); 
         PossessionManager.instance.OnDemolish();
         EnemyManager.instance.OnDemolish();
         InputManager.instance.OnDemolish();

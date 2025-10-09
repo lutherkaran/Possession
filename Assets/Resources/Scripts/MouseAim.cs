@@ -19,7 +19,7 @@ public class MouseAim
 
         if (!MouseVisible)
         {
-            CameraManager.instance.cam.transform.localRotation = Quaternion.Euler(xRotation, 0, 0);
+            CameraManager.instance.myCamera.transform.localRotation = Quaternion.Euler(xRotation, 0, 0);
             PossessionManager.instance.GetCurrentPossessable().GetPossessedEntity().transform.Rotate(Vector3.up * (mouseX * Time.deltaTime) * xSensitivity);
         }
     }

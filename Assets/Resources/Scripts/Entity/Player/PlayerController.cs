@@ -78,7 +78,7 @@ public class PlayerController : Entity, IPossessable, IDamageable
 
     public Ray DrawRayFromCrosshair()
     {
-        Ray ray = CameraManager.instance.cam.ScreenPointToRay(PlayerUI.Instance.GetCrosshairTransform().position);
+        Ray ray = CameraManager.instance.myCamera.ScreenPointToRay(PlayerUI.Instance.GetCrosshairTransform().position);
         return ray;
     }
 

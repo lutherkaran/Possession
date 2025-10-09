@@ -16,7 +16,7 @@ public class PlayerInteract : MonoBehaviour
 
     private void Start()
     {
-        cam = CameraManager.instance.cam;
+        cam = CameraManager.instance.myCamera;
     }
 
     private void Update()

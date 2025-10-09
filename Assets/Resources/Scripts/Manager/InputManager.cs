@@ -32,8 +32,8 @@ public class InputManager : IManagable
 
     public void Refresh(float deltaTime)
     {
-        playerInput.OnFoot.Sprint.performed += ctx => PossessionManager.instance.GetCurrentPossessable().GetPossessedEntity().Sprint();//controlledEntity.Sprint();
-        playerInput.OnFoot.Jump.performed += ctx => PossessionManager.instance.GetCurrentPossessable().GetPossessedEntity().ProcessJump();//controlledEntity.ProcessJump();
+        playerInput.OnFoot.Sprint.performed += ctx => PossessionManager.instance.GetCurrentPossessable().GetPossessedEntity().Sprint();
+        playerInput.OnFoot.Jump.performed += ctx => PossessionManager.instance.GetCurrentPossessable().GetPossessedEntity().ProcessJump();
     }
 
     public void PhysicsRefresh(float fixedDeltaTime)

@@ -34,7 +34,6 @@ public class GameManager : MonoBehaviour
         }
 
         instance = this;
-        //DontDestroyOnLoad(this.gameObject);
         state = GameState.WaitingToStart;
     }
 
@@ -74,7 +73,6 @@ public class GameManager : MonoBehaviour
     {
         TogglePause();
     }
-
 
     public bool isGamePlaying()
     {
