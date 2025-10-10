@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,7 +14,7 @@ public class EnemyManager : IManagable
     public void Initialize()
     {
         enemyPrefab = Resources.Load<GameObject>("Prefabs/Entity/Enemy");
-
+        
         InstantiateEnemies();
 
         foreach (Enemy enemy in enemies)
@@ -28,7 +27,7 @@ public class EnemyManager : IManagable
     {
         for (int i = 0; i < enemiesToSpawn; i++)
         {
-            GameObject newEnemy = GameObject.Instantiate(enemyPrefab, new Vector3(UnityEngine.Random.Range(0, 10), 0, UnityEngine.Random.Range(0, 10)), Quaternion.identity);
+            GameObject newEnemy = GameObject.Instantiate(enemyPrefab, new Vector3(UnityEngine.Random.Range(-10, 10), 0, UnityEngine.Random.Range(-10, 10)), Quaternion.identity);
             enemies.Add(newEnemy.GetComponent<Enemy>());
         }
     }
@@ -47,6 +46,7 @@ public class EnemyManager : IManagable
         {
             enemy.OnDemolish();
         }
+
         Instance = null;
     }
 

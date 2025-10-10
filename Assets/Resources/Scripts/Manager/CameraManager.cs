@@ -59,9 +59,8 @@ public class CameraManager : IManagable
         {
             myCamera.transform.position = targetPosition;
             isTransitioning = false;
+            InputManager.instance.GetOnFootActions().Enable();
         }
-
-        InputManager.instance.GetOnFootActions().Enable();
     }
 
     public void OnDemolish()

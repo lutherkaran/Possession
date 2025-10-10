@@ -12,8 +12,6 @@ public class EntityManager : IManagable
     public void Initialize()
     {
         entityManagerTransform = new GameObject("EntityManager").transform;
-
-        SetEntityParent();
     }
 
     public void LateRefresh(float deltaTime)
@@ -33,7 +31,7 @@ public class EntityManager : IManagable
 
     public void PostInitialize()
     {
-
+        SetEntityParent();
     }
 
     public void Refresh(float deltaTime)
@@ -47,7 +45,7 @@ public class EntityManager : IManagable
 
         foreach (Entity entity in entityList)
         {
-            //entity.transform.SetParent(entityManagerTransform);
+            entity.transform.SetParent(entityManagerTransform);
         }
 
     }
