@@ -5,10 +5,17 @@ public class MainEntry : MonoBehaviour
 {
     void Awake()
     {
-        Application.targetFrameRate = 60;
+        SettingQuality();
 
         if (IsGameScene())
             GameFlow.instance.Initialize();
+    }
+
+    private static void SettingQuality()
+    {
+        Application.targetFrameRate = 60;
+        QualitySettings.vSyncCount = 0;
+        Time.fixedDeltaTime = 1f / 60f;
     }
 
     void Start()
