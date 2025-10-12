@@ -85,6 +85,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Possession",
+                    "type": "Button",
+                    "id": "560da7bc-7145-48bd-b7a5-113a988a1c13",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -199,6 +208,61 @@
                     "isPartOfComposite": true
                 },
                 {
+                    "name": "Touch",
+                    "id": "447f7657-4932-440f-a841-25e2ac57b373",
+                    "path": "2DVector",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Movement",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "up",
+                    "id": "47cad091-18bc-4b87-91f2-2c72ed3cd62e",
+                    "path": "<Touchscreen>/delta/up",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Movement",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "down",
+                    "id": "234a5df5-b6ac-4e8f-99f2-ffb48c010f4f",
+                    "path": "<Touchscreen>/primaryTouch/delta/down",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Movement",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "left",
+                    "id": "31eb7488-a1e8-47ee-aa3c-ade9839c76f4",
+                    "path": "<Touchscreen>/primaryTouch/delta/left",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Movement",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "72a112b7-cb77-4d9c-9cb3-ddc636c89aa5",
+                    "path": "<Touchscreen>/primaryTouch/delta/right",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Movement",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
                     "name": "",
                     "id": "57f5db65-7d6f-4db7-925e-4745ee905fce",
                     "path": "<Keyboard>/space",
@@ -235,6 +299,17 @@
                     "name": "",
                     "id": "3ea87d7e-e7c0-4411-964f-e38d5116688d",
                     "path": "<Gamepad>/rightStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Look",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "628e25f2-dea4-4b73-ae5c-d43014360b06",
+                    "path": "<Touchscreen>/primaryTouch/delta",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -351,27 +426,10 @@
                     "action": "Pause",
                     "isComposite": false,
                     "isPartOfComposite": false
-                }
-            ]
-        },
-        {
-            "name": "OnPossession",
-            "id": "5fedbfb3-4c43-496f-9596-2187bef51218",
-            "actions": [
-                {
-                    "name": "Possession",
-                    "type": "Button",
-                    "id": "7b52b328-ab27-43dc-8058-01ee2e3b1dff",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                }
-            ],
-            "bindings": [
+                },
                 {
                     "name": "",
-                    "id": "959b1fe3-e0d7-4178-94b2-3dd54bcf5c3e",
+                    "id": "b17515da-4a5a-4823-b5fc-33f67edf9645",
                     "path": "<Gamepad>/buttonEast",
                     "interactions": "Press(pressPoint=0.1),Hold",
                     "processors": "",
@@ -382,8 +440,19 @@
                 },
                 {
                     "name": "",
-                    "id": "c6fff16a-3740-440d-bbd6-774dc90e6858",
+                    "id": "3c0067f0-6e44-4414-9e46-3dcdd82c7568",
                     "path": "<Keyboard>/f",
+                    "interactions": "Press(pressPoint=0.2),Hold",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Possession",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3e76caaa-73ed-4fcb-8322-28482f6eb17c",
+                    "path": "<Touchscreen>/Press",
                     "interactions": "Press(pressPoint=0.2),Hold",
                     "processors": "",
                     "groups": "",

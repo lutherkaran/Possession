@@ -107,6 +107,15 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Possession"",
+                    ""type"": ""Button"",
+                    ""id"": ""560da7bc-7145-48bd-b7a5-113a988a1c13"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -221,6 +230,61 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": true
                 },
                 {
+                    ""name"": ""Touch"",
+                    ""id"": ""447f7657-4932-440f-a841-25e2ac57b373"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Movement"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""47cad091-18bc-4b87-91f2-2c72ed3cd62e"",
+                    ""path"": ""<Touchscreen>/delta/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""234a5df5-b6ac-4e8f-99f2-ffb48c010f4f"",
+                    ""path"": ""<Touchscreen>/primaryTouch/delta/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""31eb7488-a1e8-47ee-aa3c-ade9839c76f4"",
+                    ""path"": ""<Touchscreen>/primaryTouch/delta/left"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""72a112b7-cb77-4d9c-9cb3-ddc636c89aa5"",
+                    ""path"": ""<Touchscreen>/primaryTouch/delta/right"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
                     ""name"": """",
                     ""id"": ""57f5db65-7d6f-4db7-925e-4745ee905fce"",
                     ""path"": ""<Keyboard>/space"",
@@ -257,6 +321,17 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""name"": """",
                     ""id"": ""3ea87d7e-e7c0-4411-964f-e38d5116688d"",
                     ""path"": ""<Gamepad>/rightStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Look"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""628e25f2-dea4-4b73-ae5c-d43014360b06"",
+                    ""path"": ""<Touchscreen>/primaryTouch/delta"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -373,27 +448,10 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""action"": ""Pause"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
-                }
-            ]
-        },
-        {
-            ""name"": ""OnPossession"",
-            ""id"": ""5fedbfb3-4c43-496f-9596-2187bef51218"",
-            ""actions"": [
-                {
-                    ""name"": ""Possession"",
-                    ""type"": ""Button"",
-                    ""id"": ""7b52b328-ab27-43dc-8058-01ee2e3b1dff"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                }
-            ],
-            ""bindings"": [
+                },
                 {
                     ""name"": """",
-                    ""id"": ""959b1fe3-e0d7-4178-94b2-3dd54bcf5c3e"",
+                    ""id"": ""b17515da-4a5a-4823-b5fc-33f67edf9645"",
                     ""path"": ""<Gamepad>/buttonEast"",
                     ""interactions"": ""Press(pressPoint=0.1),Hold"",
                     ""processors"": """",
@@ -404,8 +462,19 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""c6fff16a-3740-440d-bbd6-774dc90e6858"",
+                    ""id"": ""3c0067f0-6e44-4414-9e46-3dcdd82c7568"",
                     ""path"": ""<Keyboard>/f"",
+                    ""interactions"": ""Press(pressPoint=0.2),Hold"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Possession"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3e76caaa-73ed-4fcb-8322-28482f6eb17c"",
+                    ""path"": ""<Touchscreen>/Press"",
                     ""interactions"": ""Press(pressPoint=0.2),Hold"",
                     ""processors"": """",
                     ""groups"": """",
@@ -945,9 +1014,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_OnFoot_MouseInteraction = m_OnFoot.FindAction("MouseInteraction", throwIfNotFound: true);
         m_OnFoot_Attack = m_OnFoot.FindAction("Attack", throwIfNotFound: true);
         m_OnFoot_Pause = m_OnFoot.FindAction("Pause", throwIfNotFound: true);
-        // OnPossession
-        m_OnPossession = asset.FindActionMap("OnPossession", throwIfNotFound: true);
-        m_OnPossession_Possession = m_OnPossession.FindAction("Possession", throwIfNotFound: true);
+        m_OnFoot_Possession = m_OnFoot.FindAction("Possession", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1030,6 +1097,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_OnFoot_MouseInteraction;
     private readonly InputAction m_OnFoot_Attack;
     private readonly InputAction m_OnFoot_Pause;
+    private readonly InputAction m_OnFoot_Possession;
     public struct OnFootActions
     {
         private @PlayerInput m_Wrapper;
@@ -1043,6 +1111,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         public InputAction @MouseInteraction => m_Wrapper.m_OnFoot_MouseInteraction;
         public InputAction @Attack => m_Wrapper.m_OnFoot_Attack;
         public InputAction @Pause => m_Wrapper.m_OnFoot_Pause;
+        public InputAction @Possession => m_Wrapper.m_OnFoot_Possession;
         public InputActionMap Get() { return m_Wrapper.m_OnFoot; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1079,6 +1148,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Pause.started += instance.OnPause;
             @Pause.performed += instance.OnPause;
             @Pause.canceled += instance.OnPause;
+            @Possession.started += instance.OnPossession;
+            @Possession.performed += instance.OnPossession;
+            @Possession.canceled += instance.OnPossession;
         }
 
         private void UnregisterCallbacks(IOnFootActions instance)
@@ -1110,6 +1182,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Pause.started -= instance.OnPause;
             @Pause.performed -= instance.OnPause;
             @Pause.canceled -= instance.OnPause;
+            @Possession.started -= instance.OnPossession;
+            @Possession.performed -= instance.OnPossession;
+            @Possession.canceled -= instance.OnPossession;
         }
 
         public void RemoveCallbacks(IOnFootActions instance)
@@ -1127,52 +1202,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         }
     }
     public OnFootActions @OnFoot => new OnFootActions(this);
-
-    // OnPossession
-    private readonly InputActionMap m_OnPossession;
-    private List<IOnPossessionActions> m_OnPossessionActionsCallbackInterfaces = new List<IOnPossessionActions>();
-    private readonly InputAction m_OnPossession_Possession;
-    public struct OnPossessionActions
-    {
-        private @PlayerInput m_Wrapper;
-        public OnPossessionActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Possession => m_Wrapper.m_OnPossession_Possession;
-        public InputActionMap Get() { return m_Wrapper.m_OnPossession; }
-        public void Enable() { Get().Enable(); }
-        public void Disable() { Get().Disable(); }
-        public bool enabled => Get().enabled;
-        public static implicit operator InputActionMap(OnPossessionActions set) { return set.Get(); }
-        public void AddCallbacks(IOnPossessionActions instance)
-        {
-            if (instance == null || m_Wrapper.m_OnPossessionActionsCallbackInterfaces.Contains(instance)) return;
-            m_Wrapper.m_OnPossessionActionsCallbackInterfaces.Add(instance);
-            @Possession.started += instance.OnPossession;
-            @Possession.performed += instance.OnPossession;
-            @Possession.canceled += instance.OnPossession;
-        }
-
-        private void UnregisterCallbacks(IOnPossessionActions instance)
-        {
-            @Possession.started -= instance.OnPossession;
-            @Possession.performed -= instance.OnPossession;
-            @Possession.canceled -= instance.OnPossession;
-        }
-
-        public void RemoveCallbacks(IOnPossessionActions instance)
-        {
-            if (m_Wrapper.m_OnPossessionActionsCallbackInterfaces.Remove(instance))
-                UnregisterCallbacks(instance);
-        }
-
-        public void SetCallbacks(IOnPossessionActions instance)
-        {
-            foreach (var item in m_Wrapper.m_OnPossessionActionsCallbackInterfaces)
-                UnregisterCallbacks(item);
-            m_Wrapper.m_OnPossessionActionsCallbackInterfaces.Clear();
-            AddCallbacks(instance);
-        }
-    }
-    public OnPossessionActions @OnPossession => new OnPossessionActions(this);
 
     // UI
     private readonly InputActionMap m_UI;
@@ -1302,9 +1331,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         void OnMouseInteraction(InputAction.CallbackContext context);
         void OnAttack(InputAction.CallbackContext context);
         void OnPause(InputAction.CallbackContext context);
-    }
-    public interface IOnPossessionActions
-    {
         void OnPossession(InputAction.CallbackContext context);
     }
     public interface IUIActions

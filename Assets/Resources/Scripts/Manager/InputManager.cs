@@ -17,14 +17,13 @@ public class InputManager : IManagable
         playerInput = new PlayerInput();
 
         playerInput.OnFoot.Enable();
-        playerInput.OnPossession.Enable();
     }
 
     public void PostInitialize()
     {
         player = PlayerManager.instance.GetPlayer();
 
-        playerInput.OnPossession.Possession.performed += HandlePossessionInput;
+        playerInput.OnFoot.Possession.performed += HandlePossessionInput;
         playerInput.OnFoot.MouseInteraction.performed += ctx => CameraManager.instance.GetMouseAim()?.ToggleMouseInteraction();
         playerInput.OnFoot.Attack.performed += ctx => player?.Attack();
         playerInput.OnFoot.Pause.performed += Pause_performed;
@@ -67,7 +66,7 @@ public class InputManager : IManagable
 
     public void OnDemolish()
     {
-        playerInput.OnPossession.Possession.performed -= HandlePossessionInput;
+        playerInput.OnFoot.Possession.performed -= HandlePossessionInput;
         playerInput.OnFoot.MouseInteraction.performed -= ctx => CameraManager.instance.GetMouseAim()?.ToggleMouseInteraction();
         playerInput.OnFoot.Attack.performed -= ctx => player?.Attack();
         playerInput.OnFoot.Pause.performed -= Pause_performed;
@@ -77,5 +76,5 @@ public class InputManager : IManagable
     }
 
     public PlayerInput.OnFootActions GetOnFootActions() => playerInput.OnFoot;
-    public PlayerInput.OnPossessionActions GetOnPossessionActions() => playerInput.OnPossession;
+
 }
