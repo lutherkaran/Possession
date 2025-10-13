@@ -236,7 +236,7 @@ RectTransform:
   m_GameObject: {fileID: 7075333460789290416}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.18519, y: 1.18519, z: 1.18519}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1475032581167588315}
@@ -262,7 +262,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   promptText: {fileID: 1456102048051878993}
   player: {fileID: 0}
-  crosshairTransform: {fileID: 1475032581167588315}
 --- !u!114 &820912355104529950
 MonoBehaviour:
   m_ObjectHideFlags: 0
