@@ -11,7 +11,7 @@ public class MainEntry : MonoBehaviour
             GameFlow.instance.Initialize();
     }
 
-    private static void SettingQuality()
+    private void SettingQuality()
     {
         Application.targetFrameRate = 60;
         QualitySettings.vSyncCount = 0;
