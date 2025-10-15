@@ -21,7 +21,7 @@ public class EntityManager : IManagable
 
     public void OnDemolish()
     {
-
+        Instance = null;
     }
 
     public void PhysicsRefresh(float fixedDeltaTime)

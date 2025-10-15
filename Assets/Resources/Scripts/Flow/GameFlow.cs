@@ -8,6 +8,7 @@ public class GameFlow : IManagable
         PlayerManager.instance.Initialize();
         CameraManager.instance.Initialize();
         PossessionManager.instance.Initialize();
+        PathManager.instance.Initialize();
         EnemyManager.instance.Initialize();
         InputManager.instance.Initialize();
         BulletManager.instance.Initialize();
@@ -19,6 +20,7 @@ public class GameFlow : IManagable
         PlayerManager.instance.PostInitialize();
         CameraManager.instance.PostInitialize();
         PossessionManager.instance.PostInitialize();
+        PathManager.instance.PostInitialize();
         EnemyManager.instance.PostInitialize();
         InputManager.instance.PostInitialize();
         BulletManager.instance.PostInitialize();
@@ -30,6 +32,7 @@ public class GameFlow : IManagable
         PlayerManager.instance.Refresh(deltaTime);
         CameraManager.instance.Refresh(deltaTime);
         PossessionManager.instance.Refresh(deltaTime);
+        PathManager.instance.Refresh(deltaTime);
         EnemyManager.instance.Refresh(deltaTime);
         InputManager.instance.Refresh(deltaTime);
         BulletManager.instance.Refresh(deltaTime);
@@ -41,6 +44,7 @@ public class GameFlow : IManagable
         PlayerManager.instance.PhysicsRefresh(fixedDeltaTime);
         CameraManager.instance.PhysicsRefresh(fixedDeltaTime);
         PossessionManager.instance.PhysicsRefresh(fixedDeltaTime);
+        PathManager.instance.PhysicsRefresh(fixedDeltaTime);
         EnemyManager.instance.PhysicsRefresh(fixedDeltaTime);
         InputManager.instance.PhysicsRefresh(fixedDeltaTime);
         BulletManager.instance.PhysicsRefresh(fixedDeltaTime);
@@ -52,6 +56,7 @@ public class GameFlow : IManagable
         PlayerManager.instance.LateRefresh(deltaTime);
         CameraManager.instance.LateRefresh(deltaTime);
         PossessionManager.instance.LateRefresh(deltaTime);
+        PathManager.instance.LateRefresh(deltaTime);
         EnemyManager.instance.LateRefresh(deltaTime);
         InputManager.instance.LateRefresh(deltaTime);
         BulletManager.instance.LateRefresh(deltaTime);
@@ -63,6 +68,7 @@ public class GameFlow : IManagable
         PlayerManager.instance.OnDemolish();
         CameraManager.instance.OnDemolish(); 
         PossessionManager.instance.OnDemolish();
+        PathManager.instance.OnDemolish();
         EnemyManager.instance.OnDemolish();
         InputManager.instance.OnDemolish();
         BulletManager.instance.OnDemolish();

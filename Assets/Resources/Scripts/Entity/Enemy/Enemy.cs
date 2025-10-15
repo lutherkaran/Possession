@@ -18,8 +18,7 @@ public class Enemy : Entity, IPossessable, IDamageable
 
     [SerializeField] private EnemyAnimator enemyAnimator;
     [SerializeField] private HealthUI healthUI;
-    [SerializeField] private EnemyPath enemyPath;
-
+    
     private NavMeshAgent agent;
     private StateMachine stateMachine;
 
@@ -172,9 +171,7 @@ public class Enemy : Entity, IPossessable, IDamageable
     public EnemyAnimator GetAnimator() => enemyAnimator;
 
     public NavMeshAgent GetEnemyAgent() => agent;
-
-    public EnemyPath GetEnemyPath() => enemyPath;
-
+    
     public Transform GetGunBarrelTransform() => gunBarrel;
 
     public Transform GetTargetPlayerTransform() => targetTransform;
@@ -193,5 +190,4 @@ public class Enemy : Entity, IPossessable, IDamageable
     {
 
     }
-
 }

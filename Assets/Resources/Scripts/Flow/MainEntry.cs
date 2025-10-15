@@ -6,7 +6,7 @@ public class MainEntry : MonoBehaviour
     void Awake()
     {
         SettingQuality();
-
+        
         if (IsGameScene())
             GameFlow.instance.Initialize();
     }

@@ -12,7 +12,7 @@ public class PatrolState : BaseState
 
     protected override void EnterState()
     {
-        enemyPath = enemy.GetEnemyPath();
+        EnemyManager.instance.enemyPathEnemyDictionary.TryGetValue(enemy, out EnemyPath enemyPath);
 
         enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Patrolling, true);
         enemy.GetAnimator().WalkBlend();
