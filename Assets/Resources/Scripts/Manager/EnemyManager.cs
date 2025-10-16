@@ -14,7 +14,7 @@ public class EnemyManager : IManagable
     private List<Enemy> enemies = new List<Enemy>();
     private GameObject enemyPrefab;
 
-    private float enemiesToSpawn = 4;
+    private float enemiesToSpawn = 1;
 
     public Dictionary<Enemy, EnemyPath> enemyPathEnemyDictionary { get; private set; } =
         new Dictionary<Enemy, EnemyPath>();

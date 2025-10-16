@@ -3,16 +3,20 @@ using UnityEngine;
 public class CameraManager : IManagable
 {
     private static CameraManager Instance;
-    public static CameraManager instance { get { return Instance == null ? Instance = new CameraManager() : Instance; } }
 
-    private Vector3 targetPosition = Vector3.zero;
+    public static CameraManager instance
+    {
+        get { return Instance == null ? Instance = new CameraManager() : Instance; }
+    }
+
+    private Vector3 targetPosition;
     private Vector3 velocity = Vector3.zero;
 
     [SerializeField] private MouseAim mouseAim;
 
-    [Header("Camera Settings")]
-    [SerializeField] private float smoothTime = .3f; // Adjust for desired speed
-    [SerializeField] private Vector3 DefaultPosition = new Vector3(0, .6f, 0);
+    [Header("Camera Settings")] [SerializeField]
+    private float smoothTime = .3f; // Adjust for desired speed
+
     private Transform cameraAttachPoint;
 
     public Camera myCamera { get; private set; }
@@ -34,12 +38,10 @@ public class CameraManager : IManagable
 
     public void Refresh(float deltaTime)
     {
-
     }
 
     public void PhysicsRefresh(float fixedDeltaTime)
     {
-
     }
 
     public void LateRefresh(float deltaTime)
@@ -55,7 +57,7 @@ public class CameraManager : IManagable
 
         myCamera.transform.position = Vector3.SmoothDamp(myCamera.transform.position, targetPosition, ref velocity, smoothTime);
 
-        if (Vector3.Distance(myCamera.transform.position, targetPosition) <= 0.1f)
+        if (Vector3.Distance(myCamera.transform.position, targetPosition) <= 0.01f)
         {
             myCamera.transform.position = targetPosition;
             isTransitioning = false;
@@ -83,6 +85,7 @@ public class CameraManager : IManagable
 
     public void AttachCamera(Transform cameraAttachPoint)
     {
+        targetPosition = Vector3.zero;
         targetPosition = cameraAttachPoint.position;
         isTransitioning = true;
     }
