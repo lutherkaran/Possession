@@ -16,13 +16,13 @@ public class PossessionManager : IManagable
 
     public void Initialize()
     {
-
+        playerController = PlayerManager.instance.GetPlayer();
+        ToPossess(playerController.gameObject);
     }
 
     public void PostInitialize()
     {
-        playerController = PlayerManager.instance.GetPlayer();
-        ToPossess(playerController.gameObject);
+        CameraManager.instance.AttachCamera(playerController.GetCameraAttachPoint());
     }
 
     public Possession ToPossess(GameObject possessable)

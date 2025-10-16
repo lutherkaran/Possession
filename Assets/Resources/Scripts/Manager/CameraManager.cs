@@ -14,7 +14,8 @@ public class CameraManager : IManagable
 
     [SerializeField] private MouseAim mouseAim;
 
-    [Header("Camera Settings")] [SerializeField]
+    [Header("Camera Settings")]
+    [SerializeField]
     private float smoothTime = .3f; // Adjust for desired speed
 
     private Transform cameraAttachPoint;
@@ -55,9 +56,10 @@ public class CameraManager : IManagable
     {
         InputManager.instance.GetOnFootActions().Disable();
 
-        myCamera.transform.position = Vector3.SmoothDamp(myCamera.transform.position, targetPosition, ref velocity, smoothTime);
+        myCamera.transform.position =
+            Vector3.SmoothDamp(myCamera.transform.position, targetPosition, ref velocity, smoothTime);
 
-        if (Vector3.Distance(myCamera.transform.position, targetPosition) <= 0.01f)
+        if (Vector3.Distance(myCamera.transform.position, targetPosition) <= 0.1f)
         {
             myCamera.transform.position = targetPosition;
             isTransitioning = false;
@@ -80,13 +82,16 @@ public class CameraManager : IManagable
     {
         cameraAttachPoint = possessedObject.GetPossessedEntity().GetCameraAttachPoint();
         AttachCamera(cameraAttachPoint);
-        myCamera.transform.SetParent(cameraAttachPoint);
     }
 
-    public void AttachCamera(Transform cameraAttachPoint)
+    public void AttachCamera(Transform _cameraAttachPoint)
     {
-        targetPosition = Vector3.zero;
-        targetPosition = cameraAttachPoint.position;
+        cameraAttachPoint = _cameraAttachPoint;
+        Debug.Log("CameraAttach position: " + cameraAttachPoint.position);
+        Debug.Log("CameraAttach localPosition: " + cameraAttachPoint.localPosition);
+        myCamera.transform.SetParent(cameraAttachPoint);
+        targetPosition = _cameraAttachPoint.position;
+
         isTransitioning = true;
     }
 
