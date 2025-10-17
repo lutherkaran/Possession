@@ -999,8 +999,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3941316982779017119}
-  - component: {fileID: 8509165981003681393}
   - component: {fileID: 8426612707636161426}
+  - component: {fileID: 233224280884422855}
   m_Layer: 9
   m_Name: Player
   m_TagString: Player
@@ -1027,31 +1027,6 @@ Transform:
   - {fileID: 3592394158351600606}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!143 &8509165981003681393
-CharacterController:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1500367591068827970}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Height: 3
-  m_Radius: 0.7
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 2.76, z: 0}
 --- !u!114 &8426612707636161426
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1076,6 +1051,27 @@ MonoBehaviour:
   gunBarrel: {fileID: 3848242439570987137}
   maxHealth: 100
   health: 100
+--- !u!65 &233224280884422855
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1500367591068827970}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 2.8, z: 1}
+  m_Center: {x: 0, y: 2.5, z: 0}
 --- !u!1 &1578873647409756016
 GameObject:
   m_ObjectHideFlags: 0
@@ -2071,7 +2067,7 @@ Transform:
   m_GameObject: {fileID: 4144311454921686939}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 4, z: 0}
+  m_LocalPosition: {x: 0, y: 5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

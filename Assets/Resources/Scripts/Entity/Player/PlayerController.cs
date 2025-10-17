@@ -1,8 +1,6 @@
 using System;
 using UnityEngine;
 
-[RequireComponent(typeof(CharacterController))]
-
 public class PlayerController : Entity, IPossessable, IDamageable
 {
     public event EventHandler<IDamageable.OnDamagedEventArgs> OnDamaged;
@@ -48,13 +46,9 @@ public class PlayerController : Entity, IPossessable, IDamageable
     {
         base.ProcessMove(input);
 
-        characterController.Move(transform.TransformDirection(new Vector3(moveDirection.x, 0, moveDirection.z)) * speed * currentFixedDeltaTime);
-        if (isGrounded && velocity.y < 0)
-        {
-            velocity.y = -1f;
-        }
-        velocity.y += gravity * currentFixedDeltaTime;
-        characterController.Move(velocity * currentFixedDeltaTime);
+        moveDirection = new Vector3(input.x, 0, input.y);
+
+        transform.Translate(moveDirection * speed * currentFixedDeltaTime);
     }
 
     public override void Attack()
@@ -102,7 +96,7 @@ public class PlayerController : Entity, IPossessable, IDamageable
 
     public void Refresh(float deltaTime)
     {
-        isGrounded = characterController.isGrounded;
+    
     }
 
     public void PhysicsRefresh(float fixedDeltaTime)

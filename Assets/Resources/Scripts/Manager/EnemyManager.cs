@@ -16,8 +16,7 @@ public class EnemyManager : IManagable
 
     private float enemiesToSpawn = 1;
 
-    public Dictionary<Enemy, EnemyPath> enemyPathEnemyDictionary { get; private set; } =
-        new Dictionary<Enemy, EnemyPath>();
+    public Dictionary<Enemy, EnemyPath> enemyPathEnemyDictionary { get; private set; } = new Dictionary<Enemy, EnemyPath>();
 
     public List<EnemyPath> paths { get; private set; } = new List<EnemyPath>();
 

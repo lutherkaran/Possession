@@ -38,12 +38,13 @@ public abstract class Entity : MonoBehaviour
     {
         moveDirection.x = input.x;
         moveDirection.z = input.y;
+        moveDirection.y = 0;
     }
 
     public abstract void Attack();
-    
+
     protected abstract bool IsAlive();
-    
+
     public abstract Transform GetCameraAttachPoint();
     public abstract float GetEntityPossessionTimerMax();
     public abstract float GetPossessionCooldownTimerMax();
