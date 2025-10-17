@@ -62,6 +62,7 @@ public class CameraManager : IManagable
         if (Vector3.Distance(myCamera.transform.position, targetPosition) <= 0.1f)
         {
             myCamera.transform.position = targetPosition;
+            myCamera.transform.SetParent(cameraAttachPoint);
             isTransitioning = false;
             InputManager.instance.GetOnFootActions().Enable();
         }
@@ -87,9 +88,6 @@ public class CameraManager : IManagable
     public void AttachCamera(Transform _cameraAttachPoint)
     {
         cameraAttachPoint = _cameraAttachPoint;
-        Debug.Log("CameraAttach position: " + cameraAttachPoint.position);
-        Debug.Log("CameraAttach localPosition: " + cameraAttachPoint.localPosition);
-        myCamera.transform.SetParent(cameraAttachPoint);
         targetPosition = _cameraAttachPoint.position;
 
         isTransitioning = true;

@@ -113,8 +113,34 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a370e26c44dc6ac4d8c9feff129f26db,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6059731117292524877}
   m_SourcePrefab: {fileID: 100100000, guid: a370e26c44dc6ac4d8c9feff129f26db, type: 3}
+--- !u!1 &3940462878395392805 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: a370e26c44dc6ac4d8c9feff129f26db,
+    type: 3}
+  m_PrefabInstance: {fileID: 4210372854045466228}
+  m_PrefabAsset: {fileID: 0}
+--- !u!208 &6059731117292524877
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3940462878395392805}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.09, y: 0.068, z: 0.066}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: -0.022000002, y: -0.033, z: 0.064}
+  m_TimeToStationary: 0.5
 --- !u!4 &4459837625232963999 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: a370e26c44dc6ac4d8c9feff129f26db,

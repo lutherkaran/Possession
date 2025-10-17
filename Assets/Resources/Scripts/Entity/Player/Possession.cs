@@ -42,7 +42,7 @@ public class Possession
         }
 
         PossessionManager.instance.ToPossess(targetEntity);
-        CameraManager.instance.AttachCamera(possessableEntity.GetPossessedEntity().GetCameraAttachPoint());
+
         canPossess = false;
     }
 
