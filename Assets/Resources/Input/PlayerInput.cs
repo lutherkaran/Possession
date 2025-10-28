@@ -461,6 +461,17 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""49a5a7a4-3123-49dd-9091-43c5fc578abc"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""b17515da-4a5a-4823-b5fc-33f67edf9645"",
                     ""path"": ""<Gamepad>/buttonEast"",
                     ""interactions"": ""Press(pressPoint=0.2),Hold(duration=1.5,pressPoint=1)"",

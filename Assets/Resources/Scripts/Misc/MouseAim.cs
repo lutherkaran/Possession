@@ -1,12 +1,12 @@
 using UnityEngine;
 
 [System.Serializable]
-public class MouseAim
+public class MouseAim: MonoBehaviour
 {
     [Header("Mouse Controls")]
     [SerializeField] private float xRotation = 0f;
-    [SerializeField] private float xSensitivity = 10f;
-    [SerializeField] private float ySensitivity = 10f;
+    [SerializeField] private float xSensitivity = 30f;
+    [SerializeField] private float ySensitivity = 30f;
     [SerializeField] private bool MouseVisible = false;
 
     public void ProcessLook(Vector2 input, float lateDeltaTime)

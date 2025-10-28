@@ -28,7 +28,6 @@ public class CameraManager : IManagable
     {
         GameObject newCamera = GameObject.Instantiate(Resources.Load<GameObject>("Prefabs/Others/MainCamera"));
         myCamera = newCamera.GetComponent<Camera>();
-
         InitializingMouse();
     }
 
