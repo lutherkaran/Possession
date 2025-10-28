@@ -42,9 +42,9 @@ public class PlayerController : Entity, IPossessable, IDamageable
         base.Sprint();
     }
 
-    public override void ProcessMove(Vector2 input)
+    public override void MoveWhenPossessed(Vector2 input)
     {
-        base.ProcessMove(input);
+        base.MoveWhenPossessed(input);
 
         moveDirection = new Vector3(input.x, 0, input.y);
 

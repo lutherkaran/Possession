@@ -5,8 +5,8 @@ public class MouseAim
 {
     [Header("Mouse Controls")]
     [SerializeField] private float xRotation = 0f;
-    [SerializeField] private float xSensitivity = 50f;
-    [SerializeField] private float ySensitivity = 50f;
+    [SerializeField] private float xSensitivity = 10f;
+    [SerializeField] private float ySensitivity = 10f;
     [SerializeField] private bool MouseVisible = false;
 
     public void ProcessLook(Vector2 input, float lateDeltaTime)

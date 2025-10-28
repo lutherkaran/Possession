@@ -14,8 +14,8 @@ public abstract class Entity : MonoBehaviour
     protected bool sprinting = false;
     protected bool isGrounded = true;
 
-    [SerializeField] protected float entityPossessionTimerMax;
-    [SerializeField] protected float possessionCooldownTimerMax;
+    [SerializeField] protected float entityPossessionTimerMax = 50;
+    [SerializeField] protected float possessionCooldownTimerMax = 1;
 
     [SerializeField] protected Transform cameraAttachPoint;
     [SerializeField] protected LayerMask PossessableLayerMask;
@@ -34,7 +34,7 @@ public abstract class Entity : MonoBehaviour
         speed = sprinting ? 10f : 5f;
     }
 
-    public virtual void ProcessMove(Vector2 input)
+    public virtual void MoveWhenPossessed(Vector2 input)
     {
         moveDirection.x = input.x;
         moveDirection.z = input.y;

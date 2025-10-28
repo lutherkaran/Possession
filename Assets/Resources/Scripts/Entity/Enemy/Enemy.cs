@@ -100,9 +100,9 @@ public class Enemy : Entity, IPossessable, IDamageable
         base.ProcessJump();
     }
 
-    public override void ProcessMove(Vector2 input)
+    public override void MoveWhenPossessed(Vector2 input)
     {
-        base.ProcessMove(input);
+        base.MoveWhenPossessed(input);
     }
 
     public override void Sprint() { base.Sprint(); }

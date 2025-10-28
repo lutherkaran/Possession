@@ -11,6 +11,7 @@ public class GameFlow : IManagable
         BulletManager.instance.Initialize();
         PlayerManager.instance.Initialize();
         EntityManager.instance.Initialize();
+        NpcManager.instance.Initialize();
         InputManager.instance.Initialize();
         PossessionManager.instance.Initialize();
     }
@@ -23,6 +24,7 @@ public class GameFlow : IManagable
         BulletManager.instance.PostInitialize();
         PlayerManager.instance.PostInitialize();
         EntityManager.instance.PostInitialize();
+        NpcManager.instance.PostInitialize();
         InputManager.instance.PostInitialize();
         PossessionManager.instance.PostInitialize();
     }
@@ -35,6 +37,7 @@ public class GameFlow : IManagable
         BulletManager.instance.Refresh(deltaTime);
         PlayerManager.instance.Refresh(deltaTime);
         EntityManager.instance.Refresh(deltaTime);
+        NpcManager.instance.Refresh(deltaTime);
         InputManager.instance.Refresh(deltaTime);
         PossessionManager.instance.Refresh(deltaTime);
     }
@@ -47,6 +50,7 @@ public class GameFlow : IManagable
         BulletManager.instance.PhysicsRefresh(fixedDeltaTime);
         PlayerManager.instance.PhysicsRefresh(fixedDeltaTime);
         EntityManager.instance.PhysicsRefresh(fixedDeltaTime);
+        NpcManager.instance.PhysicsRefresh(fixedDeltaTime);
         InputManager.instance.PhysicsRefresh(fixedDeltaTime);
         PossessionManager.instance.PhysicsRefresh(fixedDeltaTime);
     }
@@ -59,6 +63,7 @@ public class GameFlow : IManagable
         BulletManager.instance.LateRefresh(deltaTime);
         PlayerManager.instance.LateRefresh(deltaTime);
         EntityManager.instance.LateRefresh(deltaTime);
+        NpcManager.instance.LateRefresh(deltaTime);
         InputManager.instance.LateRefresh(deltaTime);
         PossessionManager.instance.LateRefresh(deltaTime);
     }
@@ -71,6 +76,7 @@ public class GameFlow : IManagable
         BulletManager.instance.OnDemolish();
         PlayerManager.instance.OnDemolish();
         EntityManager.instance.OnDemolish();
+        NpcManager.instance.OnDemolish();
         InputManager.instance.OnDemolish();
         PossessionManager.instance.OnDemolish();
     }

@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class PossessionManager : IManagable
 {
-
     private static PossessionManager Instance;
     public static PossessionManager instance { get { return Instance == null ? Instance = new PossessionManager() : Instance; } }
 
@@ -17,7 +16,6 @@ public class PossessionManager : IManagable
     public void Initialize()
     {
         playerController = PlayerManager.instance.GetPlayer();
-  
     }
 
     public void PostInitialize()

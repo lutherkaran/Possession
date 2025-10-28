@@ -43,14 +43,14 @@ public static class Loader
             if (loadProgress >= .5f)
             {
                 loadText = "ENVIRONMENT";
-                yield return new WaitForSeconds(3);
+                yield return new WaitForSeconds(1);
             }
 
             if (asyncLoad.progress >= 0.9f)
             {
                 loadText = targetScene.ToString();
 
-                yield return new WaitForSeconds(2);
+                yield return new WaitForSeconds(1);
                 asyncLoad.allowSceneActivation = true;
             }
         }

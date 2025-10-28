@@ -37,7 +37,7 @@ public class InputManager : IManagable
 
     public void PhysicsRefresh(float fixedDeltaTime)
     {
-        PossessionManager.instance.GetCurrentPossessable().GetPossessedEntity().ProcessMove(playerInput.OnFoot.Movement.ReadValue<Vector2>());
+        PossessionManager.instance.GetCurrentPossessable().GetPossessedEntity().MoveWhenPossessed(playerInput.OnFoot.Movement.ReadValue<Vector2>());
     }
 
     public void LateRefresh(float deltaTime)
