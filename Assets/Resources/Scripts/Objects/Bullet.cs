@@ -25,7 +25,7 @@ public class Bullet : MonoBehaviour
             Vector3 spreadDirection = Quaternion.AngleAxis(Random.Range(-3f, 3f), Vector3.up) * direction.normalized;
 
             GameObject.Instantiate(bulletPrefab, gunBarrel.position, Quaternion.identity);
-            rb.velocity = spreadDirection * bulletSpeed;
+            rb.linearVelocity = spreadDirection * bulletSpeed;
             Debug.DrawRay(gunBarrel.position, direction * bulletSpeed, Color.red, 2f);
             shotTimer = 1;
         }
@@ -40,7 +40,7 @@ public class Bullet : MonoBehaviour
         Vector3 spreadDirection = Quaternion.AngleAxis(Random.Range(-3f, 3f), Vector3.up) * direction;
 
         GameObject.Instantiate(bulletPrefab, gunBarrel.position, Quaternion.LookRotation(spreadDirection));
-        rb.velocity = /*Quaternion.AngleAxis(Random.Range(-3f, 3f), Vector3.up) **/ direction.normalized * bulletSpeed;
+        rb.linearVelocity = /*Quaternion.AngleAxis(Random.Range(-3f, 3f), Vector3.up) **/ direction.normalized * bulletSpeed;
         Debug.DrawRay(gunBarrel.position, direction * bulletSpeed, Color.red, 2f);
     }
 
