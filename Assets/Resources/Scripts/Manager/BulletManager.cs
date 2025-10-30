@@ -1,8 +1,10 @@
 using UnityEngine;
 
-public class BulletManager : MonoBehaviour
+public class BulletManager : IManagable
 {
-    public static BulletManager instance { get; private set; }
+    private static BulletManager Instance = null;
+
+    public static BulletManager instance { get { return Instance == null ? Instance = new BulletManager() : Instance; } }
 
     [SerializeField] private float bulletSpeed = 25f;
 
@@ -10,17 +12,35 @@ public class BulletManager : MonoBehaviour
 
     private Rigidbody rb;
     private GameObject bulletPrefab;
+    private Transform bulletParent;
 
     private Vector3 spreadDirection = Vector3.zero;
 
-    private void Awake()
+    public void Initialize()
     {
-        bulletPrefab = Resources.Load("Prefabs/Others/Bullet") as GameObject;
+        bulletParent = new GameObject("BulletParent").transform;
 
-        if (instance == null)
-        {
-            instance = this;
-        }
+        bulletPrefab = Resources.Load("Prefabs/Others/Bullet") as GameObject;
+    }
+
+    public void PostInitialize()
+    {
+
+    }
+
+    public void Refresh(float deltaTime)
+    {
+
+    }
+
+    public void PhysicsRefresh(float fixedDeltaTime)
+    {
+
+    }
+
+    public void LateRefresh(float deltaTime)
+    {
+
     }
 
     public void Shoot(Entity entity, Transform gunBarrel, Vector3 direction)
@@ -41,6 +61,11 @@ public class BulletManager : MonoBehaviour
 
     private GameObject InstantiateBullet(Transform gunBarrel)
     {
-        return GameObject.Instantiate(bulletPrefab, gunBarrel.position, Quaternion.identity, this.transform);
+        return GameObject.Instantiate(bulletPrefab, gunBarrel.position, Quaternion.identity, bulletParent);
+    }
+
+    public void OnDemolish()
+    {
+        Instance = null;
     }
 }

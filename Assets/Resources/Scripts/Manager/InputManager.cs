@@ -2,52 +2,52 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem.Interactions;
 
-public class InputManager : MonoBehaviour
+public class InputManager : IManagable
 {
-    public static InputManager instance { get; private set; }
+    private static InputManager Instance;
+    public static InputManager instance { get { return Instance == null ? Instance = new InputManager() : Instance; } }
 
     public event EventHandler OnGamePaused;
 
     private PlayerInput playerInput;
-
     private PlayerController player;
-    private Entity controlledEntity;
 
-    private void Awake()
+    public void Initialize()
     {
-        if (instance != null && instance == this)
-        {
-            Destroy(gameObject);
-        }
-
-        instance = this;
-
         playerInput = new PlayerInput();
 
         playerInput.OnFoot.Enable();
-        playerInput.OnPossession.Enable();
     }
 
-    public void Start()
+    public void PostInitialize()
     {
-        player = PlayerController.instance.GetPlayer();
+        player = PlayerManager.instance.GetPlayer();
 
-        PossessionManager.instance.OnPossessed += SetControlledEntity;
-
-        playerInput.OnPossession.Possession.performed += HandlePossessionInput;
+        playerInput.OnFoot.Possession.performed += HandlePossessionInput;
         playerInput.OnFoot.MouseInteraction.performed += ctx => CameraManager.instance.GetMouseAim()?.ToggleMouseInteraction();
         playerInput.OnFoot.Attack.performed += ctx => player?.Attack();
         playerInput.OnFoot.Pause.performed += Pause_performed;
     }
 
+    public void Refresh(float deltaTime)
+    {
+        playerInput.OnFoot.Sprint.performed += ctx => PossessionManager.instance.GetCurrentPossessable().GetPossessedEntity().Sprint();
+        playerInput.OnFoot.Jump.performed += ctx => PossessionManager.instance.GetCurrentPossessable().GetPossessedEntity().ProcessJump();
+    }
+
+    public void PhysicsRefresh(float fixedDeltaTime)
+    {
+        PossessionManager.instance.GetCurrentPossessable().GetPossessedEntity().MoveWhenPossessed(playerInput.OnFoot.Movement.ReadValue<Vector2>());
+    }
+
+    public void LateRefresh(float deltaTime)
+    {
+        CameraManager.instance.GetMouseAim().ProcessLook(playerInput.OnFoot.Look.ReadValue<Vector2>(), deltaTime);
+    }
+
     private void Pause_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
         OnGamePaused?.Invoke(this, EventArgs.Empty);
-    }
-
-    private void SetControlledEntity(object sender, IPossessable controlledEntity)
-    {
-        this.controlledEntity = controlledEntity.GetPossessedEntity();
     }
 
     private void HandlePossessionInput(UnityEngine.InputSystem.InputAction.CallbackContext obj)
@@ -64,33 +64,17 @@ public class InputManager : MonoBehaviour
         }
     }
 
-    private void Update()
+    public void OnDemolish()
     {
-        playerInput.OnFoot.Sprint.performed += ctx => controlledEntity.Sprint();
-        playerInput.OnFoot.Jump.performed += ctx => controlledEntity.ProcessJump();
-    }
-
-    private void FixedUpdate()
-    {
-        controlledEntity.ProcessMove(playerInput.OnFoot.Movement.ReadValue<Vector2>());
-    }
-
-    private void LateUpdate()
-    {
-        CameraManager.instance.GetMouseAim().ProcessLook(playerInput.OnFoot.Look.ReadValue<Vector2>());
-    }
-
-    void OnDestroy()
-    {
-        PossessionManager.instance.OnPossessed -= SetControlledEntity;
-        playerInput.OnPossession.Possession.performed -= HandlePossessionInput;
+        playerInput.OnFoot.Possession.performed -= HandlePossessionInput;
         playerInput.OnFoot.MouseInteraction.performed -= ctx => CameraManager.instance.GetMouseAim()?.ToggleMouseInteraction();
         playerInput.OnFoot.Attack.performed -= ctx => player?.Attack();
         playerInput.OnFoot.Pause.performed -= Pause_performed;
 
         playerInput.Dispose();
+        Instance = null;
     }
 
     public PlayerInput.OnFootActions GetOnFootActions() => playerInput.OnFoot;
-    public PlayerInput.OnPossessionActions GetOnPossessionActions() => playerInput.OnPossession;
+
 }

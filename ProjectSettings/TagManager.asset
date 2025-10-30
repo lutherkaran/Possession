@@ -18,8 +18,8 @@ TagManager:
   - Potion
   - Possessable
   - Player
-  - 
-  - 
+  - Enemy
+  - Camera
   - 
   - 
   - 

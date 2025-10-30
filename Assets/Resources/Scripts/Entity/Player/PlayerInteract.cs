@@ -8,17 +8,15 @@ public class PlayerInteract : MonoBehaviour
     [SerializeField]
     LayerMask layer;
     private PlayerUI playerUI;
-    private InputManager playerInput;
 
     private void Awake()
     {
         playerUI = this.GetComponent<PlayerUI>();
-        playerInput = this.GetComponent<InputManager>();
     }
 
     private void Start()
     {
-        cam = CameraManager.instance.cam;
+        cam = CameraManager.instance.myCamera;
     }
 
     private void Update()

@@ -1,30 +1,25 @@
 using System;
 using UnityEngine;
 
-public class PossessionManager : MonoBehaviour
+public class PossessionManager : IManagable
 {
-    public event EventHandler<IPossessable> OnPossessed;
+    private static PossessionManager Instance;
+    public static PossessionManager instance { get { return Instance == null ? Instance = new PossessionManager() : Instance; } }
 
-    public static PossessionManager instance { get; private set; }
+    public event EventHandler<IPossessable> OnPossessed;
 
     private Possession currentPossession;
     private IPossessable currentPossessable;
 
     private PlayerController playerController;
 
-    private void Awake()
+    public void Initialize()
     {
-        if (instance != null)
-        {
-            Destroy(instance); instance = null;
-        }
-
-        instance = this;
+        playerController = PlayerManager.instance.GetPlayer();
     }
 
-    private void Start()
+    public void PostInitialize()
     {
-        playerController = PlayerController.instance.GetPlayer();
         ToPossess(playerController.gameObject);
     }
 
@@ -61,4 +56,25 @@ public class PossessionManager : MonoBehaviour
     public Possession GetCurrentPossession() => currentPossession;
 
     public IPossessable GetCurrentPossessable() => currentPossessable;
+
+    public void Refresh(float deltaTime)
+    {
+
+    }
+
+    public void PhysicsRefresh(float fixedDeltaTime)
+    {
+
+    }
+
+    public void LateRefresh(float deltaTime)
+    {
+
+    }
+
+    public void OnDemolish()
+    {
+        Instance = null;
+    }
+
 }

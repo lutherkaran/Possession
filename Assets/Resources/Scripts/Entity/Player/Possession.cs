@@ -42,7 +42,7 @@ public class Possession
         }
 
         PossessionManager.instance.ToPossess(targetEntity);
-        currentPossession.GetPossessedEntity().StartCoroutine(CameraManager.instance.MovetoPosition(targetEntity));
+
         canPossess = false;
     }
 
@@ -61,7 +61,7 @@ public class Possession
 
     private Ray DrawRayFromCrosshair()
     {
-        Ray ray = CameraManager.instance.cam.ScreenPointToRay(PlayerUI.Instance.GetCrosshairTransform().position);
+        Ray ray = CameraManager.instance.myCamera.ScreenPointToRay(PlayerUI.Instance.GetCrosshairTransform().position);
         return ray;
     }
 
@@ -69,17 +69,4 @@ public class Possession
     {
         PossessionManager.instance.ToPossess(player);
     }
-
-    //public Ray DrawRayFromCamera()
-    //{
-    //    Ray ray = CameraManager.instance.cam.ScreenPointToRay(Input.mousePosition);
-    //    return ray;
-    //}
-
-    //public Ray DrawRayfromPlayerEye()
-    //{
-    //    Ray ray = new Ray(player.transform.position + (Vector3.up * 0.5f), player.transform.forward);
-    //    Debug.DrawRay(ray.origin, ray.direction * 40, Color.red);
-    //    return ray;
-    //}
 }

@@ -40,7 +40,7 @@ public class StateMachine : MonoBehaviour
         }
     }
 
-    private void Update()
+    public void Refresh(float deltaTime)
     {
         if (activeState != null)
         {

@@ -4,8 +4,6 @@ public abstract class Entity : MonoBehaviour
 {
     public IPossessable possessedByPlayer { get; set; }
 
-    [SerializeField] protected PlayerController playerController;
-
     protected Vector3 moveDirection = Vector3.zero;
     protected Vector3 velocity = Vector3.zero;
 
@@ -16,17 +14,11 @@ public abstract class Entity : MonoBehaviour
     protected bool sprinting = false;
     protected bool isGrounded = true;
 
-    [SerializeField] protected float entityPossessionTimerMax;
-    [SerializeField] protected float possessionCooldownTimerMax;
+    [SerializeField] protected float entityPossessionTimerMax = 50;
+    [SerializeField] protected float possessionCooldownTimerMax = 1;
 
     [SerializeField] protected Transform cameraAttachPoint;
     [SerializeField] protected LayerMask PossessableLayerMask;
-
-
-    protected void SetPlayer(PlayerController player)
-    {
-        playerController = player;
-    }
 
     public virtual void ProcessJump()
     {
@@ -42,16 +34,17 @@ public abstract class Entity : MonoBehaviour
         speed = sprinting ? 10f : 5f;
     }
 
-    public virtual void ProcessMove(Vector2 input)
+    public virtual void MoveWhenPossessed(Vector2 input)
     {
         moveDirection.x = input.x;
         moveDirection.z = input.y;
+        moveDirection.y = 0;
     }
 
     public abstract void Attack();
-    
+
     protected abstract bool IsAlive();
-    
+
     public abstract Transform GetCameraAttachPoint();
     public abstract float GetEntityPossessionTimerMax();
     public abstract float GetPossessionCooldownTimerMax();

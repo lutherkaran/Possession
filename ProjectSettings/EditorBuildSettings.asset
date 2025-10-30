@@ -6,16 +6,16 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Resources/Scenes/MainMenuScene.unity
+    path: Assets/Resources/Scenes/LOADING.unity
+    guid: a4085740f02807540a6a9e7e50af3690
+  - enabled: 1
+    path: Assets/Resources/Scenes/Main/MENU.unity
     guid: 1d5e20b9541b8f84a81e473e0271bf4e
   - enabled: 1
-    path: Assets/Resources/Scenes/GameScene.unity
+    path: Assets/Resources/Scenes/BEGINNING/BEGINNING.unity
     guid: 99c9720ab356a0642a771bea13969a05
-  - enabled: 0
-    path: Assets/Resources/Scenes/GameScene2.unity
-    guid: ee2a2cfebce01b34e8384d1c522d63ac
   - enabled: 1
-    path: Assets/Resources/Scenes/LoadingScene.unity
-    guid: a4085740f02807540a6a9e7e50af3690
+    path: Assets/Resources/Scenes/SURVIVAL/SURVIVAL.unity
+    guid: e70d6fedefd236e4b8616975d99bdd4b
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0

@@ -1,15 +1,35 @@
 using UnityEngine;
 
-public class NPC : Entity, IPossessable
+public class Npc : Entity, IPossessable, IManagable
 {
-    Rigidbody rb;
+    private float currentFixedDeltaTime = 0f;
 
-    void Awake()
+    public void Initialize()
     {
-        rb = this.GetComponent<Rigidbody>();
+
     }
 
-    public void Update()
+    public void PostInitialize()
+    {
+
+    }
+
+    public void Refresh(float deltaTime)
+    {
+
+    }
+
+    public void PhysicsRefresh(float fixedDeltaTime)
+    {
+        currentFixedDeltaTime = fixedDeltaTime;
+    }
+
+    public void LateRefresh(float deltaTime)
+    {
+
+    }
+
+    public void OnDemolish()
     {
 
     }
@@ -24,11 +44,11 @@ public class NPC : Entity, IPossessable
         return false;
     }
 
-    public override void ProcessMove(Vector2 input)
+    public override void MoveWhenPossessed(Vector2 input)
     {
-        base.ProcessMove(input);
+        base.MoveWhenPossessed(input);
         if (PossessionManager.instance.GetCurrentPossessable() == possessedByPlayer)
-            transform.Translate(moveDirection * speed * Time.deltaTime);
+            transform.Translate(moveDirection * speed * currentFixedDeltaTime);
     }
 
     public override void ProcessJump()
@@ -36,8 +56,8 @@ public class NPC : Entity, IPossessable
         base.ProcessJump();
         if (PossessionManager.instance.GetCurrentPossessable() == possessedByPlayer)
         {
-            transform.position += velocity * Time.deltaTime;
-            velocity.y = gravity * Time.deltaTime * 10;
+            transform.position += velocity * currentFixedDeltaTime;
+            velocity.y = gravity * currentFixedDeltaTime * 10;
         }
     }
 

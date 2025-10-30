@@ -1,48 +1,35 @@
 using System;
 using UnityEngine;
 
-[RequireComponent(typeof(CharacterController))]
-
 public class PlayerController : Entity, IPossessable, IDamageable
 {
     public event EventHandler<IDamageable.OnDamagedEventArgs> OnDamaged;
 
-    public static PlayerController instance { get; private set; }
-
-    private bool isAlive = true;
-
-    public bool isPossessed { get; private set; }
-
+    private CharacterController characterController;
     [SerializeField] private HealthUI healthUI;
 
-    private CharacterController characterController;
-    private InputManager inputManager;
+    public bool isAlive { get; private set; }
+    public bool isPossessed { get; private set; }
 
     [SerializeField] private float RaycastHitDistance = 40.0f;
-
     [SerializeField] private Transform gunBarrel;
     [SerializeField] private float maxHealth = 100f;
     [SerializeField] private float health;
 
-    private void Awake()
+    float currentFixedDeltaTime;
+
+    public void Initialize()
     {
-        if (instance != null && instance != this)
-        {
-            Destroy(gameObject); // Prevent duplicates
-            return;
-        }
-
-        instance = this;
-        DontDestroyOnLoad(gameObject);
-
         health = maxHealth;
+        isAlive = true;
+
         characterController = GetComponent<CharacterController>();
-        inputManager = GetComponent<InputManager>();
+        healthUI = GetComponent<HealthUI>();
     }
 
-    private void Update()
+    public void PostInitialize()
     {
-        isGrounded = characterController.isGrounded;
+
     }
 
     public override void ProcessJump()
@@ -55,17 +42,13 @@ public class PlayerController : Entity, IPossessable, IDamageable
         base.Sprint();
     }
 
-    public override void ProcessMove(Vector2 input)
+    public override void MoveWhenPossessed(Vector2 input)
     {
-        base.ProcessMove(input);
+        base.MoveWhenPossessed(input);
 
-        characterController.Move(transform.TransformDirection(new Vector3(moveDirection.x, 0, moveDirection.z)) * speed * Time.deltaTime);
-        if (isGrounded && velocity.y < 0)
-        {
-            velocity.y = -1f;
-        }
-        velocity.y += gravity * Time.deltaTime;
-        characterController.Move(velocity * Time.deltaTime);
+        moveDirection = new Vector3(input.x, 0, input.y);
+
+        transform.Translate(moveDirection * speed * currentFixedDeltaTime);
     }
 
     public override void Attack()
@@ -89,7 +72,7 @@ public class PlayerController : Entity, IPossessable, IDamageable
 
     public Ray DrawRayFromCrosshair()
     {
-        Ray ray = CameraManager.instance.cam.ScreenPointToRay(PlayerUI.Instance.GetCrosshairTransform().position);
+        Ray ray = CameraManager.instance.myCamera.ScreenPointToRay(PlayerUI.Instance.GetCrosshairTransform().position);
         return ray;
     }
 
@@ -108,7 +91,27 @@ public class PlayerController : Entity, IPossessable, IDamageable
     public void HealthChanged(float healthChangedValue)
     {
         OnDamaged?.Invoke(this, new IDamageable.OnDamagedEventArgs { health = healthChangedValue });
-        health = healthUI.GetHealth();
+        //health = healthUI.GetHealth();
+    }
+
+    public void Refresh(float deltaTime)
+    {
+    
+    }
+
+    public void PhysicsRefresh(float fixedDeltaTime)
+    {
+        currentFixedDeltaTime = fixedDeltaTime;
+    }
+
+    public void LateRefresh(float deltaTime)
+    {
+
+    }
+
+    public void OnDemolish()
+    {
+
     }
 
     protected override bool IsAlive() => healthUI.GetHealth() > 0;
@@ -118,8 +121,6 @@ public class PlayerController : Entity, IPossessable, IDamageable
     public PlayerController GetPlayer() => this;
 
     public Entity GetPossessedEntity() => this;
-
-    public InputManager GetInputManager() => inputManager;
 
     public CharacterController GetCharacterControllerReference() => characterController;
 

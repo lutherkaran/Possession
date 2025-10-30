@@ -1,36 +1,52 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
-public class EntityManager : MonoBehaviour
+public class EntityManager : IManagable
 {
-    List<Entity> entityList = new List<Entity>();
+    private static EntityManager Instance;
+    public static EntityManager instance { get { return Instance == null ? Instance = new EntityManager() : Instance; } }
 
-    // Start is called before the first frame update
-    private void Awake()
+    private List<Entity> entityList = new List<Entity>();
+    private Transform entityManagerTransform;
+
+    public void Initialize()
     {
-        entityList.AddRange(GameObject.FindObjectsOfType<Entity>());
+        entityManagerTransform = new GameObject("EntityManager").transform;
+    }
+
+    public void LateRefresh(float deltaTime)
+    {
+
+    }
+
+    public void OnDemolish()
+    {
+        Instance = null;
+    }
+
+    public void PhysicsRefresh(float fixedDeltaTime)
+    {
+
+    }
+
+    public void PostInitialize()
+    {
         SetEntityParent();
+    }
+
+    public void Refresh(float deltaTime)
+    {
+
     }
 
     private void SetEntityParent()
     {
+        entityList.AddRange(GameObject.FindObjectsOfType<Entity>());
+
         foreach (Entity entity in entityList)
         {
-            entity.transform.SetParent(this.transform);
+            entity.transform.SetParent(entityManagerTransform);
         }
-    }
-
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    { 
 
     }
 }

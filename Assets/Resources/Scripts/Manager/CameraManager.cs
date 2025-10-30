@@ -1,37 +1,75 @@
 using UnityEngine;
-using System.Collections;
 
-public class CameraManager : MonoBehaviour
+public class CameraManager : IManagable
 {
-    private GameObject currentlyPossessed;
+    private static CameraManager Instance;
+
+    public static CameraManager instance
+    {
+        get { return Instance == null ? Instance = new CameraManager() : Instance; }
+    }
+
     private Vector3 targetPosition;
     private Vector3 velocity = Vector3.zero;
 
     [SerializeField] private MouseAim mouseAim;
 
     [Header("Camera Settings")]
-    [SerializeField] private float smoothTime = 0.3f; // Adjust for desired speed
-    [SerializeField] private Vector3 DefaultPosition = new Vector3(0, .6f, 0);
+    [SerializeField]
+    private float smoothTime = .3f; // Adjust for desired speed
+
     private Transform cameraAttachPoint;
 
-    public Camera cam;
-    public static CameraManager instance { get; private set; }
+    public Camera myCamera { get; private set; }
 
-    private void Awake()
+    private bool isTransitioning = false;
+
+    public void Initialize()
     {
-        if (instance != null)
-        {
-            Destroy(instance);
-        }
-
-        instance = this;
-        cam = GetComponent<Camera>();
+        GameObject newCamera = GameObject.Instantiate(Resources.Load<GameObject>("Prefabs/Others/MainCamera"));
+        myCamera = newCamera.GetComponent<Camera>();
         InitializingMouse();
     }
 
-    private void Start()
+    public void PostInitialize()
     {
         PossessionManager.instance.OnPossessed += AttachCameraToPossessedObject;
+    }
+
+    public void Refresh(float deltaTime)
+    {
+    }
+
+    public void PhysicsRefresh(float fixedDeltaTime)
+    {
+    }
+
+    public void LateRefresh(float deltaTime)
+    {
+        if (!isTransitioning) return;
+
+        MoveCamera(deltaTime);
+    }
+
+    private void MoveCamera(float deltaTIme)
+    {
+        InputManager.instance.GetOnFootActions().Disable();
+
+        myCamera.transform.position =
+            Vector3.SmoothDamp(myCamera.transform.position, targetPosition, ref velocity, smoothTime);
+
+        if (Vector3.Distance(myCamera.transform.position, targetPosition) <= 0.1f)
+        {
+            myCamera.transform.position = targetPosition;
+            myCamera.transform.SetParent(cameraAttachPoint);
+            isTransitioning = false;
+            InputManager.instance.GetOnFootActions().Enable();
+        }
+    }
+
+    public void OnDemolish()
+    {
+        Instance = null;
     }
 
     private void InitializingMouse()
@@ -42,25 +80,16 @@ public class CameraManager : MonoBehaviour
 
     private void AttachCameraToPossessedObject(object sender, IPossessable possessedObject)
     {
-        currentlyPossessed = possessedObject.GetPossessedEntity().gameObject;
         cameraAttachPoint = possessedObject.GetPossessedEntity().GetCameraAttachPoint();
-
-        StartCoroutine(MovetoPosition(cameraAttachPoint.gameObject));
-        cam.transform.SetParent(cameraAttachPoint);
+        AttachCamera(cameraAttachPoint);
     }
 
-    public IEnumerator MovetoPosition(GameObject currentlyPossessed)
+    public void AttachCamera(Transform _cameraAttachPoint)
     {
-        InputManager.instance.GetOnFootActions().Disable();
-        targetPosition = Vector3.zero;
-        targetPosition = cameraAttachPoint.position;
+        cameraAttachPoint = _cameraAttachPoint;
+        targetPosition = _cameraAttachPoint.position;
 
-        while (Vector3.Distance(cam.transform.position, targetPosition) > 0.1f)
-        {
-            cam.transform.position = Vector3.SmoothDamp(cam.transform.position, targetPosition, ref velocity, smoothTime);
-            yield return null;
-        }
-        InputManager.instance.GetOnFootActions().Enable();
+        isTransitioning = true;
     }
 
     public MouseAim GetMouseAim() => mouseAim;

@@ -18,11 +18,10 @@ public class Enemy : Entity, IPossessable, IDamageable
 
     [SerializeField] private EnemyAnimator enemyAnimator;
     [SerializeField] private HealthUI healthUI;
-    [SerializeField] private EnemyPath enemyPath;
-
+    
     private NavMeshAgent agent;
     private StateMachine stateMachine;
-   
+
     public Vector3 defaultVelocity { get; private set; }
     public Vector3 targetsLastPosition { get; private set; }
     public Vector3 shootDirection { get; private set; }
@@ -43,33 +42,25 @@ public class Enemy : Entity, IPossessable, IDamageable
     [SerializeField] private float currentHealth;
 
     private Dictionary<Type, BaseState> statesDictionary;
+
     private Transform targetTransform;
+    private Transform player;
 
-
-    private void Awake()
+    public void Initialize()
     {
-        Initialize();
-    }
-
-    private void Start()
-    {
-        PostInitialize();
-        InitializeStatesDictionary();
-    }
-
-    private void Initialize()
-    {
-        agent = GetComponent<NavMeshAgent>();
-
         currentHealth = maxHealth;
+
+        agent = GetComponent<NavMeshAgent>();
+        stateMachine = GetComponent<StateMachine>();
         defaultVelocity = agent.velocity;
     }
 
-    private void PostInitialize()
+    public void PostInitialize()
     {
         enemyAnimator = GetComponentInChildren<EnemyAnimator>();
         healthUI = GetComponentInChildren<HealthUI>();
-        stateMachine = GetComponent<StateMachine>();
+
+        InitializeStatesDictionary();
     }
 
     private void InitializeStatesDictionary()
@@ -88,9 +79,9 @@ public class Enemy : Entity, IPossessable, IDamageable
         stateMachine.Initialise(this, statesDictionary);
     }
 
-    private void Update()
+    public void Refresh(float deltaTime)
     {
-
+        stateMachine.Refresh(deltaTime);
     }
 
     public override void Attack()
@@ -98,7 +89,7 @@ public class Enemy : Entity, IPossessable, IDamageable
         Shoot();
     }
 
-    private void Shoot()
+    public void Shoot()
     {
         shootDirection = (GetTargetPlayerTransform().position + Vector3.up * (UnityEngine.Random.Range(1f, 1.5f)) - GetGunBarrelTransform().position).normalized;
         onShoot?.Invoke(this, new OnShootEventArgs { _entity = this, _direction = shootDirection, _gunBarrel = gunBarrel });
@@ -109,9 +100,9 @@ public class Enemy : Entity, IPossessable, IDamageable
         base.ProcessJump();
     }
 
-    public override void ProcessMove(Vector2 input)
+    public override void MoveWhenPossessed(Vector2 input)
     {
-        base.ProcessMove(input);
+        base.MoveWhenPossessed(input);
     }
 
     public override void Sprint() { base.Sprint(); }
@@ -135,9 +126,10 @@ public class Enemy : Entity, IPossessable, IDamageable
 
     public bool CanSeePlayer()
     {
-        if (playerController.transform != null && Vector3.Distance(transform.position, playerController.transform.position) < sightDistance)
+        player = PlayerManager.instance.GetPlayer().transform;
+        if (Vector3.Distance(transform.position, player.position) < sightDistance)
         {
-            Vector3 targetDirection = playerController.transform.position - transform.position;
+            Vector3 targetDirection = player.position - transform.position;
             float angleToPlayer = Vector3.Angle(targetDirection, transform.forward);
 
             if (angleToPlayer >= -fieldOfView && angleToPlayer <= fieldOfView)
@@ -175,14 +167,27 @@ public class Enemy : Entity, IPossessable, IDamageable
     public override float GetEntityPossessionTimerMax() => entityPossessionTimerMax;
 
     public override float GetPossessionCooldownTimerMax() => possessionCooldownTimerMax;
-    
+
     public EnemyAnimator GetAnimator() => enemyAnimator;
 
     public NavMeshAgent GetEnemyAgent() => agent;
-
-    public EnemyPath GetEnemyPath() => enemyPath;
-
+    
     public Transform GetGunBarrelTransform() => gunBarrel;
 
     public Transform GetTargetPlayerTransform() => targetTransform;
+
+    public void PhysicsRefresh(float fixedDeltaTime)
+    {
+
+    }
+
+    public void LateRefresh(float deltaTime)
+    {
+
+    }
+
+    public void OnDemolish()
+    {
+
+    }
 }

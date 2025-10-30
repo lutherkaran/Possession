@@ -1,5 +1,4 @@
 using System;
-using UnityEditorInternal;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -35,7 +34,6 @@ public class GameManager : MonoBehaviour
         }
 
         instance = this;
-        //DontDestroyOnLoad(this.gameObject);
         state = GameState.WaitingToStart;
     }
 
@@ -75,7 +73,6 @@ public class GameManager : MonoBehaviour
     {
         TogglePause();
     }
-
 
     public bool isGamePlaying()
     {
