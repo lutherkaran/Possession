@@ -36,7 +36,7 @@ public class BulletManager : MonoBehaviour
         spreadDirection = Quaternion.AngleAxis(Random.Range(-3f, 3f), Vector3.up) * direction.normalized;
 
         rb = bulletGameObject.GetComponent<Rigidbody>();
-        rb.velocity = spreadDirection * bulletSpeed;
+        rb.linearVelocity = spreadDirection * bulletSpeed;
     }
 
     private GameObject InstantiateBullet(Transform gunBarrel)
