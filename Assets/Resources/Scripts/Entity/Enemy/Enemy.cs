@@ -18,7 +18,8 @@ public class Enemy : Entity, IPossessable, IDamageable
 
     [SerializeField] private EnemyAnimator enemyAnimator;
     [SerializeField] private HealthUI healthUI;
-    
+    [SerializeField] private CameraSceneVolumeProfileSO enemyVolumeProfileSO; // using the default for now.
+
     private NavMeshAgent agent;
     private StateMachine stateMachine;
 
@@ -59,8 +60,18 @@ public class Enemy : Entity, IPossessable, IDamageable
     {
         enemyAnimator = GetComponentInChildren<EnemyAnimator>();
         healthUI = GetComponentInChildren<HealthUI>();
+        PossessionManager.instance.OnPossessed += OnEnemyPossessed;
 
         InitializeStatesDictionary();
+    }
+
+    private void OnEnemyPossessed(object sender, IPossessable e)
+    {
+        if (e.GetPossessedEntity() == this)
+        {
+            CameraManager.instance.ApplyCameraSettings(enemyVolumeProfileSO.fieldOfView);
+            GameManager.instance.ApplyVolumeProfile(enemyVolumeProfileSO.volumeProfile);
+        }
     }
 
     private void InitializeStatesDictionary()
@@ -171,7 +182,7 @@ public class Enemy : Entity, IPossessable, IDamageable
     public EnemyAnimator GetAnimator() => enemyAnimator;
 
     public NavMeshAgent GetEnemyAgent() => agent;
-    
+
     public Transform GetGunBarrelTransform() => gunBarrel;
 
     public Transform GetTargetPlayerTransform() => targetTransform;

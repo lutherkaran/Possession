@@ -4,9 +4,9 @@ public class Horse : Npc
 {
     [SerializeField] private CameraSceneVolumeProfileSO horseSceneVolumeProfile;
 
-    public override void Initialize()
+    public override void PostInitialize()
     {
-        base.Initialize();
+        base.PostInitialize();
         PossessionManager.instance.OnPossessed += OnCatPossession;
     }
 

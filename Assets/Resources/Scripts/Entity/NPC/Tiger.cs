@@ -4,9 +4,9 @@ public class Tiger : Npc
 {
     [SerializeField] private CameraSceneVolumeProfileSO tigerSceneVolumeProfile;
 
-    public override void Initialize()
+    public override void PostInitialize()
     {
-        base.Initialize();
+        base.PostInitialize();
         PossessionManager.instance.OnPossessed += OnCatPossession;
     }
 

@@ -4,9 +4,9 @@ public class Penguin : Npc
 {
     [SerializeField] private CameraSceneVolumeProfileSO penguinSceneVolumeProfile;
 
-    public override void Initialize()
+    public override void PostInitialize()
     {
-        base.Initialize();
+        base.PostInitialize();
         PossessionManager.instance.OnPossessed += OnCatPossession;
     }
 

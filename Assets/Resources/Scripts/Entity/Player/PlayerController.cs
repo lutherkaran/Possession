@@ -6,7 +6,9 @@ public class PlayerController : Entity, IPossessable, IDamageable
     public event EventHandler<IDamageable.OnDamagedEventArgs> OnDamaged;
 
     private CharacterController characterController;
+    
     [SerializeField] private HealthUI healthUI;
+    [SerializeField] private CameraSceneVolumeProfileSO playerVolumeProfileSO; // using the default for now
 
     public bool isAlive { get; private set; }
     public bool isPossessed { get; private set; }
@@ -29,7 +31,16 @@ public class PlayerController : Entity, IPossessable, IDamageable
 
     public void PostInitialize()
     {
+        PossessionManager.instance.OnPossessed += OnPlayerPossessed;
+    }
 
+    private void OnPlayerPossessed(object sender, IPossessable e)
+    {
+        if (e.GetPossessedEntity() == this)
+        {
+            CameraManager.instance.ApplyCameraSettings(playerVolumeProfileSO.fieldOfView);
+            GameManager.instance.ApplyVolumeProfile(playerVolumeProfileSO.volumeProfile);
+        }
     }
 
     public override void ProcessJump()
