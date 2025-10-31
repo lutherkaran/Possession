@@ -4,32 +4,32 @@ public class Npc : Entity, IPossessable, IManagable
 {
     private float currentFixedDeltaTime = 0f;
 
-    public void Initialize()
+    public virtual void Initialize()
     {
 
     }
 
-    public void PostInitialize()
+    public virtual void PostInitialize()
     {
 
     }
 
-    public void Refresh(float deltaTime)
+    public virtual void Refresh(float deltaTime)
     {
 
     }
 
-    public void PhysicsRefresh(float fixedDeltaTime)
+    public virtual void PhysicsRefresh(float fixedDeltaTime)
     {
         currentFixedDeltaTime = fixedDeltaTime;
     }
 
-    public void LateRefresh(float deltaTime)
+    public virtual void LateRefresh(float deltaTime)
     {
 
     }
 
-    public void OnDemolish()
+    public virtual void OnDemolish()
     {
 
     }

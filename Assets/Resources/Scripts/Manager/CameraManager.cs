@@ -98,4 +98,11 @@ public class CameraManager : IManagable
     {
         PossessionManager.instance.OnPossessed -= AttachCameraToPossessedObject;
     }
+
+    public void ApplyCameraSettings(float fieldOfView)
+    {
+        myCamera.fieldOfView = fieldOfView;
+        Debug.Log("myCamera: " + myCamera.fieldOfView);
+        Debug.Log("newCamera: " + myCamera.fieldOfView);
+    }
 }

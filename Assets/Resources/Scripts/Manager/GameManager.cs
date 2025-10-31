@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class GameManager : MonoBehaviour
 {
@@ -7,6 +8,8 @@ public class GameManager : MonoBehaviour
 
     public event EventHandler OnGamePaused;
     public event EventHandler OnGameUnpaused;
+
+    [SerializeField] private Volume globalVolume;
 
     private enum GameState
     {
@@ -95,5 +98,10 @@ public class GameManager : MonoBehaviour
             OnGameUnpaused?.Invoke(this, EventArgs.Empty);
             CameraManager.instance.GetMouseAim().ToggleMouseInteraction();
         }
+    }
+
+    public void ApplyVolumeProfile(VolumeProfile volumeProfile)
+    {
+        globalVolume.GetComponent<Volume>().profile = volumeProfile;
     }
 }

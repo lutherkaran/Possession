@@ -14,17 +14,17 @@ OcclusionCullingSettings:
 RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 10
-  m_Fog: 0
-  m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  m_Fog: 1
+  m_FogColor: {r: 0.3529412, g: 0.37254903, b: 0.43137255, a: 1}
   m_FogMode: 2
-  m_FogDensity: 0.18
+  m_FogDensity: 0.02
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
-  m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
-  m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
+  m_AmbientSkyColor: {r: 0.47058824, g: 0.49019608, b: 0.54901963, a: 1}
+  m_AmbientEquatorColor: {r: 0.37254903, g: 0.39215687, b: 0.4509804, a: 1}
+  m_AmbientGroundColor: {r: 0.23529412, g: 0.23529412, b: 0.27450982, a: 1}
   m_AmbientIntensity: 1
-  m_AmbientMode: 0
+  m_AmbientMode: 1
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
   m_SkyboxMaterial: {fileID: 2100000, guid: be20ebc6ab2f9ee40be1f80e9ff6158d, type: 2}
   m_HaloStrength: 0.5
@@ -93,7 +93,8 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 20201, guid: 0000000000000000f000000000000000, type: 0}
+  m_LightingDataAsset: {fileID: 112000000, guid: a548739b2c4991942be3819ad77b56fb,
+    type: 2}
   m_LightingSettings: {fileID: 0}
 --- !u!196 &4
 NavMeshSettings:
@@ -1072,6 +1073,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: DogNpc
       objectReference: {fileID: 0}
+    - target: {fileID: 1237160823714483091, guid: ef0a6a660f281b6419d47a6792c208ad,
+        type: 3}
+      propertyPath: dogSceneVolumeProfile
+      value: 
+      objectReference: {fileID: 11400000, guid: 1a35eec5291348a4ab812252aa1befa3,
+        type: 2}
     - target: {fileID: 1579767858999284997, guid: ef0a6a660f281b6419d47a6792c208ad,
         type: 3}
       propertyPath: m_Enabled
@@ -2088,7 +2095,7 @@ Light:
   m_Enabled: 1
   serializedVersion: 11
   m_Type: 1
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 0.74509805, b: 0.47058824, a: 1}
   m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
@@ -2098,7 +2105,7 @@ Light:
     m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
-    m_Strength: 1
+    m_Strength: 0.8
     m_Bias: 0.05
     m_NormalBias: 0.4
     m_NearPlane: 0.2
@@ -2131,9 +2138,9 @@ Light:
   m_Lightmapping: 1
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
-  m_BounceIntensity: 1
+  m_BounceIntensity: 0.6
   m_ColorTemperature: 5000
-  m_UseColorTemperature: 1
+  m_UseColorTemperature: 0
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
@@ -2194,6 +2201,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: DeerNpc
       objectReference: {fileID: 0}
+    - target: {fileID: 6719135856900906613, guid: 7f90f1e7ff5fc5b4d88368860e18c8f9,
+        type: 3}
+      propertyPath: deerSceneVolumeProfile
+      value: 
+      objectReference: {fileID: 11400000, guid: e4b1b6318cbd79b4ba3b3e7d3346a174,
+        type: 2}
     - target: {fileID: 6814030415206713647, guid: 7f90f1e7ff5fc5b4d88368860e18c8f9,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3875,6 +3888,12 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1592549132173025779, guid: c2fdd4ef1a6f2024ba04132bd854c30c,
+        type: 3}
+      propertyPath: volumeProfile
+      value: 
+      objectReference: {fileID: 11400000, guid: a6560a915ef98420e9faacc1c7438823,
+        type: 2}
     - target: {fileID: 2648078475085479225, guid: c2fdd4ef1a6f2024ba04132bd854c30c,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4715,7 +4734,7 @@ MonoBehaviour:
   priority: 0
   blendDistance: 0
   weight: 1
-  sharedProfile: {fileID: 11400000, guid: a6560a915ef98420e9faacc1c7438823, type: 2}
+  sharedProfile: {fileID: 11400000, guid: 4e7ab8dd03881564a843deb9f0ffc99c, type: 2}
 --- !u!4 &832575519
 Transform:
   m_ObjectHideFlags: 0
@@ -4813,6 +4832,12 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 543366639244814509, guid: b52d7611012671d4d88c3c51285a6df3,
+        type: 3}
+      propertyPath: penguinSceneVolumeProfile
+      value: 
+      objectReference: {fileID: 11400000, guid: fd96f181073103a43b4f101694fb67c0,
+        type: 2}
     - target: {fileID: 1796255035789600764, guid: b52d7611012671d4d88c3c51285a6df3,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4950,6 +4975,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: HorseNpc
       objectReference: {fileID: 0}
+    - target: {fileID: 8359960024093925532, guid: 8d30a0cc8c2d5a94ebae1ae7565e94bf,
+        type: 3}
+      propertyPath: horseSceneVolumeProfile
+      value: 
+      objectReference: {fileID: 11400000, guid: 6ba4dbc467b7c57409f216463d56a274,
+        type: 2}
     m_RemovedComponents:
     - {fileID: 5396586273444979177, guid: 8d30a0cc8c2d5a94ebae1ae7565e94bf, type: 3}
     - {fileID: 184955127574371266, guid: 8d30a0cc8c2d5a94ebae1ae7565e94bf, type: 3}
@@ -5342,6 +5373,12 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3312736763655720254, guid: e5da75aa7272a924795cbc850f381785,
+        type: 3}
+      propertyPath: chickenSceneVolumeProfile
+      value: 
+      objectReference: {fileID: 11400000, guid: 3d1072567e73f0044a6f638789f4de7d,
+        type: 2}
     - target: {fileID: 7881135867406394219, guid: e5da75aa7272a924795cbc850f381785,
         type: 3}
       propertyPath: m_Name
@@ -6001,6 +6038,12 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4567225438449294455, guid: 256debc84ad299345a4ea58f2ea13115,
+        type: 3}
+      propertyPath: tigerSceneVolumeProfile
+      value: 
+      objectReference: {fileID: 11400000, guid: abf5d08148293b9459bde83aae841f06,
+        type: 2}
     - target: {fileID: 7167577354170813629, guid: 256debc84ad299345a4ea58f2ea13115,
         type: 3}
       propertyPath: m_Name
@@ -6319,6 +6362,12 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3312736763655720254, guid: e5da75aa7272a924795cbc850f381785,
+        type: 3}
+      propertyPath: chickenSceneVolumeProfile
+      value: 
+      objectReference: {fileID: 11400000, guid: 3d1072567e73f0044a6f638789f4de7d,
+        type: 2}
     - target: {fileID: 7881135867406394219, guid: e5da75aa7272a924795cbc850f381785,
         type: 3}
       propertyPath: m_Name
@@ -6865,6 +6914,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf05257d69d1bc74698d9f54184ff6f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  globalVolume: {fileID: 832575518}
 --- !u!4 &1301532814
 Transform:
   m_ObjectHideFlags: 0
@@ -8258,6 +8308,12 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3312736763655720254, guid: e5da75aa7272a924795cbc850f381785,
+        type: 3}
+      propertyPath: chickenSceneVolumeProfile
+      value: 
+      objectReference: {fileID: 11400000, guid: 3d1072567e73f0044a6f638789f4de7d,
+        type: 2}
     - target: {fileID: 7881135867406394219, guid: e5da75aa7272a924795cbc850f381785,
         type: 3}
       propertyPath: m_Name
@@ -8452,6 +8508,24 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1887019049335681189, guid: 30c122facbab6874f8875988bd8b4875,
+        type: 3}
+      propertyPath: volumeProfile
+      value: 
+      objectReference: {fileID: 11400000, guid: da2d3e7919569964ab501dfc1c69d8f3,
+        type: 2}
+    - target: {fileID: 1887019049335681189, guid: 30c122facbab6874f8875988bd8b4875,
+        type: 3}
+      propertyPath: catSceneVolumeProfile
+      value: 
+      objectReference: {fileID: 11400000, guid: 5f7d2d5b67f68bd47a3c19250a537008,
+        type: 2}
+    - target: {fileID: 1887019049335681189, guid: 30c122facbab6874f8875988bd8b4875,
+        type: 3}
+      propertyPath: cameraSceneVolumeProfile
+      value: 
+      objectReference: {fileID: 11400000, guid: 5f7d2d5b67f68bd47a3c19250a537008,
+        type: 2}
     - target: {fileID: 4014842427096024152, guid: 30c122facbab6874f8875988bd8b4875,
         type: 3}
       propertyPath: m_Name
@@ -10560,37 +10634,37 @@ PrefabInstance:
     - target: {fileID: 4023705205762384142, guid: 614c4734caea34e45a5c25f3c9cd7951,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 18.622349
+      value: 12.375563
       objectReference: {fileID: 0}
     - target: {fileID: 4023705205762384142, guid: 614c4734caea34e45a5c25f3c9cd7951,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 6.0643177
+      value: 1.519052
       objectReference: {fileID: 0}
     - target: {fileID: 4023705205762384142, guid: 614c4734caea34e45a5c25f3c9cd7951,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 18.757753
+      value: -18.816614
       objectReference: {fileID: 0}
     - target: {fileID: 4023705205762384142, guid: 614c4734caea34e45a5c25f3c9cd7951,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.27683192
+      value: -0.4531153
       objectReference: {fileID: 0}
     - target: {fileID: 4023705205762384142, guid: 614c4734caea34e45a5c25f3c9cd7951,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.018119045
+      value: 0.018898096
       objectReference: {fileID: 0}
     - target: {fileID: 4023705205762384142, guid: 614c4734caea34e45a5c25f3c9cd7951,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.95869356
+      value: 0.8904771
       objectReference: {fileID: 0}
     - target: {fileID: 4023705205762384142, guid: 614c4734caea34e45a5c25f3c9cd7951,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.062789306
+      value: 0.037147406
       objectReference: {fileID: 0}
     - target: {fileID: 4023705205762384142, guid: 614c4734caea34e45a5c25f3c9cd7951,
         type: 3}
