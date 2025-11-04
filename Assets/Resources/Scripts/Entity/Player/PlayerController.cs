@@ -6,7 +6,7 @@ public class PlayerController : Entity, IPossessable, IDamageable
     public event EventHandler<IDamageable.OnDamagedEventArgs> OnDamaged;
 
     private CharacterController characterController;
-    
+
     [SerializeField] private HealthUI healthUI;
     [SerializeField] private CameraSceneVolumeProfileSO playerVolumeProfileSO; // using the default for now
 
@@ -64,7 +64,7 @@ public class PlayerController : Entity, IPossessable, IDamageable
 
     public override void Attack()
     {
-        if (this != possessedByPlayer) return;
+        if (possessedByPlayer != this) return;
 
         Shoot();
     }
@@ -107,7 +107,7 @@ public class PlayerController : Entity, IPossessable, IDamageable
 
     public void Refresh(float deltaTime)
     {
-    
+
     }
 
     public void PhysicsRefresh(float fixedDeltaTime)

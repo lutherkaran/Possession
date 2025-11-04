@@ -1,8 +1,15 @@
 using UnityEngine;
 
-public class Cat : Npc
+public class Cat : AnimalNpc
 {
     [SerializeField] private CameraSceneVolumeProfileSO catSceneVolumeProfile;
+
+    public override void Initialize()
+    {
+        base.Initialize();
+
+        animal = animalType.Cat;
+    }
 
     public override void PostInitialize()
     {

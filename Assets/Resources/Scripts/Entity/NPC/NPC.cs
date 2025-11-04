@@ -3,7 +3,7 @@ using UnityEngine;
 public class Npc : Entity, IPossessable, IManagable
 {
     private float currentFixedDeltaTime = 0f;
-
+    
     public virtual void Initialize()
     {
 
@@ -85,5 +85,4 @@ public class Npc : Entity, IPossessable, IManagable
     public override float GetEntityPossessionTimerMax() => entityPossessionTimerMax;
 
     public override float GetPossessionCooldownTimerMax() => possessionCooldownTimerMax;
-
 }

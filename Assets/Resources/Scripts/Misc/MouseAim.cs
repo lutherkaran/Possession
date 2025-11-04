@@ -1,13 +1,13 @@
 using UnityEngine;
 
 [System.Serializable]
-public class MouseAim: MonoBehaviour
+public class MouseAim
 {
     [Header("Mouse Controls")]
     [SerializeField] private float xRotation = 0f;
-    [SerializeField] private float xSensitivity = 30f;
-    [SerializeField] private float ySensitivity = 30f;
-    [SerializeField] private bool MouseVisible = false;
+    [SerializeField] private float xSensitivity = 50f;
+    [SerializeField] private float ySensitivity = 50f;
+    [SerializeField] private bool mouseVisible = false;
 
     public void ProcessLook(Vector2 input, float lateDeltaTime)
     {
@@ -17,7 +17,7 @@ public class MouseAim: MonoBehaviour
         xRotation -= (mouseY * lateDeltaTime) * ySensitivity;
         xRotation = Mathf.Clamp(xRotation, -80f, 80f);
 
-        if (!MouseVisible)
+        if (!mouseVisible)
         {
             CameraManager.instance.myCamera.transform.localRotation = Quaternion.Euler(xRotation, 0, 0);
             PossessionManager.instance.GetCurrentPossessable().GetPossessedEntity().transform.Rotate(Vector3.up * (mouseX * lateDeltaTime) * xSensitivity);
@@ -26,9 +26,9 @@ public class MouseAim: MonoBehaviour
 
     public void ToggleMouseInteraction()
     {
-        MouseVisible = !MouseVisible;
+        mouseVisible = !mouseVisible;
 
-        if (MouseVisible)
+        if (mouseVisible)
         {
             Cursor.lockState = CursorLockMode.None;
             ShowMouse();

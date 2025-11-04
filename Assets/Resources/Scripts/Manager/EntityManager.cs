@@ -41,7 +41,7 @@ public class EntityManager : IManagable
 
     private void SetEntityParent()
     {
-        entityList.AddRange(GameObject.FindObjectsOfType<Entity>());
+        entityList.AddRange(GameObject.FindObjectsByType<Entity>(FindObjectsSortMode.None));
 
         foreach (Entity entity in entityList)
         {

@@ -102,7 +102,7 @@ public class CameraManager : IManagable
     public void ApplyCameraSettings(float fieldOfView)
     {
         myCamera.fieldOfView = fieldOfView;
-        Debug.Log("myCamera: " + myCamera.fieldOfView);
-        Debug.Log("newCamera: " + myCamera.fieldOfView);
+        //Debug.Log("myCamera: " + myCamera.fieldOfView);
+        //Debug.Log("newCamera: " + myCamera.fieldOfView);
     }
 }
