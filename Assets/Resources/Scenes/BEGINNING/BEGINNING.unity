@@ -2206,6 +2206,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: DeerNpc
       objectReference: {fileID: 0}
+    - target: {fileID: 4019073034159484152, guid: 7f90f1e7ff5fc5b4d88368860e18c8f9,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6719135856900906613, guid: 7f90f1e7ff5fc5b4d88368860e18c8f9,
         type: 3}
       propertyPath: deerSceneVolumeProfile
@@ -5698,6 +5703,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: PenguinNpc
       objectReference: {fileID: 0}
+    - target: {fileID: 7903941490115520840, guid: b52d7611012671d4d88c3c51285a6df3,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 4771929583671923679, guid: b52d7611012671d4d88c3c51285a6df3, type: 3}
     - {fileID: 7259921583849180945, guid: b52d7611012671d4d88c3c51285a6df3, type: 3}
@@ -5999,7 +6009,7 @@ MeshCollider:
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
-  m_Mesh: {fileID: 452506438}
+  m_Mesh: {fileID: 433799004}
 --- !u!33 &920246392
 MeshFilter:
   m_ObjectHideFlags: 10
@@ -11622,7 +11632,7 @@ MeshCollider:
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
-  m_Mesh: {fileID: 1220444889}
+  m_Mesh: {fileID: 452506438}
 --- !u!33 &1824268087
 MeshFilter:
   m_ObjectHideFlags: 10
@@ -13408,7 +13418,7 @@ MeshCollider:
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
-  m_Mesh: {fileID: 1220444889}
+  m_Mesh: {fileID: 475871731}
 --- !u!33 &2019520508
 MeshFilter:
   m_ObjectHideFlags: 10
@@ -16063,13 +16073,13 @@ SceneRoots:
   - {fileID: 1631837746}
   - {fileID: 1181135112}
   - {fileID: 956904109}
-  - {fileID: 430621771}
   - {fileID: 146195809}
   - {fileID: 895094148}
   - {fileID: 1632839748}
-  - {fileID: 891585841}
   - {fileID: 1097828289}
   - {fileID: 1802547412}
+  - {fileID: 891585841}
+  - {fileID: 430621771}
   - {fileID: 1936612947}
   - {fileID: 848446345}
   - {fileID: 1377815898}

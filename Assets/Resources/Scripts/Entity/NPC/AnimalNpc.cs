@@ -9,14 +9,17 @@ public class AnimalNpc : Npc
 
     [SerializeField] private Gem gem;
 
-
     private void OnTriggerEnter(Collider other)
     {
         puzzleObject = other.transform.GetComponent<IPuzzleObject>();
 
-        if (puzzleObject != null)
+        if (DoorPuzzle.puzzleDictionary[puzzleObject] == gem.GetGemSO().animal)
         {
             puzzleObject.Collected();
+        }
+        else
+        {
+            Debug.Log("Find another Gem");
         }
     }
 }

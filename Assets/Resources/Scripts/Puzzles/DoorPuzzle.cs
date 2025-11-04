@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class DoorPuzzle : BasePuzzle
 {
-    public static Dictionary<AnimalNpc.animalType, IPuzzleObject> puzzleDictionary = new Dictionary<AnimalNpc.animalType, IPuzzleObject>();
+    public static Dictionary<IPuzzleObject, AnimalNpc.animalType> puzzleDictionary = new Dictionary<IPuzzleObject, AnimalNpc.animalType>();
 
     private int counter = 0;
 

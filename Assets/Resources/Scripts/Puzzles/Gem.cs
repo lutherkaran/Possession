@@ -9,7 +9,7 @@ public class Gem : MonoBehaviour, IPuzzleObject
 
     private void Start()
     {
-        DoorPuzzle.puzzleDictionary.Add(gemsSO.animal, this);
+        DoorPuzzle.puzzleDictionary.Add(this, gemsSO.animal);
     }
 
     public void HasPuzzleObject()
