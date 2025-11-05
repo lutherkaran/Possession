@@ -54,7 +54,7 @@ public class EnemyAnimator : MonoBehaviour
 
     public void Shoot()
     {
-        BulletManager.instance.Shoot(enemy, enemy.GetGunBarrelTransform(), enemy.shootDirection);
+       // BulletManager.instance.Shoot(enemy, enemy.GetGunBarrelTransform(), enemy.shootDirection);
     }
 
     public void AttackingBlend()
