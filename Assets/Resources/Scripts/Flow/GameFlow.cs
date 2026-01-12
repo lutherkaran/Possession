@@ -9,8 +9,8 @@ public class GameFlow : IManagable
         PathManager.instance.Initialize();
         EnemyManager.instance.Initialize();
         BulletManager.instance.Initialize();
-        PlayerManager.instance.Initialize();
         EntityManager.instance.Initialize();
+        PlayerManager.instance.Initialize();
         NpcManager.instance.Initialize();
         InputManager.instance.Initialize();
         PossessionManager.instance.Initialize();
@@ -22,8 +22,8 @@ public class GameFlow : IManagable
         PathManager.instance.PostInitialize();
         EnemyManager.instance.PostInitialize();
         BulletManager.instance.PostInitialize();
-        PlayerManager.instance.PostInitialize();
         EntityManager.instance.PostInitialize();
+        PlayerManager.instance.PostInitialize();
         NpcManager.instance.PostInitialize();
         InputManager.instance.PostInitialize();
         PossessionManager.instance.PostInitialize();

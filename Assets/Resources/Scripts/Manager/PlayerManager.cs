@@ -17,7 +17,7 @@ public class PlayerManager : IManagable
         GameObject newPlayer = GameObject.Instantiate(Resources.Load<GameObject>("Prefabs/Entity/Player"));
         player = newPlayer.GetComponent<PlayerController>();
 
-        player.transform.position = Vector3.zero;
+        player.transform.position = EntityManager.instance.playerSpawnLocation; //Vector3.zero;
         player.transform.rotation = Quaternion.identity;
 
         player.Initialize();

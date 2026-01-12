@@ -1040,12 +1040,10 @@ MonoBehaviour:
   entitySO: {fileID: 11400000, guid: 5eebae3dea8447647aaafbeda5a32c41, type: 2}
   cameraAttachPoint: {fileID: 5011228572377031243}
   healthUI: {fileID: 1915882398233693777}
+  playerSO: {fileID: 11400000, guid: 018ab39cc24273346b270c33e4f3b71a, type: 2}
   playerVolumeProfileSO: {fileID: 11400000, guid: ddd33e8a5688afc49ba352ac8c209488,
     type: 2}
-  RaycastHitDistance: 40
   gunBarrel: {fileID: 3848242439570987137}
-  maxHealth: 100
-  health: 100
 --- !u!54 &4372927102567460494
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1095,7 +1093,7 @@ CapsuleCollider:
   m_Radius: 0.78
   m_Height: 2.8
   m_Direction: 1
-  m_Center: {x: 0, y: 2.55, z: 0}
+  m_Center: {x: 0, y: 2.2, z: 0}
 --- !u!1 &1578873647409756016
 GameObject:
   m_ObjectHideFlags: 0
@@ -1609,7 +1607,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 10}
+  m_AnchoredPosition: {x: 0, y: 120}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &7340016698463430720
@@ -1683,7 +1681,7 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_TextWrappingMode: 1
+  m_TextWrappingMode: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
@@ -2128,7 +2126,7 @@ Transform:
   m_GameObject: {fileID: 4144311454921686939}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 5, z: -5}
+  m_LocalPosition: {x: 0, y: 5.5, z: -2.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

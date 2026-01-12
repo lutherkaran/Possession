@@ -9,21 +9,19 @@ public class PlayerController : Entity, IPossessable, IDamageable
     private bool isWalking = false;
 
     [SerializeField] private HealthUI healthUI;
+    [SerializeField] private PlayerSO playerSO;
     [SerializeField] private CameraSceneVolumeProfileSO playerVolumeProfileSO; // using the default for now
+    [SerializeField] private Transform gunBarrel;
 
     public bool isAlive { get; private set; }
     public bool isPossessed { get; private set; }
 
-    [SerializeField] private float RaycastHitDistance = 40.0f;
-    [SerializeField] private Transform gunBarrel;
-    [SerializeField] private float maxHealth = 100f;
-    [SerializeField] private float health;
 
     float currentFixedDeltaTime;
 
     public void Initialize()
     {
-        health = maxHealth;
+        playerSO.health = playerSO.maxHealth;
         isAlive = true;
 
         characterController = GetComponent<CharacterController>();
@@ -74,7 +72,7 @@ public class PlayerController : Entity, IPossessable, IDamageable
     {
         Ray ray = DrawRayFromCrosshair();
 
-        if (Physics.Raycast(ray, out RaycastHit hit, RaycastHitDistance))
+        if (Physics.Raycast(ray, out RaycastHit hit, playerSO.RaycastHitDistance))
         {
             Vector3 shootDirection = (hit.point - gunBarrel.position).normalized;
 
@@ -128,7 +126,7 @@ public class PlayerController : Entity, IPossessable, IDamageable
 
     protected override bool IsAlive() => healthUI.GetHealth() > 0;
 
-    public float GetMaxHealth() => maxHealth;
+    public float GetMaxHealth() => playerSO.maxHealth;
 
     public PlayerController GetPlayer() => this;
 

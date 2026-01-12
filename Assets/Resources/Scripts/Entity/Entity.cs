@@ -9,9 +9,6 @@ public abstract class Entity : MonoBehaviour
 
     [SerializeField] protected EntitySO entitySO;
 
-    //[SerializeField] protected float speed = 2f;
-    //[SerializeField] protected float maxSpeed = 5f;
-
     protected float jumpHeight = 1.5f;
     protected float gravity = -9.8f;
 
@@ -19,12 +16,6 @@ public abstract class Entity : MonoBehaviour
     protected bool isGrounded = true;
     
     [SerializeField] protected Transform cameraAttachPoint;
-
-    //[SerializeField] protected float entityPossessionTimerMax = 50;
-    //[SerializeField] protected float possessionCooldownTimerMax = 1;
-    //
-    //[SerializeField] protected LayerMask PossessableLayerMask;
-
 
     public virtual void ProcessJump()
     {
@@ -55,5 +46,3 @@ public abstract class Entity : MonoBehaviour
     public abstract float GetEntityPossessionTimerMax();
     public abstract float GetPossessionCooldownTimerMax();
 }
-//TODO Any enitity should be able to use these methods
-//TODO Depends which entity is currently possessed, get it's GameObject's type and then make it perform movement's actions.

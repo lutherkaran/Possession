@@ -9,7 +9,6 @@ public class Keypad : Interactable
     protected override void Interact()
     {
         isDoorOpened = !isDoorOpened;
-        //Debug.Log("Interacted with... " + gameObject.name + isDoorOpened);
         door.GetComponent<Animator>().SetBool("IsOpen", isDoorOpened);
     }
 }
