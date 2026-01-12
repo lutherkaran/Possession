@@ -1131,13 +1131,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10603f1310d09db489c9a67cf53be2c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: GameAssembly::Chicken
-  speed: 5
-  entityPossessionTimerMax: 50
-  possessionCooldownTimerMax: 1
+  entitySO: {fileID: 11400000, guid: b2dd17416d621c0499f92fd0aec1580e, type: 2}
   cameraAttachPoint: {fileID: 4192764010645568565}
-  PossessableLayerMask:
-    serializedVersion: 2
-    m_Bits: 256
   animal: 0
   gem: {fileID: 0}
   chickenSceneVolumeProfile: {fileID: 11400000, guid: 3d1072567e73f0044a6f638789f4de7d,

@@ -178,8 +178,6 @@ SkinnedMeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
-  m_ForceMeshLod: -1
-  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -201,7 +199,6 @@ SkinnedMeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -830,13 +827,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa80aac06c8d2b245b2abc04ece6d0e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: GameAssembly::Penguin
-  speed: 5
-  entityPossessionTimerMax: 50
-  possessionCooldownTimerMax: 1
+  entitySO: {fileID: 11400000, guid: b2dd17416d621c0499f92fd0aec1580e, type: 2}
   cameraAttachPoint: {fileID: 8100008266221926739}
-  PossessableLayerMask:
-    serializedVersion: 2
-    m_Bits: 256
+  animal: 0
+  gem: {fileID: 0}
+  penguinSceneVolumeProfile: {fileID: 0}
 --- !u!136 &600511559797657855
 CapsuleCollider:
   m_ObjectHideFlags: 0

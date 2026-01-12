@@ -670,13 +670,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9660a2e7f405cce46bee87891122f542, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 5
-  entityPossessionTimerMax: 30
-  possessionCooldownTimerMax: 8
+  entitySO: {fileID: 11400000, guid: 05a436233ce47274e8b12d2549868ea4, type: 2}
   cameraAttachPoint: {fileID: 2507531698593563178}
-  PossessableLayerMask:
-    serializedVersion: 2
-    m_Bits: 256
   enemyAnimator: {fileID: 1844821719531932094}
   healthUI: {fileID: 520791666268907717}
   enemyVolumeProfileSO: {fileID: 11400000, guid: ddd33e8a5688afc49ba352ac8c209488,

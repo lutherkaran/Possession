@@ -175,9 +175,9 @@ public class Enemy : Entity, IPossessable, IDamageable
 
     public override Transform GetCameraAttachPoint() => cameraAttachPoint;
 
-    public override float GetEntityPossessionTimerMax() => entityPossessionTimerMax;
+    public override float GetEntityPossessionTimerMax() => entitySO.entityPossessionTimerMax;
 
-    public override float GetPossessionCooldownTimerMax() => possessionCooldownTimerMax;
+    public override float GetPossessionCooldownTimerMax() => entitySO.possessionCooldownTimerMax;
 
     public EnemyAnimator GetAnimator() => enemyAnimator;
 

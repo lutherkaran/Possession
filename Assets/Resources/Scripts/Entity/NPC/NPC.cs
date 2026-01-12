@@ -48,7 +48,7 @@ public class Npc : Entity, IPossessable, IManagable
     {
         base.MoveWhenPossessed(input);
         if (PossessionManager.instance.GetCurrentPossessable() == possessedByPlayer)
-            transform.Translate(moveDirection * speed * currentFixedDeltaTime);
+            transform.Translate(moveDirection * entitySO.speed * currentFixedDeltaTime);
     }
 
     public override void ProcessJump()
@@ -82,7 +82,7 @@ public class Npc : Entity, IPossessable, IManagable
 
     public override Transform GetCameraAttachPoint() => cameraAttachPoint;
 
-    public override float GetEntityPossessionTimerMax() => entityPossessionTimerMax;
+    public override float GetEntityPossessionTimerMax() => entitySO.entityPossessionTimerMax;
 
-    public override float GetPossessionCooldownTimerMax() => possessionCooldownTimerMax;
+    public override float GetPossessionCooldownTimerMax() => entitySO.possessionCooldownTimerMax;
 }

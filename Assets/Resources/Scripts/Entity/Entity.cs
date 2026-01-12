@@ -7,18 +7,24 @@ public abstract class Entity : MonoBehaviour
     protected Vector3 moveDirection = Vector3.zero;
     protected Vector3 velocity = Vector3.zero;
 
-    [SerializeField] protected float speed = 5f;
+    [SerializeField] protected EntitySO entitySO;
+
+    //[SerializeField] protected float speed = 2f;
+    //[SerializeField] protected float maxSpeed = 5f;
+
     protected float jumpHeight = 1.5f;
     protected float gravity = -9.8f;
 
     protected bool sprinting = false;
     protected bool isGrounded = true;
-
-    [SerializeField] protected float entityPossessionTimerMax = 50;
-    [SerializeField] protected float possessionCooldownTimerMax = 1;
-
+    
     [SerializeField] protected Transform cameraAttachPoint;
-    [SerializeField] protected LayerMask PossessableLayerMask;
+
+    //[SerializeField] protected float entityPossessionTimerMax = 50;
+    //[SerializeField] protected float possessionCooldownTimerMax = 1;
+    //
+    //[SerializeField] protected LayerMask PossessableLayerMask;
+
 
     public virtual void ProcessJump()
     {
@@ -31,7 +37,7 @@ public abstract class Entity : MonoBehaviour
     public virtual void Sprint()
     {
         sprinting = !sprinting;
-        speed = sprinting ? 10f : 5f;
+        entitySO.speed = sprinting ? entitySO.maxSpeed : entitySO.speed;
     }
 
     public virtual void MoveWhenPossessed(Vector2 input)

@@ -6,6 +6,7 @@ public class PlayerController : Entity, IPossessable, IDamageable
     public event EventHandler<IDamageable.OnDamagedEventArgs> OnDamaged;
 
     private CharacterController characterController;
+    private bool isWalking = false;
 
     [SerializeField] private HealthUI healthUI;
     [SerializeField] private CameraSceneVolumeProfileSO playerVolumeProfileSO; // using the default for now
@@ -57,9 +58,9 @@ public class PlayerController : Entity, IPossessable, IDamageable
     {
         base.MoveWhenPossessed(input);
 
+        isWalking = input != Vector2.zero;
         moveDirection = new Vector3(input.x, 0, input.y);
-
-        transform.Translate(moveDirection * speed * currentFixedDeltaTime);
+        transform.Translate(moveDirection * entitySO.speed * currentFixedDeltaTime);
     }
 
     public override void Attack()
@@ -137,7 +138,11 @@ public class PlayerController : Entity, IPossessable, IDamageable
 
     public override Transform GetCameraAttachPoint() => cameraAttachPoint;
 
-    public override float GetEntityPossessionTimerMax() => entityPossessionTimerMax;
+    public override float GetEntityPossessionTimerMax() => entitySO.entityPossessionTimerMax;
 
-    public override float GetPossessionCooldownTimerMax() => possessionCooldownTimerMax;
+    public override float GetPossessionCooldownTimerMax() => entitySO.possessionCooldownTimerMax;
+
+    public bool isSprinting() => sprinting;
+
+    public bool IsWalking() => isWalking;
 }
