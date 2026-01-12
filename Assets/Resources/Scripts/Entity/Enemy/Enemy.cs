@@ -19,6 +19,8 @@ public class Enemy : Entity, IPossessable, IDamageable
     [SerializeField] private EnemyAnimator enemyAnimator;
     [SerializeField] private HealthUI healthUI;
     [SerializeField] private CameraSceneVolumeProfileSO enemyVolumeProfileSO; // using the default for now.
+    [SerializeField] private Transform gunBarrel;
+    [SerializeField] private EnemySO enemySO;
 
     private NavMeshAgent agent;
     private StateMachine stateMachine;
@@ -27,21 +29,6 @@ public class Enemy : Entity, IPossessable, IDamageable
     public Vector3 targetsLastPosition { get; private set; }
     public Vector3 shootDirection { get; private set; }
 
-    [Header("Sight Properties")]
-    [SerializeField] private float sightDistance = 20f;
-    [SerializeField] private float eyeHeight;
-    [SerializeField] private LayerMask targetLayerMask;
-    public float fieldOfView = 90f;
-
-    [Range(1f, 1.8f)]
-    [SerializeField] private float targetHeight;
-
-    [SerializeField] private Transform gunBarrel;
-
-    [Header("Health Properties")]
-    [SerializeField] private float maxHealth = 100f;
-    [SerializeField] private float currentHealth;
-
     private Dictionary<Type, BaseState> statesDictionary;
 
     private Transform targetTransform;
@@ -49,7 +36,7 @@ public class Enemy : Entity, IPossessable, IDamageable
 
     public void Initialize()
     {
-        currentHealth = maxHealth;
+        enemySO.currentHealth = enemySO.maxHealth;
 
         agent = GetComponent<NavMeshAgent>();
         stateMachine = GetComponent<StateMachine>();
@@ -132,29 +119,29 @@ public class Enemy : Entity, IPossessable, IDamageable
     public void HealthChanged(float healthChangedValue)
     {
         OnDamaged?.Invoke(this, new IDamageable.OnDamagedEventArgs { health = healthChangedValue });
-        currentHealth = healthUI.GetHealth();
+        enemySO.currentHealth = healthUI.GetHealth();
     }
 
     public bool CanSeePlayer()
     {
         player = PlayerManager.instance.GetPlayer().transform;
-        if (Vector3.Distance(transform.position, player.position) < sightDistance)
+        if (Vector3.Distance(transform.position, player.position) < enemySO.sightDistance)
         {
             Vector3 targetDirection = player.position - transform.position;
             float angleToPlayer = Vector3.Angle(targetDirection, transform.forward);
 
-            if (angleToPlayer >= -fieldOfView && angleToPlayer <= fieldOfView)
+            if (angleToPlayer >= -enemySO.fieldOfView && angleToPlayer <= enemySO.fieldOfView)
             {
-                Ray ray = new Ray(transform.position + (Vector3.up * eyeHeight), targetDirection);
+                Ray ray = new Ray(transform.position + (Vector3.up * enemySO.eyeHeight), targetDirection);
 
-                if (Physics.Raycast(ray, out RaycastHit hitInfo, sightDistance, targetLayerMask))
+                if (Physics.Raycast(ray, out RaycastHit hitInfo, enemySO.sightDistance, enemySO.targetLayerMask))
                 {
                     targetTransform = hitInfo.transform;
                     targetsLastPosition = targetTransform.position;
 
                     Vector3.RotateTowards(transform.forward, targetDirection.normalized, 1, 2);
 
-                    Debug.DrawRay(ray.origin, ray.direction * sightDistance, Color.red);
+                    Debug.DrawRay(ray.origin, ray.direction * enemySO.sightDistance, Color.red);
                     return true;
                 }
             }
@@ -167,7 +154,7 @@ public class Enemy : Entity, IPossessable, IDamageable
 
     public float GetHealth() => healthUI.GetHealth();
 
-    public float GetMaxHealth() => maxHealth;
+    public float GetMaxHealth() => enemySO.maxHealth;
 
     public bool IsSafe() => Vector3.Distance(transform.position, targetTransform.position) >= 20f;
 
@@ -186,6 +173,8 @@ public class Enemy : Entity, IPossessable, IDamageable
     public Transform GetGunBarrelTransform() => gunBarrel;
 
     public Transform GetTargetPlayerTransform() => targetTransform;
+
+    public EnemySO GetEnemySO() => enemySO;
 
     public void PhysicsRefresh(float fixedDeltaTime)
     {

@@ -676,16 +676,8 @@ MonoBehaviour:
   healthUI: {fileID: 520791666268907717}
   enemyVolumeProfileSO: {fileID: 11400000, guid: ddd33e8a5688afc49ba352ac8c209488,
     type: 2}
-  sightDistance: 20
-  eyeHeight: 1.4
-  targetLayerMask:
-    serializedVersion: 2
-    m_Bits: 512
-  fieldOfView: 180
-  targetHeight: 1.332
   gunBarrel: {fileID: 2098210427522331679}
-  maxHealth: 100
-  currentHealth: 0
+  enemySO: {fileID: 11400000, guid: b921530961d70b941b5d0d958b8ddad7, type: 2}
 --- !u!136 &8833404179622063895
 CapsuleCollider:
   m_ObjectHideFlags: 0

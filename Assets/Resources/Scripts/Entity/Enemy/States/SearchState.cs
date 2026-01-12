@@ -20,7 +20,7 @@ public class SearchState : BaseState
         enemy.GetAnimator().RunBlend();
         enemy.GetEnemyAgent().SetDestination(enemy.targetsLastPosition);
         enemy.GetEnemyAgent().velocity = enemy.defaultVelocity * 4f;
-        enemy.fieldOfView = 180f;
+        enemy.GetEnemySO().fieldOfView = 180f;
     }
 
     protected override void PerformState()

@@ -18,7 +18,7 @@ public class IdleState : BaseState
         enemy.GetEnemyAgent().velocity = Vector3.zero;
         enemy.GetAnimator().ResetBlend();
 
-        enemy.fieldOfView = 90f;
+        enemy.GetEnemySO().fieldOfView = 90f;
         duration = Random.Range(4f, 10f);
         enemy.GetEnemyAgent().isStopped = false;
     }

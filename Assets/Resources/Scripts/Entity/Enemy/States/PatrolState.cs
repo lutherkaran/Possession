@@ -19,7 +19,7 @@ public class PatrolState : BaseState
 
         enemy.GetEnemyAgent().velocity = enemy.defaultVelocity;
         enemy.GetEnemyAgent().SetDestination(enemyPath.GetRandomPathPosition());
-        enemy.fieldOfView = 150f;
+        enemy.GetEnemySO().fieldOfView = 150f;
     }
 
     protected override void PerformState()
