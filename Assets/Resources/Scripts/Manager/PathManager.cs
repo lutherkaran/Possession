@@ -10,16 +10,16 @@ public class PathManager : IManagable
         get { return Instance == null ? Instance = new PathManager() : Instance; }
     }
 
-    public List<EnemyPath> pathList { get; private set; }
-    
+    public List<EnemyPath> enemyPathList { get; private set; }
+
     public void Initialize()
     {
-        pathList = new List<EnemyPath>();
+        enemyPathList = new List<EnemyPath>();
 
         Transform pathManager = new GameObject("PathManager").transform;
-        pathList.AddRange(GameObject.FindObjectsByType<EnemyPath>(FindObjectsSortMode.None));
-        
-        foreach (EnemyPath path in pathList)
+        enemyPathList.AddRange(GameObject.FindObjectsByType<EnemyPath>(FindObjectsSortMode.None));
+
+        foreach (EnemyPath path in enemyPathList)
         {
             path.transform.SetParent(pathManager);
         }

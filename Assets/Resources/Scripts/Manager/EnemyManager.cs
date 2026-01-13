@@ -45,7 +45,7 @@ public class EnemyManager : IManagable
 
     private void MapEnemiesWithPath()
     {
-        paths = PathManager.instance.pathList;
+        paths = PathManager.instance.enemyPathList;
         for (int i = 0; i < enemiesToSpawn; i++)
         {
             bool isMapped = (enemyPathEnemyDictionary.TryAdd(enemies[i], paths[i]));
