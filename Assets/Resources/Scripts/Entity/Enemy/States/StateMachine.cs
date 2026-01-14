@@ -8,6 +8,8 @@ public class StateMachine : MonoBehaviour
     public BaseState lastActiveState;
 
     private Enemy enemy;
+    private AnimalNpc animalNpc;
+
     private Dictionary<Type, BaseState> availableStates;
 
     private float waitTimer = 0;
@@ -24,6 +26,12 @@ public class StateMachine : MonoBehaviour
             enemy = type.GetComponent<Enemy>();
             enemy.OnDamaged += Enemy_OnDamaged;
             ChangeState(new IdleState(enemy));
+        }
+
+        if(type is AnimalNpc)
+        {
+            animalNpc = type.GetComponent<AnimalNpc>();
+            ChangeState(new IdleState(animalNpc));
         }
     }
 

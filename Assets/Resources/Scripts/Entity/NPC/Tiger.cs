@@ -4,6 +4,16 @@ public class Tiger : AnimalNpc
 {
     [SerializeField] private CameraSceneVolumeProfileSO tigerSceneVolumeProfile;
 
+    public override AnimalNpc GetAnimal()
+    {
+        return this;
+    }
+
+    public override Animator GetAnimalAnimator()
+    {
+        return animalAnimator;
+    }
+
     public override void Initialize()
     {
         base.Initialize();

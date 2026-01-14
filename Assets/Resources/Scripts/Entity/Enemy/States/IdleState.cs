@@ -3,41 +3,77 @@ using UnityEngine;
 public class IdleState : BaseState
 {
     private Enemy enemy;
+    private AnimalNpc animalNpc;
+
     private EnemyAnimator enemyAnimator;
 
     private float duration = 0;
 
-    public IdleState(Enemy _enemy) : base(_enemy.gameObject)
+    public IdleState(Entity entity) : base(entity.gameObject)
     {
-        enemy = _enemy;
+        if (entity is Enemy e)
+            enemy = e;
+        else if (entity is AnimalNpc a)
+            animalNpc = a;
     }
 
     protected override void EnterState()
     {
-        enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Idle, true);
-        enemy.GetEnemyAgent().velocity = Vector3.zero;
-        enemy.GetAnimator().ResetBlend();
-
-        enemy.GetEnemySO().fieldOfView = 90f;
         duration = Random.Range(4f, 10f);
-        enemy.GetEnemyAgent().isStopped = false;
+
+        if (enemy)
+        {
+            enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Idle, true);
+            enemy.GetEnemyAgent().velocity = Vector3.zero;
+            enemy.GetAnimator().ResetBlend();
+
+            enemy.GetEnemySO().fieldOfView = 90f;
+            enemy.GetEnemyAgent().isStopped = true;
+        }
+
+        if (animalNpc)
+        {
+            animalNpc.GetAnimal().GetAnimalAnimator().SetBool("IsWalking", false); // idle true
+            animalNpc.GetAnimalNpcAgent().velocity = Vector3.zero;
+
+            animalNpc.GetAnimal().GetAnimalNpcAgent().isStopped = true;
+        }
     }
 
     protected override void PerformState()
     {
-        if (enemy.CanSeePlayer())
+        if (enemy)
         {
-            stateMachine.ChangeState(new AttackState(enemy));
+            if (enemy.CanSeePlayer())
+            {
+                stateMachine.ChangeState(new AttackState(enemy));
+            }
+            else
+            {
+                stateMachine.Waiting(new PatrolState(enemy), duration);
+            }
         }
-        else
+
+        if (animalNpc)
         {
-            stateMachine.Waiting(new PatrolState(enemy), duration);
+            stateMachine.Waiting(new PatrolState(animalNpc), duration);
         }
     }
 
     protected override void ExitState()
     {
-        enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Idle, false);
-        enemy.GetEnemyAgent().velocity = enemy.defaultVelocity;
+        if (enemy)
+        {
+            enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Idle, false);
+            enemy.GetEnemyAgent().velocity = enemy.defaultVelocity;
+            enemy.GetEnemyAgent().isStopped = false;
+        }
+
+        if(animalNpc)
+        {
+            animalNpc.GetAnimal().GetAnimalAnimator().SetBool("IsWalking", true);
+            animalNpc.GetAnimal().GetAnimalNpcAgent().isStopped = false;
+            animalNpc.GetAnimal().GetAnimalNpcAgent().velocity = Vector3.one;
+        }
     }
 }

@@ -3,17 +3,28 @@ using UnityEngine;
 public class PossessedState : BaseState
 {
     private Enemy enemy;
+    private AnimalNpc animalNpc;
 
     private readonly float WalkSpeed = 10f;
     private Vector3 moveDirection;
 
-    public PossessedState(Enemy _enemy) : base(_enemy.gameObject)
+    public PossessedState(Entity entity) : base(entity.gameObject)
     {
-        enemy = _enemy;
+        if (entity is Enemy e)
+            enemy = e;
+        else if (entity is AnimalNpc a)
+            animalNpc = a;
     }
 
     protected override void EnterState()
     {
+        base.EnterState();
+
+        animalNpc.GetAnimalNpcAgent().velocity = Vector3.zero;
+        animalNpc.GetAnimalNpcAgent().isStopped = true;
+
+        Debug.Log(animalNpc.gameObject.name);
+
         enemy.GetEnemyAgent().velocity = Vector3.zero;
         enemy.GetEnemyAgent().isStopped = true;
         enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Possessed, true);

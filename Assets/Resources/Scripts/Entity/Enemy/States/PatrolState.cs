@@ -3,32 +3,50 @@ using UnityEngine;
 public class PatrolState : BaseState
 {
     private Enemy enemy;
+    private AnimalNpc animalNpc;
+
     private EnemyPath enemyPath;
 
-    public PatrolState(Enemy _enemy) : base(_enemy.gameObject)
+
+    public PatrolState(Entity entity) : base(entity.gameObject)
     {
-        enemy = _enemy;
+        if (entity is Enemy e)
+            enemy = e;
+        else if (entity is AnimalNpc a)
+            animalNpc = a;
     }
 
     protected override void EnterState()
     {
-        EnemyManager.instance.enemyPathEnemyDictionary.TryGetValue(enemy, out EnemyPath enemyPath);
+        if (enemy)
+        {
+            EnemyManager.instance.enemyPathEnemyDictionary.TryGetValue(enemy, out EnemyPath enemyPath);
 
-        enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Patrolling, true);
-        enemy.GetAnimator().WalkBlend();
+            enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Patrolling, true);
+            enemy.GetAnimator().WalkBlend();
 
-        enemy.GetEnemyAgent().velocity = enemy.defaultVelocity;
-        enemy.GetEnemyAgent().SetDestination(enemyPath.GetRandomPathPosition());
-        enemy.GetEnemySO().fieldOfView = 150f;
+            enemy.GetEnemyAgent().velocity = enemy.defaultVelocity;
+            enemy.GetEnemyAgent().SetDestination(enemyPath.GetRandomPathPosition());
+            enemy.GetEnemySO().fieldOfView = 150f;
+        }
+
+        if (animalNpc)
+        {
+            animalNpc.GetAnimal().GetComponent<Chicken>().MoveToLocation(Time.fixedDeltaTime);
+            animalNpc.GetAnimal().GetAnimalAnimator().SetBool("IsWalking", true);
+        }
     }
 
     protected override void PerformState()
     {
         PatrolCycle();
 
-        if (enemy.CanSeePlayer())
+        if (enemy)
         {
-            stateMachine.ChangeState(new AttackState(enemy));
+            if (enemy.CanSeePlayer())
+            {
+                stateMachine.ChangeState(new AttackState(enemy));
+            }
         }
     }
 
@@ -39,9 +57,19 @@ public class PatrolState : BaseState
 
     protected void PatrolCycle()
     {
-        if (enemy.GetEnemyAgent().remainingDistance <= enemy.GetEnemyAgent().stoppingDistance)//0.2f && (enemy.Agent.remainingDistance >= 0.1f))
+        if (enemy)
         {
-            stateMachine.ChangeState(new IdleState(enemy));
+            if (enemy.GetEnemyAgent().remainingDistance <= enemy.GetEnemyAgent().stoppingDistance)//0.2f && (enemy.Agent.remainingDistance >= 0.1f))
+            {
+                stateMachine.ChangeState(new IdleState(enemy));
+            }
+        }
+        else if (animalNpc)
+        {
+            if (animalNpc.GetAnimalNpcAgent().remainingDistance <= animalNpc.GetAnimalNpcAgent().stoppingDistance)
+            {
+                stateMachine.ChangeState(new IdleState(animalNpc));
+            }
         }
     }
 }

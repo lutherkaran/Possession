@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Net.Sockets;
 using UnityEngine;
 
@@ -6,26 +7,47 @@ public class Chicken : AnimalNpc
 {
     [SerializeField] private CameraSceneVolumeProfileSO chickenSceneVolumeProfile;
     [SerializeField] private Transform[] pathPoints;
-    
-    private Animator chickenAnimator;
 
     private Vector3 targetLocation = Vector3.zero;
 
     private bool targetLocationReached = true;
     private bool targetLocationFound = false;
 
+    public override AnimalNpc GetAnimal()
+    {
+        return this;
+    }
+
+    public override Animator GetAnimalAnimator()
+    {
+        return animalAnimator;
+    }
+
     public override void Initialize()
     {
         base.Initialize();
-        
-        animal = animalType.Chicken;
-        chickenAnimator = GetComponent<Animator>();
 
+        animal = animalType.Chicken;
+        animalAnimator = GetComponent<Animator>();
+    }
+
+    private void InitializeAnimalStateDictionary()
+    {
+        animalStates = new Dictionary<Type, BaseState>()
+        {
+            { typeof(IdleState), new IdleState(this) },
+            { typeof(PatrolState), new PatrolState(this) },
+            {typeof(PossessedState), new PossessedState(this) }
+        };
+
+        animalStateMachine.Initialise(this, animalStates);
     }
 
     public override void PostInitialize()
     {
         base.PostInitialize();
+
+        InitializeAnimalStateDictionary();
         PossessionManager.instance.OnPossessed += OnCatPossession;
     }
 
@@ -33,18 +55,19 @@ public class Chicken : AnimalNpc
     {
         base.PhysicsRefresh(fixedDeltaTime);
 
-        if (!targetLocationFound && targetLocationReached)
-        {
-            FindTargetLocation();
-        }
-        else
-        {
-            if (!targetLocationReached)
-            {
-                MoveToLocation(fixedDeltaTime);
-                RotateTowardsTarget();
-            }
-        }
+
+        //if (!targetLocationFound && targetLocationReached)
+        //{
+        //    FindTargetLocation();
+        //}
+        //else
+        //{
+        //    if (!targetLocationReached)
+        //    {
+        //        MoveToLocation(fixedDeltaTime);
+        //        RotateTowardsTarget();
+        //    }
+        //}
     }
 
     private void RotateTowardsTarget()
@@ -52,27 +75,33 @@ public class Chicken : AnimalNpc
         transform.LookAt(targetLocation);
     }
 
-    private void MoveToLocation(float fixedDeltaTime)
+    public void MoveToLocation(float fixedDeltaTime)
     {
-        float distance = Vector3.Distance(transform.position, targetLocation);
-
-        if (distance >= 0.1f)
-        {
-            Vector3 direction = (targetLocation - transform.position).normalized;
-
-            transform.Translate(direction * fixedDeltaTime * entitySO.speed, Space.World);
-            chickenAnimator.SetBool("IsWalking", true);
-
-        }
+        if (!targetLocationFound && targetLocationReached)
+            FindTargetLocation();
         else
         {
-            targetLocationFound = false;
-            targetLocationReached = true;
-            chickenAnimator.SetBool("IsWalking", false);
+            RotateTowardsTarget();
+
+            float distance = Vector3.Distance(transform.position, targetLocation);
+
+            if (distance >= 0.1f)
+            {
+                Vector3 direction = (targetLocation - transform.position).normalized;
+
+                transform.Translate(direction * fixedDeltaTime * entitySO.speed, Space.World);
+                animalAnimator.SetBool("IsWalking", true);
+
+            }
+            else
+            {
+                targetLocationFound = false;
+                targetLocationReached = true;
+            }
         }
     }
 
-    private void FindTargetLocation()
+    public void FindTargetLocation()
     {
         int randomIndex = UnityEngine.Random.Range(0, pathPoints.Length);
         targetLocation = pathPoints[randomIndex].position;

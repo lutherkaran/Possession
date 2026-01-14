@@ -4,6 +4,16 @@ public class Penguin : AnimalNpc
 {
     [SerializeField] private CameraSceneVolumeProfileSO penguinSceneVolumeProfile;
 
+    public override AnimalNpc GetAnimal()
+    {
+        return this;
+    }
+
+    public override Animator GetAnimalAnimator()
+    {
+        return animalAnimator;
+    }
+
     public override void Initialize()
     {
         base.Initialize();
