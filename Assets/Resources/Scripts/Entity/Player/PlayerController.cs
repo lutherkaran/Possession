@@ -6,18 +6,17 @@ public class PlayerController : Entity, IPossessable, IDamageable
     public event EventHandler<IDamageable.OnDamagedEventArgs> OnDamaged;
 
     private CharacterController characterController;
-    private bool isWalking = false;
 
     [SerializeField] private HealthUI healthUI;
     [SerializeField] private PlayerSO playerSO;
     [SerializeField] private CameraSceneVolumeProfileSO playerVolumeProfileSO; // using the default for now
     [SerializeField] private Transform gunBarrel;
 
+    private bool isWalking = false;
     public bool isAlive { get; private set; }
     public bool isPossessed { get; private set; }
 
-
-    float currentFixedDeltaTime;
+    private float currentFixedDeltaTime;
 
     public void Initialize()
     {

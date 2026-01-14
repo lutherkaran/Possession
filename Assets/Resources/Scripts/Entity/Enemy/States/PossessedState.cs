@@ -20,15 +20,21 @@ public class PossessedState : BaseState
     {
         base.EnterState();
 
-        animalNpc.GetAnimalNpcAgent().velocity = Vector3.zero;
-        animalNpc.GetAnimalNpcAgent().isStopped = true;
+        if (animalNpc)
+        {
+            animalNpc.GetAnimalNpcAgent().velocity = Vector3.zero;
+            animalNpc.GetAnimalNpcAgent().isStopped = true;
 
-        Debug.Log(animalNpc.gameObject.name);
+            Debug.Log(animalNpc.gameObject.name);
+        }
 
-        enemy.GetEnemyAgent().velocity = Vector3.zero;
-        enemy.GetEnemyAgent().isStopped = true;
-        enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Possessed, true);
-        PossessionManager.instance.OnPossessed += Enemy_OnPossessed;
+        else if (enemy)
+        {
+            enemy.GetEnemyAgent().velocity = Vector3.zero;
+            enemy.GetEnemyAgent().isStopped = true;
+            enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Possessed, true);
+            PossessionManager.instance.OnPossessed += Enemy_OnPossessed;
+        }
     }
 
     private void Enemy_OnPossessed(object sender, IPossessable e)

@@ -16,8 +16,13 @@ public class PlayerAnimator : MonoBehaviour
 
     private void Update()
     {
-        playerAnimator.SetBool(IS_WALKING, player.IsWalking());
-
-        playerAnimator.SetBool(IS_SPRINTING, player.isSprinting());
+        if (!player.IsWalking())
+        {
+            playerAnimator.SetFloat("Blend", 0);
+        }
+        else
+        {
+            playerAnimator.SetFloat("Blend", player.transform.position.magnitude);
+        }
     }
 }
