@@ -1,22 +1,40 @@
+using System;
+using System.Collections.Generic;
+using UnityEditorInternal;
 using UnityEngine;
 
-public class Npc : Entity, IPossessable, IManagable
+public class Npc : NPCAI, IPossessable
 {
     private float currentFixedDeltaTime = 0f;
-    
+
+    protected Dictionary<Type, BaseState> animalStates;
+    protected StateMachine npcStateMachine;
+
     public virtual void Initialize()
     {
-
+        npcStateMachine = GetComponent<StateMachine>();
     }
 
     public virtual void PostInitialize()
     {
+        InitializeAnimalStateDictionary();
+    }
 
+    private void InitializeAnimalStateDictionary()
+    {
+        animalStates = new Dictionary<Type, BaseState>()
+        {
+            { typeof(IdleState), new IdleState(this) },
+            { typeof(PatrolState), new PatrolState(this) },
+            { typeof(PossessedState), new PossessedState(this) }
+        };
+
+        npcStateMachine.Initialise(this, animalStates);
     }
 
     public virtual void Refresh(float deltaTime)
     {
-
+        npcStateMachine.Refresh(deltaTime);
     }
 
     public virtual void PhysicsRefresh(float fixedDeltaTime)
@@ -68,14 +86,19 @@ public class Npc : Entity, IPossessable, IManagable
 
     public void Possessing(GameObject go)
     {
-        //Debug.Log("Possessing..." + go.name);
         possessedByPlayer = PossessionManager.instance.GetCurrentPossessable();
+        npcStateMachine.ChangeState(new PossessedState(this));
     }
 
     public void Depossessing(GameObject go)
     {
-        //Debug.Log("DePossessing..." + go.name);
+        npcStateMachine.ChangeState(new IdleState(this));
         possessedByPlayer = null;
+    }
+
+    protected override void ApplyChanges(BaseState a)
+    {
+        base.ApplyChanges(a);
     }
 
     public Entity GetPossessedEntity() => this;

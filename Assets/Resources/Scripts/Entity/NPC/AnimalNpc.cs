@@ -13,17 +13,32 @@ public abstract class AnimalNpc : Npc
     [SerializeField] private Gem gem;
     [SerializeField] protected Animator animalAnimator;
 
-    protected StateMachine animalStateMachine;
     private NavMeshAgent animalAgent;
-
-    protected Dictionary<Type, BaseState> animalStates;
 
     public override void Initialize()
     {
         base.Initialize();
 
         animalAgent = GetComponent<NavMeshAgent>();
-        animalStateMachine = GetComponent<StateMachine>();
+    }
+
+    protected override void ApplyChanges(BaseState a)
+    {
+        base.ApplyChanges(a);
+
+        if (a is IdleState)
+        {
+            GetAnimal().GetAnimalAnimator().SetBool("IsWalking", false); // idle true
+            GetAnimalNpcAgent().velocity = Vector3.zero;
+
+            GetAnimal().GetAnimalNpcAgent().isStopped = true;
+
+        }
+        else if (a is PatrolState)
+        {
+            GetAnimal().GetComponent<Chicken>().MoveToLocation(Time.fixedDeltaTime);
+            GetAnimal().GetAnimalAnimator().SetBool("IsWalking", true);
+        }
     }
 
     private void OnTriggerEnter(Collider other)

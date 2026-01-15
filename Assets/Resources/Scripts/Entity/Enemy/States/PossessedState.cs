@@ -1,18 +1,26 @@
+using log4net;
 using UnityEngine;
 
 public class PossessedState : BaseState
 {
     private Enemy enemy;
+    private NPCAI npcAi;
+    private Npc npc;
+
     private AnimalNpc animalNpc;
 
     private readonly float WalkSpeed = 10f;
     private Vector3 moveDirection;
 
-    public PossessedState(Entity entity) : base(entity.gameObject)
+    public PossessedState(NPCAI npcAi) : base(npcAi.gameObject)
     {
-        if (entity is Enemy e)
+        this.npcAi = npcAi;
+
+        if (npcAi is Enemy e)
             enemy = e;
-        else if (entity is AnimalNpc a)
+        else if (npcAi is Npc n)
+            npc = n;
+        else if (npcAi is AnimalNpc a)
             animalNpc = a;
     }
 

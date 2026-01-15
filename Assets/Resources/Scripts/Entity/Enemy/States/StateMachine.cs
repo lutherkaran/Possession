@@ -9,6 +9,8 @@ public class StateMachine : MonoBehaviour
 
     private Enemy enemy;
     private AnimalNpc animalNpc;
+    private Npc npc;
+    private NPCAI npcAi;
 
     private Dictionary<Type, BaseState> availableStates;
 
@@ -17,8 +19,10 @@ public class StateMachine : MonoBehaviour
     [Header("State Machine")]
     [SerializeField] private string currentState;
 
-    public void Initialise<T>(T type, Dictionary<Type, BaseState> _availableStates) where T : Entity
+    public void Initialise<T>(T type, Dictionary<Type, BaseState> _availableStates) where T : NPCAI
     {
+        npcAi = type;
+
         availableStates = _availableStates;
 
         if (type is Enemy)
@@ -28,10 +32,10 @@ public class StateMachine : MonoBehaviour
             ChangeState(new IdleState(enemy));
         }
 
-        if(type is AnimalNpc)
+        if(type is Npc)
         {
-            animalNpc = type.GetComponent<AnimalNpc>();
-            ChangeState(new IdleState(animalNpc));
+            npc = type.GetComponent<Npc>();
+            ChangeState(new IdleState(npc));
         }
     }
 
@@ -65,7 +69,7 @@ public class StateMachine : MonoBehaviour
 
         if (activeState != null)
         {
-            if (activeState != new PossessedState(enemy))
+            if (activeState != new PossessedState(npcAi))
             {
                 lastActiveState = activeState;
             }

@@ -2,38 +2,45 @@ using UnityEngine;
 
 public class PatrolState : BaseState
 {
+    private NPCAI nPCAI;
     private Enemy enemy;
+    private Npc npc;
     private AnimalNpc animalNpc;
 
     private EnemyPath enemyPath;
 
-
-    public PatrolState(Entity entity) : base(entity.gameObject)
+    public PatrolState (NPCAI nPCAI) : base(nPCAI.gameObject)
     {
-        if (entity is Enemy e)
+        this.nPCAI = nPCAI;
+
+        if (nPCAI is Enemy e)
             enemy = e;
-        else if (entity is AnimalNpc a)
+        else if (nPCAI is Npc n)
+            npc = n;
+        else if (nPCAI is AnimalNpc a)
             animalNpc = a;
     }
 
     protected override void EnterState()
     {
+        nPCAI.MakeChanges(this);
+
         if (enemy)
         {
-            EnemyManager.instance.enemyPathEnemyDictionary.TryGetValue(enemy, out EnemyPath enemyPath);
-
-            enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Patrolling, true);
-            enemy.GetAnimator().WalkBlend();
-
-            enemy.GetEnemyAgent().velocity = enemy.defaultVelocity;
-            enemy.GetEnemyAgent().SetDestination(enemyPath.GetRandomPathPosition());
-            enemy.GetEnemySO().fieldOfView = 150f;
+            //EnemyManager.instance.enemyPathEnemyDictionary.TryGetValue(enemy, out EnemyPath enemyPath);
+            //
+            //enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Patrolling, true);
+            //enemy.GetAnimator().WalkBlend();
+            //
+            //enemy.GetEnemyAgent().velocity = enemy.defaultVelocity;
+            //enemy.GetEnemyAgent().SetDestination(enemyPath.GetRandomPathPosition());
+            //enemy.GetEnemySO().fieldOfView = 150f;
         }
 
         if (animalNpc)
         {
-            animalNpc.GetAnimal().GetComponent<Chicken>().MoveToLocation(Time.fixedDeltaTime);
-            animalNpc.GetAnimal().GetAnimalAnimator().SetBool("IsWalking", true);
+            //animalNpc.GetAnimal().GetComponent<Chicken>().MoveToLocation(Time.fixedDeltaTime);
+            //animalNpc.GetAnimal().GetAnimalAnimator().SetBool("IsWalking", true);
         }
     }
 
@@ -64,7 +71,7 @@ public class PatrolState : BaseState
                 stateMachine.ChangeState(new IdleState(enemy));
             }
         }
-        else if (animalNpc)
+        if (animalNpc)
         {
             if (animalNpc.GetAnimalNpcAgent().remainingDistance <= animalNpc.GetAnimalNpcAgent().stoppingDistance)
             {

@@ -2,8 +2,9 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using static UnityEngine.EventSystems.EventTrigger;
 
-public class Enemy : Entity, IPossessable, IDamageable
+public class Enemy : NPCAI, IPossessable, IDamageable
 {
     public event EventHandler<IDamageable.OnDamagedEventArgs> OnDamaged;
 
@@ -24,6 +25,7 @@ public class Enemy : Entity, IPossessable, IDamageable
 
     private NavMeshAgent agent;
     private StateMachine stateMachine;
+    private EnemyAI enemyAI;
 
     public Vector3 defaultVelocity { get; private set; }
     public Vector3 targetsLastPosition { get; private set; }
@@ -40,6 +42,8 @@ public class Enemy : Entity, IPossessable, IDamageable
 
         agent = GetComponent<NavMeshAgent>();
         stateMachine = GetComponent<StateMachine>();
+
+        enemyAI = new EnemyAI(this);
         defaultVelocity = agent.velocity;
     }
 
@@ -47,6 +51,7 @@ public class Enemy : Entity, IPossessable, IDamageable
     {
         enemyAnimator = GetComponentInChildren<EnemyAnimator>();
         healthUI = GetComponentInChildren<HealthUI>();
+
         PossessionManager.instance.OnPossessed += OnEnemyPossessed;
 
         InitializeStatesDictionary();
@@ -148,6 +153,13 @@ public class Enemy : Entity, IPossessable, IDamageable
         }
 
         return false;
+    }
+
+    protected override void ApplyChanges(BaseState a)
+    {
+        base.ApplyChanges(a);
+
+        enemyAI.RunAI(a);
     }
 
     protected override bool IsAlive() => healthUI.GetHealth() > 0;

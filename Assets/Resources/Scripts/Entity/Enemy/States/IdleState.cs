@@ -2,57 +2,47 @@ using UnityEngine;
 
 public class IdleState : BaseState
 {
+    private NPCAI npcAi;
     private Enemy enemy;
+    private Npc npc;
     private AnimalNpc animalNpc;
 
     private EnemyAnimator enemyAnimator;
 
     private float duration = 0;
 
-    public IdleState(Entity entity) : base(entity.gameObject)
+    public IdleState(NPCAI npcAi) : base(npcAi.gameObject)
     {
-        if (entity is Enemy e)
+        this.npcAi = npcAi;
+
+        if (npcAi is Enemy e)
             enemy = e;
-        else if (entity is AnimalNpc a)
+        else if (npcAi is Npc n)
+            npc = n;
+        else if (npcAi is AnimalNpc a)
             animalNpc = a;
     }
 
     protected override void EnterState()
     {
+        npcAi.MakeChanges(this);
+
         duration = Random.Range(4f, 10f);
-
-        if (enemy)
-        {
-            enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Idle, true);
-            enemy.GetEnemyAgent().velocity = Vector3.zero;
-            enemy.GetAnimator().ResetBlend();
-
-            enemy.GetEnemySO().fieldOfView = 90f;
-            enemy.GetEnemyAgent().isStopped = true;
-        }
-
-        if (animalNpc)
-        {
-            animalNpc.GetAnimal().GetAnimalAnimator().SetBool("IsWalking", false); // idle true
-            animalNpc.GetAnimalNpcAgent().velocity = Vector3.zero;
-
-            animalNpc.GetAnimal().GetAnimalNpcAgent().isStopped = true;
-        }
     }
 
     protected override void PerformState()
     {
-        if (enemy)
-        {
-            if (enemy.CanSeePlayer())
-            {
-                stateMachine.ChangeState(new AttackState(enemy));
-            }
-            else
-            {
-                stateMachine.Waiting(new PatrolState(enemy), duration);
-            }
-        }
+        //if (enemy)
+        //{
+        //    if (enemy.CanSeePlayer())
+        //    {
+        //        stateMachine.ChangeState(new AttackState(enemy));
+        //    }
+        //    else
+        //    {
+        //        stateMachine.Waiting(new PatrolState(enemy), duration);
+        //    }
+        //}
 
         if (animalNpc)
         {
@@ -69,7 +59,7 @@ public class IdleState : BaseState
             enemy.GetEnemyAgent().isStopped = false;
         }
 
-        if(animalNpc)
+        if (animalNpc)
         {
             animalNpc.GetAnimal().GetAnimalAnimator().SetBool("IsWalking", true);
             animalNpc.GetAnimal().GetAnimalNpcAgent().isStopped = false;

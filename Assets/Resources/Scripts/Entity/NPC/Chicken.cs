@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Net.Sockets;
 using UnityEngine;
 
 public class Chicken : AnimalNpc
@@ -31,23 +28,10 @@ public class Chicken : AnimalNpc
         animalAnimator = GetComponent<Animator>();
     }
 
-    private void InitializeAnimalStateDictionary()
-    {
-        animalStates = new Dictionary<Type, BaseState>()
-        {
-            { typeof(IdleState), new IdleState(this) },
-            { typeof(PatrolState), new PatrolState(this) },
-            {typeof(PossessedState), new PossessedState(this) }
-        };
-
-        animalStateMachine.Initialise(this, animalStates);
-    }
-
     public override void PostInitialize()
     {
         base.PostInitialize();
 
-        InitializeAnimalStateDictionary();
         PossessionManager.instance.OnPossessed += OnCatPossession;
     }
 
