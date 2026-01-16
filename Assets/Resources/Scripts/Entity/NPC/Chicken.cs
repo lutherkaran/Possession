@@ -35,6 +35,26 @@ public class Chicken : AnimalNpc
         PossessionManager.instance.OnPossessed += OnCatPossession;
     }
 
+
+    public new void MakeChanges(StateSettings _settings)
+    {
+
+
+        if (_settings.currentActiveState is IdleState)
+        {
+            GetAnimal().GetAnimalAnimator().SetBool("IsWalking", false); // idle true
+            GetAnimal().GetNavMeshAgent().isStopped = true;
+
+            animalAgent.velocity = Vector3.zero;
+
+        }
+        else if (_settings.currentActiveState is PatrolState)
+        {
+            GetAnimal().GetComponent<Chicken>().MoveToLocation(Time.fixedDeltaTime);
+            GetAnimal().GetAnimalAnimator().SetBool("IsWalking", true);
+        }
+    }
+
     public override void PhysicsRefresh(float fixedDeltaTime)
     {
         base.PhysicsRefresh(fixedDeltaTime);

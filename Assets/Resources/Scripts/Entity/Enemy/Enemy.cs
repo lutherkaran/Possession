@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using static UnityEngine.EventSystems.EventTrigger;
 
-public class Enemy : NPCAI, IPossessable, IDamageable
+public class Enemy : Entity, IPossessable, IDamageable, IStateContext
 {
     public event EventHandler<IDamageable.OnDamagedEventArgs> OnDamaged;
 
@@ -23,7 +23,7 @@ public class Enemy : NPCAI, IPossessable, IDamageable
     [SerializeField] private Transform gunBarrel;
     [SerializeField] private EnemySO enemySO;
 
-    private NavMeshAgent agent;
+    private NavMeshAgent enemyAgent;
     private StateMachine stateMachine;
     private EnemyAI enemyAI;
 
@@ -40,11 +40,11 @@ public class Enemy : NPCAI, IPossessable, IDamageable
     {
         enemySO.currentHealth = enemySO.maxHealth;
 
-        agent = GetComponent<NavMeshAgent>();
+        enemyAgent = GetComponent<NavMeshAgent>();
         stateMachine = GetComponent<StateMachine>();
 
         enemyAI = new EnemyAI(this);
-        defaultVelocity = agent.velocity;
+        defaultVelocity = enemyAgent.velocity;
     }
 
     public void PostInitialize()
@@ -73,9 +73,9 @@ public class Enemy : NPCAI, IPossessable, IDamageable
             {typeof(IdleState), new IdleState(this) },
             {typeof(PatrolState), new PatrolState(this) },
             {typeof(AttackState), new AttackState(this) },
-            {typeof(HealState), new HealState(this) },
-            {typeof(FleeState), new FleeState(this) },
-            {typeof(SearchState), new SearchState(this) },
+            //{typeof(HealState), new HealState(this) },
+            //{typeof(FleeState), new FleeState(this) },
+            //{typeof(SearchState), new SearchState(this) },
             {typeof(PossessedState), new PossessedState(this) },
         };
 
@@ -127,41 +127,6 @@ public class Enemy : NPCAI, IPossessable, IDamageable
         enemySO.currentHealth = healthUI.GetHealth();
     }
 
-    public bool CanSeePlayer()
-    {
-        player = PlayerManager.instance.GetPlayer().transform;
-        if (Vector3.Distance(transform.position, player.position) < enemySO.sightDistance)
-        {
-            Vector3 targetDirection = player.position - transform.position;
-            float angleToPlayer = Vector3.Angle(targetDirection, transform.forward);
-
-            if (angleToPlayer >= -enemySO.fieldOfView && angleToPlayer <= enemySO.fieldOfView)
-            {
-                Ray ray = new Ray(transform.position + (Vector3.up * enemySO.eyeHeight), targetDirection);
-
-                if (Physics.Raycast(ray, out RaycastHit hitInfo, enemySO.sightDistance, enemySO.targetLayerMask))
-                {
-                    targetTransform = hitInfo.transform;
-                    targetsLastPosition = targetTransform.position;
-
-                    Vector3.RotateTowards(transform.forward, targetDirection.normalized, 1, 2);
-
-                    Debug.DrawRay(ray.origin, ray.direction * enemySO.sightDistance, Color.red);
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    protected override void ApplyChanges(BaseState a)
-    {
-        base.ApplyChanges(a);
-
-        enemyAI.RunAI(a);
-    }
-
     protected override bool IsAlive() => healthUI.GetHealth() > 0;
 
     public float GetHealth() => healthUI.GetHealth();
@@ -180,7 +145,7 @@ public class Enemy : NPCAI, IPossessable, IDamageable
 
     public EnemyAnimator GetAnimator() => enemyAnimator;
 
-    public NavMeshAgent GetEnemyAgent() => agent;
+    public NavMeshAgent GetEnemyAgent() => enemyAgent;
 
     public Transform GetGunBarrelTransform() => gunBarrel;
 
@@ -201,5 +166,44 @@ public class Enemy : NPCAI, IPossessable, IDamageable
     public void OnDemolish()
     {
 
+    }
+
+    public NavMeshAgent GetNavMeshAgent()
+    {
+        return enemyAgent;
+    }
+
+    bool IStateContext.CanSeePlayer()
+    {
+        player = PlayerManager.instance.GetPlayer().transform;
+        if (Vector3.Distance(transform.position, player.position) < enemySO.sightDistance)
+        {
+            Vector3 targetDirection = player.position - transform.position;
+            float angleToPlayer = Vector3.Angle(targetDirection, transform.forward);
+            if (angleToPlayer >= -enemySO.fieldOfView && angleToPlayer <= enemySO.fieldOfView)
+            {
+                Ray ray = new Ray(transform.position + (Vector3.up * enemySO.eyeHeight), targetDirection);
+                if (Physics.Raycast(ray, out RaycastHit hitInfo, enemySO.sightDistance, enemySO.targetLayerMask))
+                {
+                    targetTransform = hitInfo.transform;
+                    targetsLastPosition = targetTransform.position;
+                    Vector3.RotateTowards(transform.forward, targetDirection.normalized, 1, 2);
+                    Debug.DrawRay(ray.origin, ray.direction * enemySO.sightDistance, Color.red);
+                    return true;
+                }
+            }
+        }
+        return false;
+
+    }
+
+    void IStateContext.MakeChanges(StateSettings _settings)
+    {
+        enemyAI.RunAI(_settings);
+    }
+
+    void IStateContext.ResetChanges()
+    {
+        enemyAI.Reset();
     }
 }

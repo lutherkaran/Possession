@@ -4,7 +4,7 @@ using UnityEngine;
 public class PossessedState : BaseState
 {
     private Enemy enemy;
-    private NPCAI npcAi;
+
     private Npc npc;
 
     private AnimalNpc animalNpc;
@@ -12,37 +12,37 @@ public class PossessedState : BaseState
     private readonly float WalkSpeed = 10f;
     private Vector3 moveDirection;
 
-    public PossessedState(NPCAI npcAi) : base(npcAi.gameObject)
+    public PossessedState(IStateContext _stateContext) : base(_stateContext)
     {
-        this.npcAi = npcAi;
+        stateContext = _stateContext;
 
-        if (npcAi is Enemy e)
-            enemy = e;
-        else if (npcAi is Npc n)
-            npc = n;
-        else if (npcAi is AnimalNpc a)
-            animalNpc = a;
+        //if (npcAi is Enemy e)
+        //    enemy = e;
+        //else if (npcAi is Npc n)
+        //    npc = n;
+        //else if (npcAi is AnimalNpc a)
+        //    animalNpc = a;
     }
 
     protected override void EnterState()
     {
         base.EnterState();
 
-        if (animalNpc)
-        {
-            animalNpc.GetAnimalNpcAgent().velocity = Vector3.zero;
-            animalNpc.GetAnimalNpcAgent().isStopped = true;
+        //if (animalNpc)
+        //{
+        //    animalNpc.GetAnimalNpcAgent().velocity = Vector3.zero;
+        //    animalNpc.GetAnimalNpcAgent().isStopped = true;
 
-            Debug.Log(animalNpc.gameObject.name);
-        }
+        //    Debug.Log(animalNpc.gameObject.name);
+        //}
 
-        else if (enemy)
-        {
-            enemy.GetEnemyAgent().velocity = Vector3.zero;
-            enemy.GetEnemyAgent().isStopped = true;
-            enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Possessed, true);
-            PossessionManager.instance.OnPossessed += Enemy_OnPossessed;
-        }
+        //else if (enemy)
+        //{
+        //    enemy.GetEnemyAgent().velocity = Vector3.zero;
+        //    enemy.GetEnemyAgent().isStopped = true;
+        //    enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Possessed, true);
+        //    PossessionManager.instance.OnPossessed += Enemy_OnPossessed;
+        //}
     }
 
     private void Enemy_OnPossessed(object sender, IPossessable e)

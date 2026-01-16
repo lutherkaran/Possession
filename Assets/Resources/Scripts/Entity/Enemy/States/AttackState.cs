@@ -4,12 +4,17 @@ public class AttackState : BaseState
 {
     private Enemy enemy;
 
+    private StateSettings settings;
+
     private float moveTimer;
     private float losePlayerTimer;
 
-    public AttackState(Enemy _enemy) : base(_enemy.gameObject)
+    public AttackState(IStateContext _stateContext) : base(_stateContext)
     {
-        enemy = _enemy;
+        stateContext = _stateContext;
+
+        settings = new StateSettings(stateContext, this, false, false, Vector3.zero, Vector3.zero, 150f);
+
     }
 
     protected override void EnterState()
@@ -29,7 +34,7 @@ public class AttackState : BaseState
 
     protected override void PerformState()
     {
-        if (enemy.CanSeePlayer())
+        if (stateContext.CanSeePlayer())
         {
             enemy.transform.LookAt(enemy.GetTargetPlayerTransform());
 

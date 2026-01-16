@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 
 public class EnemyAI
@@ -10,9 +9,9 @@ public class EnemyAI
         enemy = _enemy;
     }
 
-    public void RunAI(BaseState a)
+    public void RunAI(StateSettings _stateSettings)
     {
-        if (a is IdleState)
+        if (_stateSettings.currentActiveState is IdleState)
         {
             enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Idle, true);
             enemy.GetEnemyAgent().velocity = Vector3.zero;
@@ -21,7 +20,7 @@ public class EnemyAI
             enemy.GetEnemySO().fieldOfView = 90f;
             enemy.GetEnemyAgent().isStopped = true;
         }
-        else if (a is PatrolState)
+        else if (_stateSettings.currentActiveState is PatrolState)
         {
             EnemyManager.instance.enemyPathEnemyDictionary.TryGetValue(enemy, out EnemyPath enemyPath);
 
@@ -32,5 +31,18 @@ public class EnemyAI
             enemy.GetEnemyAgent().SetDestination(enemyPath.GetRandomPathPosition());
             enemy.GetEnemySO().fieldOfView = 150f;
         }
+    }
+
+    public void Reset()
+    {
+        enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Possessed, false);
+        enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Attacking, false);
+        enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Patrolling, false);
+        enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Idle, true);
+        enemy.GetEnemyAgent().velocity = Vector3.zero;
+        enemy.GetAnimator().ResetBlend();
+
+        enemy.GetEnemySO().fieldOfView = 90f;
+        enemy.GetEnemyAgent().isStopped = true;
     }
 }

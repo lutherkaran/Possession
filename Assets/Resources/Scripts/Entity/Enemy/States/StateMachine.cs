@@ -7,10 +7,7 @@ public class StateMachine : MonoBehaviour
     public BaseState activeState;
     public BaseState lastActiveState;
 
-    private Enemy enemy;
-    private AnimalNpc animalNpc;
-    private Npc npc;
-    private NPCAI npcAi;
+    private IStateContext stateContext;
 
     private Dictionary<Type, BaseState> availableStates;
 
@@ -19,38 +16,32 @@ public class StateMachine : MonoBehaviour
     [Header("State Machine")]
     [SerializeField] private string currentState;
 
-    public void Initialise<T>(T type, Dictionary<Type, BaseState> _availableStates) where T : NPCAI
+    public void Initialise(IStateContext _stateContext, Dictionary<Type, BaseState> _availableStates)
     {
-        npcAi = type;
-
-        availableStates = _availableStates;
-
-        if (type is Enemy)
+        if (_stateContext == null)
         {
-            enemy = type.GetComponent<Enemy>();
-            enemy.OnDamaged += Enemy_OnDamaged;
-            ChangeState(new IdleState(enemy));
+            Debug.LogError("Statemachine requires a component implementation" + stateContext);
         }
-
-        if(type is Npc)
+        else
         {
-            npc = type.GetComponent<Npc>();
-            ChangeState(new IdleState(npc));
+            stateContext = _stateContext;
+            //enemy.OnDamaged += Enemy_OnDamaged;
+            ChangeState(new IdleState(stateContext));
         }
     }
 
-    private void Enemy_OnDamaged(object sender, IDamageable.OnDamagedEventArgs e)
-    {
-        if (enemy.GetHealth() > 30 && enemy.GetHealth() < 50)
-        {
-            ChangeState(new FleeState(enemy));
-        }
+    //private void Enemy_OnDamaged(object sender, IDamageable.OnDamagedEventArgs e)
+    //{
+    //    if (enemy.GetHealth() > 30 && enemy.GetHealth() < 50)
+    //    {
+    //        ChangeState(new FleeState(enemy));
+    //    }
 
-        else if (enemy.GetHealth() < 30)
-        {
-            ChangeState(new HealState(enemy));
-        }
-    }
+    //    else if (enemy.GetHealth() < 30)
+    //    {
+    //        ChangeState(new HealState(enemy));
+    //    }
+    //}
 
     public void Refresh(float deltaTime)
     {
@@ -69,7 +60,7 @@ public class StateMachine : MonoBehaviour
 
         if (activeState != null)
         {
-            if (activeState != new PossessedState(npcAi))
+            if (activeState != new PossessedState(stateContext))
             {
                 lastActiveState = activeState;
             }

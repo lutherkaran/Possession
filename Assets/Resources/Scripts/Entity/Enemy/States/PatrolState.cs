@@ -2,28 +2,25 @@ using UnityEngine;
 
 public class PatrolState : BaseState
 {
-    private NPCAI nPCAI;
+
     private Enemy enemy;
     private Npc npc;
     private AnimalNpc animalNpc;
 
     private EnemyPath enemyPath;
 
-    public PatrolState (NPCAI nPCAI) : base(nPCAI.gameObject)
-    {
-        this.nPCAI = nPCAI;
+    private readonly StateSettings settings;
 
-        if (nPCAI is Enemy e)
-            enemy = e;
-        else if (nPCAI is Npc n)
-            npc = n;
-        else if (nPCAI is AnimalNpc a)
-            animalNpc = a;
+    public PatrolState(IStateContext _stateContext) : base(_stateContext)
+    {
+        stateContext = _stateContext;
+
+        settings = new StateSettings(stateContext, this, false, false, Vector3.zero, Vector3.zero, 150f);
     }
 
     protected override void EnterState()
     {
-        nPCAI.MakeChanges(this);
+        stateContext.MakeChanges(settings);
 
         if (enemy)
         {
@@ -48,35 +45,21 @@ public class PatrolState : BaseState
     {
         PatrolCycle();
 
-        if (enemy)
-        {
-            if (enemy.CanSeePlayer())
-            {
-                stateMachine.ChangeState(new AttackState(enemy));
-            }
-        }
+        if (stateContext.CanSeePlayer())
+            stateMachine.ChangeState(new AttackState(stateContext));
     }
 
     protected override void ExitState()
     {
-        enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Patrolling, false);
+        stateContext.ResetChanges();
+        //enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Patrolling, false);
     }
 
     protected void PatrolCycle()
     {
-        if (enemy)
+        if (stateContext.GetNavMeshAgent().remainingDistance <= stateContext.GetNavMeshAgent().stoppingDistance)
         {
-            if (enemy.GetEnemyAgent().remainingDistance <= enemy.GetEnemyAgent().stoppingDistance)//0.2f && (enemy.Agent.remainingDistance >= 0.1f))
-            {
-                stateMachine.ChangeState(new IdleState(enemy));
-            }
-        }
-        if (animalNpc)
-        {
-            if (animalNpc.GetAnimalNpcAgent().remainingDistance <= animalNpc.GetAnimalNpcAgent().stoppingDistance)
-            {
-                stateMachine.ChangeState(new IdleState(animalNpc));
-            }
+            stateMachine.ChangeState(new IdleState(stateContext));
         }
     }
 }

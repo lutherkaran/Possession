@@ -29,7 +29,7 @@ public class SearchState : BaseState
 
         if (searchTimer < maxSearchDuration)
         {
-            if (enemy.CanSeePlayer())
+            if (stateContext.CanSeePlayer())
             {
                 stateMachine.ChangeState(new AttackState(enemy));
             }

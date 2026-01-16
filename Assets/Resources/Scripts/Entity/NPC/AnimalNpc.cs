@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public abstract class AnimalNpc : Npc
+public abstract class AnimalNpc : Npc, IStateContext
 {
     public enum animalType { Cat, Dog, Chicken, Tiger, Penguin, Horse, Deer }
     public animalType animal;
@@ -13,32 +13,67 @@ public abstract class AnimalNpc : Npc
     [SerializeField] private Gem gem;
     [SerializeField] protected Animator animalAnimator;
 
-    private NavMeshAgent animalAgent;
+    protected NavMeshAgent animalAgent;
+    protected Dictionary<Type, BaseState> animalStates;
+    protected StateMachine animalStateMachine;
+
+    private AnimalNpcController animalNpcController;
 
     public override void Initialize()
     {
         base.Initialize();
 
         animalAgent = GetComponent<NavMeshAgent>();
+        animalStateMachine = GetComponent<StateMachine>();
+        animalNpcController = new AnimalNpcController(this);
     }
 
-    protected override void ApplyChanges(BaseState a)
+    public override void PostInitialize()
     {
-        base.ApplyChanges(a);
+        InitializeAnimalStateDictionary();
+    }
 
-        if (a is IdleState)
+    private void InitializeAnimalStateDictionary()
+    {
+        animalStates = new Dictionary<Type, BaseState>()
         {
-            GetAnimal().GetAnimalAnimator().SetBool("IsWalking", false); // idle true
-            GetAnimalNpcAgent().velocity = Vector3.zero;
+            { typeof(IdleState), new IdleState(this) },
+            { typeof(PatrolState), new PatrolState(this) },
+            { typeof(PossessedState), new PossessedState(this) }
+        };
 
-            GetAnimal().GetAnimalNpcAgent().isStopped = true;
+        animalStateMachine.Initialise(this, animalStates);
+    }
 
-        }
-        else if (a is PatrolState)
-        {
-            GetAnimal().GetComponent<Chicken>().MoveToLocation(Time.fixedDeltaTime);
-            GetAnimal().GetAnimalAnimator().SetBool("IsWalking", true);
-        }
+
+    public override void Refresh(float deltaTime)
+    {
+        animalStateMachine.Refresh(deltaTime);
+    }
+
+    public override void PhysicsRefresh(float fixedDeltaTime)
+    {
+        currentFixedDeltaTime = fixedDeltaTime;
+    }
+
+    public abstract Animator GetAnimalAnimator();
+    public abstract AnimalNpc GetAnimal();
+
+    public NavMeshAgent GetNavMeshAgent()
+    {
+        return animalAgent;
+    }
+
+    public new void Possessing(GameObject go)
+    {
+        possessedByPlayer = PossessionManager.instance.GetCurrentPossessable();
+        animalStateMachine.ChangeState(new PossessedState(this));
+    }
+
+    public new void Depossessing(GameObject go)
+    {
+        animalStateMachine.ChangeState(new IdleState(this));
+        possessedByPlayer = null;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -55,8 +90,20 @@ public abstract class AnimalNpc : Npc
         }
     }
 
-    public NavMeshAgent GetAnimalNpcAgent() => animalAgent;
+    public bool CanSeePlayer()
+    {
+        return false;
+    }
 
-    public abstract Animator GetAnimalAnimator();
-    public abstract AnimalNpc GetAnimal();
+    public void MakeChanges(StateSettings _settings)
+    {
+        animalNpcController.RunAI(_settings);
+    }
+
+    public void ResetChanges()
+    {
+        GetAnimal().GetAnimalAnimator().SetBool("IsWalking", true);
+        GetAnimal().GetNavMeshAgent().velocity = Vector3.one;
+        GetAnimal().GetNavMeshAgent().isStopped = false;
+    }
 }

@@ -2,44 +2,31 @@ using System;
 using System.Collections.Generic;
 using UnityEditorInternal;
 using UnityEngine;
+using UnityEngine.AI;
 
-public class Npc : NPCAI, IPossessable
+public class Npc : Entity, IPossessable
 {
-    private float currentFixedDeltaTime = 0f;
+    private NavMeshAgent npcAgent;
 
-    protected Dictionary<Type, BaseState> animalStates;
-    protected StateMachine npcStateMachine;
+    protected float currentFixedDeltaTime = 0f;
 
     public virtual void Initialize()
     {
-        npcStateMachine = GetComponent<StateMachine>();
     }
 
     public virtual void PostInitialize()
     {
-        InitializeAnimalStateDictionary();
-    }
-
-    private void InitializeAnimalStateDictionary()
-    {
-        animalStates = new Dictionary<Type, BaseState>()
-        {
-            { typeof(IdleState), new IdleState(this) },
-            { typeof(PatrolState), new PatrolState(this) },
-            { typeof(PossessedState), new PossessedState(this) }
-        };
-
-        npcStateMachine.Initialise(this, animalStates);
+    
     }
 
     public virtual void Refresh(float deltaTime)
     {
-        npcStateMachine.Refresh(deltaTime);
+
     }
 
     public virtual void PhysicsRefresh(float fixedDeltaTime)
     {
-        currentFixedDeltaTime = fixedDeltaTime;
+  
     }
 
     public virtual void LateRefresh(float deltaTime)
@@ -87,19 +74,15 @@ public class Npc : NPCAI, IPossessable
     public void Possessing(GameObject go)
     {
         possessedByPlayer = PossessionManager.instance.GetCurrentPossessable();
-        npcStateMachine.ChangeState(new PossessedState(this));
+       // npcAgent.ChangeState(new PossessedState(this));
     }
 
     public void Depossessing(GameObject go)
     {
-        npcStateMachine.ChangeState(new IdleState(this));
+       // npcAgent.ChangeState(new IdleState(this));
         possessedByPlayer = null;
     }
 
-    protected override void ApplyChanges(BaseState a)
-    {
-        base.ApplyChanges(a);
-    }
 
     public Entity GetPossessedEntity() => this;
 
@@ -108,4 +91,24 @@ public class Npc : NPCAI, IPossessable
     public override float GetEntityPossessionTimerMax() => entitySO.entityPossessionTimerMax;
 
     public override float GetPossessionCooldownTimerMax() => entitySO.possessionCooldownTimerMax;
+
+    //public void MakeChanges(StateSettings _settings)
+    //{
+
+    //}
+
+    //public bool CanSeePlayer()
+    //{
+    //    return false;
+    //}
+
+    //public void ResetChanges()
+    //{
+    //    throw new NotImplementedException();
+    //}
+
+    //public NavMeshAgent GetNavMeshAgent()
+    //{
+    //    return npcAgent;
+    //}
 }

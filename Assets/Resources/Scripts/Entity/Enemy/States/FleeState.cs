@@ -21,14 +21,14 @@ public class FleeState : BaseState
 
     protected override void PerformState()
     {
-        if (!enemy.IsSafe() && enemy.CanSeePlayer())
-        {
-            Flee();
-        }
-        else
-        {
-            stateMachine.ChangeState(new HealState(enemy));
-        }
+        //if (!enemy.IsSafe() && enemy.CanSeePlayer())
+        //{
+        //    Flee();
+        //}
+        //else
+        //{
+        //    stateMachine.ChangeState(new HealState(enemy));
+        //}
     }
 
     protected override void ExitState()
