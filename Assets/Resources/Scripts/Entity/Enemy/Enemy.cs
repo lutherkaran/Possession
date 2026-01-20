@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using static UnityEngine.EventSystems.EventTrigger;
 
 public class Enemy : Entity, IPossessable, IDamageable, IStateContext
 {
@@ -39,7 +38,7 @@ public class Enemy : Entity, IPossessable, IDamageable, IStateContext
     public void Initialize()
     {
         enemySO.currentHealth = enemySO.maxHealth;
-
+        
         enemyAgent = GetComponent<NavMeshAgent>();
         stateMachine = GetComponent<StateMachine>();
 
@@ -73,9 +72,7 @@ public class Enemy : Entity, IPossessable, IDamageable, IStateContext
             {typeof(IdleState), new IdleState(this) },
             {typeof(PatrolState), new PatrolState(this) },
             {typeof(AttackState), new AttackState(this) },
-            //{typeof(HealState), new HealState(this) },
-            //{typeof(FleeState), new FleeState(this) },
-            //{typeof(SearchState), new SearchState(this) },
+            {typeof(SearchState), new SearchState(this) },
             {typeof(PossessedState), new PossessedState(this) },
         };
 
@@ -133,7 +130,7 @@ public class Enemy : Entity, IPossessable, IDamageable, IStateContext
 
     public float GetMaxHealth() => enemySO.maxHealth;
 
-    public bool IsSafe() => Vector3.Distance(transform.position, targetTransform.position) >= 20f;
+    public bool IsSafe() => true;
 
     public Entity GetPossessedEntity() => this;
 
@@ -173,6 +170,8 @@ public class Enemy : Entity, IPossessable, IDamageable, IStateContext
         return enemyAgent;
     }
 
+    public Transform GetTransform() => transform;
+
     bool IStateContext.CanSeePlayer()
     {
         player = PlayerManager.instance.GetPlayer().transform;
@@ -197,7 +196,7 @@ public class Enemy : Entity, IPossessable, IDamageable, IStateContext
 
     }
 
-    void IStateContext.MakeChanges(StateSettings _settings)
+    void IStateContext.ApplySettings(StateSettings _settings)
     {
         enemyAI.RunAI(_settings);
     }
@@ -206,4 +205,5 @@ public class Enemy : Entity, IPossessable, IDamageable, IStateContext
     {
         enemyAI.Reset();
     }
+
 }

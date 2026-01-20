@@ -1,8 +1,9 @@
 using UnityEngine;
 
-public class AnimalNpcController 
+public class AnimalNpcController
 {
     private AnimalNpc animal;
+    private StateSettings stateSettings;
 
     public AnimalNpcController(AnimalNpc _animal)
     {
@@ -11,25 +12,47 @@ public class AnimalNpcController
 
     public void RunAI(StateSettings _stateSettings)
     {
-        if (_stateSettings.currentActiveState is IdleState)
+        stateSettings = _stateSettings;
+
+        if (stateSettings.currentActiveState is IdleState)
         {
             animal.GetAnimalAnimator().SetBool("IsWalking", false); // idle true
-            animal.GetNavMeshAgent().isStopped = true;
-
             animal.GetNavMeshAgent().velocity = Vector3.zero;
-
+            animal.GetNavMeshAgent().isStopped = true;
         }
-        else if (_stateSettings.currentActiveState is PatrolState)
+
+        else if (stateSettings.currentActiveState is PatrolState)
         {
-            animal.GetComponent<Chicken>().MoveToLocation(Time.fixedDeltaTime);
+            animal.GetNavMeshAgent().SetDestination(animal.FindTargetLocation());
             animal.GetAnimalAnimator().SetBool("IsWalking", true);
+            animal.GetNavMeshAgent().isStopped = false;
+        }
+
+        else if (stateSettings.currentActiveState is FleeState)
+        {
+            animal.GetAnimalAnimator().SetBool("IsWalking", true);
+            animal.GetNavMeshAgent().velocity = Vector3.one * 4f;
+            animal.GetNavMeshAgent().isStopped = false;
         }
     }
 
     public void Reset()
     {
-        animal.GetAnimalAnimator().SetBool("IsWalking", true);
-        animal.GetNavMeshAgent().velocity = Vector3.one;
-        animal.GetNavMeshAgent().isStopped = false;
+        if (stateSettings.currentActiveState is IdleState)
+        {
+            animal.GetAnimalAnimator().SetBool("IsWalking", false); // idle true
+            animal.GetNavMeshAgent().isStopped = false;
+        }
+        else if (stateSettings.currentActiveState is PatrolState)
+        {
+            animal.GetAnimalAnimator().SetBool("IsWalking", true);
+            animal.GetNavMeshAgent().isStopped = false;
+        }
+        else if (stateSettings.currentActiveState is FleeState)
+        {
+            animal.GetAnimalAnimator().SetBool("IsWalking", false);
+            animal.GetNavMeshAgent().velocity = Vector3.zero;
+            animal.GetNavMeshAgent().isStopped = false;
+        }
     }
 }

@@ -9,12 +9,12 @@ public class IdleState : BaseState
     public IdleState(IStateContext _stateContext) : base(_stateContext)
     {
         stateContext = _stateContext;
-        settings = new StateSettings(stateContext, this, false, false, Vector3.zero, Vector3.zero, 90f);
+        settings = new StateSettings(stateContext, this, false, false, false, Vector3.zero, 90f);
     }
 
     protected override void EnterState()
     {
-        stateContext.MakeChanges(settings);
+        stateContext.ApplySettings(settings);
 
         duration = Random.Range(4f, 10f);
     }
@@ -24,25 +24,20 @@ public class IdleState : BaseState
         if (stateContext.CanSeePlayer())
             stateMachine.ChangeState(new AttackState(stateContext));
         else
-            stateMachine.Waiting(new PatrolState(stateContext), duration);
+        {
+            if (stateContext.IsSafe())
+            {
+                stateMachine.Waiting(new PatrolState(stateContext), duration);
+            }
+            else
+            {
+                stateMachine.ChangeState(new FleeState(stateContext));
+            }
+        }
     }
 
     protected override void ExitState()
     {
         stateContext.ResetChanges();
-
-        //if (enemy)
-        //{
-        //    enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Idle, false);
-        //    enemy.GetEnemyAgent().velocity = enemy.defaultVelocity;
-        //    enemy.GetEnemyAgent().isStopped = false;
-        //}
-
-        //if (animalNpc)
-        //{
-        //    animalNpc.GetAnimal().GetAnimalAnimator().SetBool("IsWalking", true);
-        //    animalNpc.GetAnimal().GetAnimalNpcAgent().velocity = Vector3.one;
-        //    animalNpc.GetAnimal().GetAnimalNpcAgent().isStopped = false;
-        //}
     }
 }

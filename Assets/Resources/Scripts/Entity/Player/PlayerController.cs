@@ -21,6 +21,8 @@ public class PlayerController : Entity, IPossessable, IDamageable
     public void Initialize()
     {
         playerSO.health = playerSO.maxHealth;
+        player = this;
+
         isAlive = true;
 
         characterController = GetComponent<CharacterController>();

@@ -13,11 +13,15 @@ public abstract class AnimalNpc : Npc, IStateContext
     [SerializeField] private Gem gem;
     [SerializeField] protected Animator animalAnimator;
 
+    [SerializeField] private float maxDistance = 5f;
+
     protected NavMeshAgent animalAgent;
     protected Dictionary<Type, BaseState> animalStates;
     protected StateMachine animalStateMachine;
 
-    private AnimalNpcController animalNpcController;
+    protected AnimalNpcController animalNpcController;
+
+    [SerializeField] private Transform[] pathPoints;
 
     public override void Initialize()
     {
@@ -39,12 +43,12 @@ public abstract class AnimalNpc : Npc, IStateContext
         {
             { typeof(IdleState), new IdleState(this) },
             { typeof(PatrolState), new PatrolState(this) },
-            { typeof(PossessedState), new PossessedState(this) }
+            { typeof(PossessedState), new PossessedState(this) },
+            { typeof(FleeState), new FleeState(this) }
         };
 
         animalStateMachine.Initialise(this, animalStates);
     }
-
 
     public override void Refresh(float deltaTime)
     {
@@ -56,24 +60,25 @@ public abstract class AnimalNpc : Npc, IStateContext
         currentFixedDeltaTime = fixedDeltaTime;
     }
 
-    public abstract Animator GetAnimalAnimator();
-    public abstract AnimalNpc GetAnimal();
-
     public NavMeshAgent GetNavMeshAgent()
     {
         return animalAgent;
     }
 
-    public new void Possessing(GameObject go)
+    public override void Possessing(GameObject go)
     {
+        base.Possessing(go);
+
         possessedByPlayer = PossessionManager.instance.GetCurrentPossessable();
         animalStateMachine.ChangeState(new PossessedState(this));
     }
 
-    public new void Depossessing(GameObject go)
+    public override void Depossessing(GameObject go)
     {
-        animalStateMachine.ChangeState(new IdleState(this));
+        base.Depossessing(go);
+
         possessedByPlayer = null;
+        animalStateMachine.ChangeState(new IdleState(this));
     }
 
     private void OnTriggerEnter(Collider other)
@@ -90,20 +95,35 @@ public abstract class AnimalNpc : Npc, IStateContext
         }
     }
 
-    public bool CanSeePlayer()
+    public bool IsSafe()
     {
-        return false;
+        if (Vector3.Distance(transform.position, PlayerManager.instance.GetPlayer().transform.position) >= maxDistance)
+            return true;
+        else
+            return false;
     }
 
-    public void MakeChanges(StateSettings _settings)
+    public Vector3 FindTargetLocation()
     {
-        animalNpcController.RunAI(_settings);
+        int randomIndex = UnityEngine.Random.Range(0, pathPoints.Length);
+        Vector3 targetLocation = pathPoints[randomIndex].position;
+        return targetLocation;
+    }
+    
+    public virtual void ApplySettings(StateSettings _settings)
+    {
+        
     }
 
     public void ResetChanges()
     {
-        GetAnimal().GetAnimalAnimator().SetBool("IsWalking", true);
-        GetAnimal().GetNavMeshAgent().velocity = Vector3.one;
-        GetAnimal().GetNavMeshAgent().isStopped = false;
+        animalNpcController.Reset();
     }
+
+    bool IStateContext.CanSeePlayer() => false;
+
+    public Transform GetTransform() => transform;
+
+    public abstract Animator GetAnimalAnimator();
+    public abstract AnimalNpc GetAnimal();
 }

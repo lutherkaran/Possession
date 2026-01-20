@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Threading;
 using UnityEngine;
 
 public class SearchState : BaseState
@@ -9,18 +7,20 @@ public class SearchState : BaseState
     private float maxSearchDuration = 20f;
     private float searchTimer;
 
-    public SearchState(Enemy _enemy) : base(_enemy.gameObject)
+    private readonly StateSettings stateSettings;
+
+    public SearchState(IStateContext _stateContext) : base(_stateContext)
     {
-        enemy = _enemy;
+        stateContext = _stateContext;
+        stateSettings = new StateSettings(stateContext, this, false, false, false, Vector3.zero, 180);
+
+        if (stateContext is Enemy enemy)
+            this.enemy = enemy;
     }
 
     protected override void EnterState()
     {
-        enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Searching, true);
-        enemy.GetAnimator().RunBlend();
-        enemy.GetEnemyAgent().SetDestination(enemy.targetsLastPosition);
-        enemy.GetEnemyAgent().velocity = enemy.defaultVelocity * 4f;
-        enemy.GetEnemySO().fieldOfView = 180f;
+        stateContext.ApplySettings(stateSettings);
     }
 
     protected override void PerformState()
@@ -31,19 +31,19 @@ public class SearchState : BaseState
         {
             if (stateContext.CanSeePlayer())
             {
-                stateMachine.ChangeState(new AttackState(enemy));
+                stateMachine.ChangeState(new AttackState(stateContext));
             }
 
-            if (enemy.GetEnemyAgent().remainingDistance <= enemy.GetEnemyAgent().stoppingDistance)
+            if (stateContext.GetNavMeshAgent().remainingDistance <= stateContext.GetNavMeshAgent().stoppingDistance)
             {
-                stateMachine.Waiting(new IdleState(enemy), 3);
+                stateMachine.Waiting(new IdleState(stateContext), 3);
                 FindAnotherDestinationNearby();
             }
         }
 
         else
         {
-            stateMachine.ChangeState(new PatrolState(enemy));
+            stateMachine.ChangeState(new PatrolState(stateContext));
         }
     }
 
@@ -56,7 +56,8 @@ public class SearchState : BaseState
 
     private void FindAnotherDestinationNearby()
     {
-        stateMachine.ChangeState(new SearchState(enemy));
-        enemy.GetEnemyAgent().SetDestination(enemy.targetsLastPosition + (Random.insideUnitSphere * 20f));
+        stateMachine.ChangeState(new SearchState(stateContext));
+        // It should be player's last position not the current possition.
+        stateContext.GetNavMeshAgent().SetDestination(stateContext.GetTransform().position + PlayerManager.instance.GetPlayer().transform.position + (Random.insideUnitSphere * 20f));
     }
 }

@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -71,18 +68,15 @@ public class Npc : Entity, IPossessable
         base.Sprint();
     }
 
-    public void Possessing(GameObject go)
+    public virtual void Possessing(GameObject go)
     {
         possessedByPlayer = PossessionManager.instance.GetCurrentPossessable();
-       // npcAgent.ChangeState(new PossessedState(this));
     }
 
-    public void Depossessing(GameObject go)
+    public virtual void Depossessing(GameObject go)
     {
-       // npcAgent.ChangeState(new IdleState(this));
         possessedByPlayer = null;
     }
-
 
     public Entity GetPossessedEntity() => this;
 
@@ -91,24 +85,4 @@ public class Npc : Entity, IPossessable
     public override float GetEntityPossessionTimerMax() => entitySO.entityPossessionTimerMax;
 
     public override float GetPossessionCooldownTimerMax() => entitySO.possessionCooldownTimerMax;
-
-    //public void MakeChanges(StateSettings _settings)
-    //{
-
-    //}
-
-    //public bool CanSeePlayer()
-    //{
-    //    return false;
-    //}
-
-    //public void ResetChanges()
-    //{
-    //    throw new NotImplementedException();
-    //}
-
-    //public NavMeshAgent GetNavMeshAgent()
-    //{
-    //    return npcAgent;
-    //}
 }

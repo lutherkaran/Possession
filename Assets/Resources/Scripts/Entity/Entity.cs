@@ -4,6 +4,8 @@ public abstract class Entity : MonoBehaviour
 {
     public IPossessable possessedByPlayer { get; set; }
 
+    protected PlayerController player;
+
     protected Vector3 moveDirection = Vector3.zero;
     protected Vector3 velocity = Vector3.zero;
 

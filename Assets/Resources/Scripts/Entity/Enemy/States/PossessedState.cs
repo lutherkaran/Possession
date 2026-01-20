@@ -1,27 +1,13 @@
-using log4net;
 using UnityEngine;
 
 public class PossessedState : BaseState
 {
-    private Enemy enemy;
-
-    private Npc npc;
-
-    private AnimalNpc animalNpc;
-
     private readonly float WalkSpeed = 10f;
     private Vector3 moveDirection;
 
     public PossessedState(IStateContext _stateContext) : base(_stateContext)
     {
         stateContext = _stateContext;
-
-        //if (npcAi is Enemy e)
-        //    enemy = e;
-        //else if (npcAi is Npc n)
-        //    npc = n;
-        //else if (npcAi is AnimalNpc a)
-        //    animalNpc = a;
     }
 
     protected override void EnterState()
@@ -47,25 +33,25 @@ public class PossessedState : BaseState
 
     private void Enemy_OnPossessed(object sender, IPossessable e)
     {
-        enemy.GetAnimator().ManualBlend(WalkSpeed);
+        //enemy.GetAnimator().ManualBlend(WalkSpeed);
     }
 
     protected override void PerformState()
     {
-        moveDirection.x = InputManager.instance.GetOnFootActions().Movement.ReadValue<Vector2>().x;
-        moveDirection.z = InputManager.instance.GetOnFootActions().Movement.ReadValue<Vector2>().y;
-        moveDirection.y = 0;
-
-        if (PossessionManager.instance.GetCurrentPossessable() == enemy.possessedByPlayer)
-            enemy.transform.Translate(moveDirection * WalkSpeed * Time.deltaTime);
+        //moveDirection.x = InputManager.instance.GetOnFootActions().Movement.ReadValue<Vector2>().x;
+        //moveDirection.z = InputManager.instance.GetOnFootActions().Movement.ReadValue<Vector2>().y;
+        //moveDirection.y = 0;
+        //
+        //if (PossessionManager.instance.GetCurrentPossessable() == enemy.possessedByPlayer)
+        //    enemy.transform.Translate(moveDirection * WalkSpeed * Time.deltaTime);
         //    enemy.GetAnimator().ManualBlend(WalkSpeed * Time.deltaTime);
     }
 
     protected override void ExitState()
     {
-        enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Possessed, false);
-        enemy.GetAnimator().WalkBlend();
-        stateMachine.ChangeState(stateMachine.lastActiveState);
+        //enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Possessed, false);
+        //enemy.GetAnimator().WalkBlend();
+        //stateMachine.ChangeState(stateMachine.lastActiveState);
     }
 
 }
