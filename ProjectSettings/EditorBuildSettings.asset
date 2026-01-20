@@ -18,3 +18,4 @@ EditorBuildSettings:
     path: Assets/Resources/Scenes/LoadingScene.unity
     guid: a4085740f02807540a6a9e7e50af3690
   m_configObjects: {}
+  m_UseUCBPForAssetBundles: 0
