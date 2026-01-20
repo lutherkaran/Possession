@@ -19,6 +19,14 @@ public class Tiger : AnimalNpc
         base.Initialize();
 
         animal = animalType.Tiger;
+        animalAnimator = GetComponent<Animator>();
+    }
+
+    public override void ApplySettings(StateSettings _settings)
+    {
+        base.ApplySettings(_settings);
+
+        animalNpcController.RunAI(_settings);
     }
 
     public override void PostInitialize()

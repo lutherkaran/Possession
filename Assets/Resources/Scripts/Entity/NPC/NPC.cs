@@ -1,10 +1,7 @@
 using UnityEngine;
-using UnityEngine.AI;
 
 public class Npc : Entity, IPossessable
 {
-    private NavMeshAgent npcAgent;
-
     protected float currentFixedDeltaTime = 0f;
 
     public virtual void Initialize()

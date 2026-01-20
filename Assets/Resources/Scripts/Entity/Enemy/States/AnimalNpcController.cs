@@ -25,6 +25,7 @@ public class AnimalNpcController
         {
             animal.GetNavMeshAgent().SetDestination(animal.FindTargetLocation());
             animal.GetAnimalAnimator().SetBool("IsWalking", true);
+            animal.GetNavMeshAgent().velocity = Vector3.one * 2f;
             animal.GetNavMeshAgent().isStopped = false;
         }
 
@@ -34,6 +35,14 @@ public class AnimalNpcController
             animal.GetNavMeshAgent().velocity = Vector3.one * 4f;
             animal.GetNavMeshAgent().isStopped = false;
         }
+
+        else if (stateSettings.currentActiveState is PossessedState)
+        {
+            animal.GetAnimalAnimator().SetBool("IsWalking", false);
+            animal.GetNavMeshAgent().velocity = UnityEngine.Vector3.zero;
+            animal.GetNavMeshAgent().isStopped = true;
+        }
+
     }
 
     public void Reset()
@@ -45,13 +54,20 @@ public class AnimalNpcController
         }
         else if (stateSettings.currentActiveState is PatrolState)
         {
-            animal.GetAnimalAnimator().SetBool("IsWalking", true);
+            animal.GetAnimalAnimator().SetBool("IsWalking", false);
             animal.GetNavMeshAgent().isStopped = false;
         }
         else if (stateSettings.currentActiveState is FleeState)
         {
             animal.GetAnimalAnimator().SetBool("IsWalking", false);
             animal.GetNavMeshAgent().velocity = Vector3.zero;
+            animal.GetNavMeshAgent().isStopped = false;
+        }
+
+        else if (stateSettings.currentActiveState is PossessedState)
+        {
+            animal.GetAnimalAnimator().SetBool("IsWalking", false);
+            animal.GetNavMeshAgent().velocity = UnityEngine.Vector3.zero;
             animal.GetNavMeshAgent().isStopped = false;
         }
     }

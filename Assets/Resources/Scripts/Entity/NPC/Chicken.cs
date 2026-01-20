@@ -22,13 +22,6 @@ public class Chicken : AnimalNpc
         animalAnimator = GetComponent<Animator>();
     }
 
-    public override void PostInitialize()
-    {
-        base.PostInitialize();
-
-        PossessionManager.instance.OnPossessed += OnCatPossession;
-    }
-
     public override void ApplySettings(StateSettings _settings)
     {
         base.ApplySettings(_settings);
@@ -39,6 +32,13 @@ public class Chicken : AnimalNpc
     public override void PhysicsRefresh(float fixedDeltaTime)
     {
         base.PhysicsRefresh(fixedDeltaTime);
+    }
+
+    public override void PostInitialize()
+    {
+        base.PostInitialize();
+
+        PossessionManager.instance.OnPossessed += OnCatPossession;
     }
 
     private void OnCatPossession(object sender, IPossessable e)

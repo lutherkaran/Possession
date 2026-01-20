@@ -1,9 +1,9 @@
-public class EnemyAI
+public class EnemyController
 {
     private Enemy enemy;
     private StateSettings stateSettings;
 
-    public EnemyAI(Enemy _enemy)
+    public EnemyController(Enemy _enemy)
     {
         enemy = _enemy;
     }
@@ -46,6 +46,12 @@ public class EnemyAI
             enemy.GetEnemyAgent().velocity = enemy.defaultVelocity * 4f;
             enemy.GetEnemySO().fieldOfView = stateSettings.fieldOfView;
         }
+        else if (stateSettings.currentActiveState is PossessedState)
+        {
+            enemy.GetEnemyAgent().velocity = UnityEngine.Vector3.zero;
+            enemy.GetEnemyAgent().isStopped = true;
+            enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Possessed, true);
+        }
     }
 
     public void Reset()
@@ -67,6 +73,11 @@ public class EnemyAI
         {
             enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Searching, false);
             enemy.GetEnemyAgent().velocity = enemy.defaultVelocity;
+        }
+        else if (stateSettings.currentActiveState is PossessedState)
+        {
+            enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Possessed, false);
+            enemy.GetAnimator().WalkBlend();
         }
     }
 }

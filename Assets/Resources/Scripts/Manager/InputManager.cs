@@ -12,6 +12,8 @@ public class InputManager : IManagable
     private PlayerInput playerInput;
     private PlayerController player;
 
+    private Vector2 moveDir = Vector2.zero;
+
     public void Initialize()
     {
         playerInput = new PlayerInput();
@@ -37,7 +39,8 @@ public class InputManager : IManagable
 
     public void PhysicsRefresh(float fixedDeltaTime)
     {
-        PossessionManager.instance.GetCurrentPossessable().GetPossessedEntity().MoveWhenPossessed(playerInput.OnFoot.Movement.ReadValue<Vector2>());
+        moveDir = playerInput.OnFoot.Movement.ReadValue<Vector2>();
+        PossessionManager.instance.GetCurrentPossessable().GetPossessedEntity().MoveWhenPossessed(moveDir);
     }
 
     public void LateRefresh(float deltaTime)
@@ -76,5 +79,5 @@ public class InputManager : IManagable
     }
 
     public PlayerInput.OnFootActions GetOnFootActions() => playerInput.OnFoot;
-
+    public Vector2 GetMoveDirection() => moveDir;
 }

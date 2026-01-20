@@ -24,7 +24,7 @@ public class Enemy : Entity, IPossessable, IDamageable, IStateContext
 
     private NavMeshAgent enemyAgent;
     private StateMachine stateMachine;
-    private EnemyAI enemyAI;
+    private EnemyController enemyAI;
 
     public Vector3 defaultVelocity { get; private set; }
     public Vector3 targetsLastPosition { get; private set; }
@@ -35,14 +35,15 @@ public class Enemy : Entity, IPossessable, IDamageable, IStateContext
     private Transform targetTransform;
     private Transform player;
 
+    private float currentFixedDeltaTime = 0f;
     public void Initialize()
     {
         enemySO.currentHealth = enemySO.maxHealth;
-        
+
         enemyAgent = GetComponent<NavMeshAgent>();
         stateMachine = GetComponent<StateMachine>();
 
-        enemyAI = new EnemyAI(this);
+        enemyAI = new EnemyController(this);
         defaultVelocity = enemyAgent.velocity;
     }
 
@@ -103,6 +104,8 @@ public class Enemy : Entity, IPossessable, IDamageable, IStateContext
     public override void MoveWhenPossessed(Vector2 input)
     {
         base.MoveWhenPossessed(input);
+
+        transform.Translate(moveDirection * entitySO.speed * currentFixedDeltaTime);
     }
 
     public override void Sprint() { base.Sprint(); }
@@ -152,7 +155,7 @@ public class Enemy : Entity, IPossessable, IDamageable, IStateContext
 
     public void PhysicsRefresh(float fixedDeltaTime)
     {
-
+        currentFixedDeltaTime = fixedDeltaTime;
     }
 
     public void LateRefresh(float deltaTime)

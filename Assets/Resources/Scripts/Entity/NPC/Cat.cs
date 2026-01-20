@@ -14,11 +14,19 @@ public class Cat : AnimalNpc
         return animalAnimator;
     }
 
+    public override void ApplySettings(StateSettings _settings)
+    {
+        base.ApplySettings(_settings);
+
+        animalNpcController.RunAI(_settings);
+    }
+
     public override void Initialize()
     {
         base.Initialize();
 
         animal = animalType.Cat;
+        animalAnimator = GetComponent<Animator>();
     }
 
     public override void PostInitialize()
