@@ -27,7 +27,6 @@ public class PossessedState : BaseState
     protected override void PerformState()
     {
         PossessionManager.instance.GetCurrentPossessable().GetPossessedEntity().MoveWhenPossessed(InputManager.instance.GetMoveDirection());
-        Debug.Log(InputManager.instance.GetMoveDirection());
         //    enemy.transform.Translate(moveDirection * WalkSpeed * Time.deltaTime);
         //    enemy.GetAnimator().ManualBlend(WalkSpeed * Time.deltaTime);
     }

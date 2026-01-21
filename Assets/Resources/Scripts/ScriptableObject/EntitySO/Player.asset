@@ -12,10 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47ea945f45f6e854296af63e22c84747, type: 3}
   m_Name: Player
   m_EditorClassIdentifier: 
-  entity: {fileID: 0}
   entityPossessionTimerMax: 50
   possessionCooldownTimerMax: 1
-  cameraAttachPoint: {fileID: 0}
   PossessableLayerMask:
     serializedVersion: 2
     m_Bits: 256

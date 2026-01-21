@@ -1094,6 +1094,9 @@ GameObject:
   - component: {fileID: 3201553535601399363}
   - component: {fileID: 3312736763655720254}
   - component: {fileID: 2180324660255726798}
+  - component: {fileID: 2440118988714673586}
+  - component: {fileID: 1833073337641687875}
+  - component: {fileID: 6346000106100498524}
   m_Layer: 8
   m_Name: ChickenNpc
   m_TagString: Npc
@@ -1135,6 +1138,12 @@ MonoBehaviour:
   cameraAttachPoint: {fileID: 4192764010645568565}
   animal: 0
   gem: {fileID: 0}
+  animalAnimator: {fileID: 2440118988714673586}
+  safeDistance: 10
+  pathPoints:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   chickenSceneVolumeProfile: {fileID: 11400000, guid: 3d1072567e73f0044a6f638789f4de7d,
     type: 2}
 --- !u!135 &2180324660255726798
@@ -1158,6 +1167,63 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.25
   m_Center: {x: 0, y: 0.25, z: 0}
+--- !u!95 &2440118988714673586
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7881135867406394219}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: d4ec65f18a8137b42a202642b4f6600f, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1833073337641687875
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7881135867406394219}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb5736e5c23f6a146849e5c59f958680, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentState: 
+--- !u!195 &6346000106100498524
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7881135867406394219}
+  m_Enabled: 1
+  m_AgentTypeID: -1923039037
+  m_Radius: 0.25
+  m_Speed: 1
+  m_Acceleration: 5
+  avoidancePriority: 10
+  m_AngularSpeed: 720
+  m_StoppingDistance: 0.5
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 0.5
+  m_BaseOffset: 0
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 1
 --- !u!1 &8109536373523732969
 GameObject:
   m_ObjectHideFlags: 0

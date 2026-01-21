@@ -13,7 +13,7 @@ public abstract class AnimalNpc : Npc, IStateContext
     [SerializeField] private Gem gem;
     [SerializeField] protected Animator animalAnimator;
 
-    [SerializeField] private float maxDistance = 5f;
+    [SerializeField] protected float safeDistance = 10f;
 
     protected NavMeshAgent animalAgent;
     protected Dictionary<Type, BaseState> animalStates;
@@ -44,7 +44,6 @@ public abstract class AnimalNpc : Npc, IStateContext
             { typeof(IdleState), new IdleState(this) },
             { typeof(PatrolState), new PatrolState(this) },
             { typeof(PossessedState), new PossessedState(this) },
-            { typeof(FleeState), new FleeState(this) }
         };
 
         animalStateMachine.Initialise(this, animalStates);
@@ -95,12 +94,9 @@ public abstract class AnimalNpc : Npc, IStateContext
         }
     }
 
-    public bool IsSafe()
+    public virtual bool IsSafe()
     {
-        if (Vector3.Distance(transform.position, PlayerManager.instance.GetPlayer().transform.position) >= maxDistance)
-            return true;
-        else
-            return false;
+        return true;
     }
 
     public Vector3 FindTargetLocation()

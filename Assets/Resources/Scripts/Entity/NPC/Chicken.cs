@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Chicken : AnimalNpc
@@ -39,6 +40,7 @@ public class Chicken : AnimalNpc
         base.PostInitialize();
 
         PossessionManager.instance.OnPossessed += OnCatPossession;
+        animalStates.TryAdd(typeof(FleeState), new FleeState(this));
     }
 
     private void OnCatPossession(object sender, IPossessable e)
@@ -48,6 +50,14 @@ public class Chicken : AnimalNpc
             CameraManager.instance.ApplyCameraSettings(chickenSceneVolumeProfile.fieldOfView);
             GameManager.instance.ApplyVolumeProfile(chickenSceneVolumeProfile.volumeProfile);
         }
+    }
+
+    public override bool IsSafe()
+    {
+        if (Vector3.Distance(transform.position, PlayerManager.instance.GetPlayer().transform.position) >= safeDistance)
+            return true;
+        else
+            return false;
     }
 
     public new Transform GetTransform() => transform;

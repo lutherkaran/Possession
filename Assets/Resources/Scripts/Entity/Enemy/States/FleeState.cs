@@ -6,7 +6,6 @@ public class FleeState : BaseState
     private readonly StateSettings settings;
 
     private Vector3 lastFleeTarget;
-    private float nextPathUpdateTime;
     private float fleeDistance = 4f;
 
     public FleeState(IStateContext _stateContext) : base(_stateContext)
@@ -27,8 +26,8 @@ public class FleeState : BaseState
         {
             stateMachine.ChangeState(stateMachine.lastActiveState);
         }
-
-        Flee();
+        else
+            Flee();
     }
 
     protected override void ExitState()
