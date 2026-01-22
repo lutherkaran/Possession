@@ -12,7 +12,7 @@ public class SearchState : BaseState
     public SearchState(IStateContext _stateContext) : base(_stateContext)
     {
         stateContext = _stateContext;
-        stateSettings = new StateSettings(stateContext, this, false, false, false, Vector3.zero, 180);
+        stateSettings = new StateSettings(stateContext, this, StateSettings.animationStates.isRunning, Vector3.zero, 180);
 
         if (stateContext is Enemy enemy)
             this.enemy = enemy;

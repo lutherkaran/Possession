@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Chicken : AnimalNpc
@@ -12,7 +11,7 @@ public class Chicken : AnimalNpc
 
     public override Animator GetAnimalAnimator()
     {
-        return animalAnimator;
+        return animalAnimation.GetAnimator();
     }
 
     public override void Initialize()
@@ -20,7 +19,6 @@ public class Chicken : AnimalNpc
         base.Initialize();
 
         animal = animalType.Chicken;
-        animalAnimator = GetComponent<Animator>();
     }
 
     public override void ApplySettings(StateSettings _settings)
@@ -40,7 +38,6 @@ public class Chicken : AnimalNpc
         base.PostInitialize();
 
         PossessionManager.instance.OnPossessed += OnCatPossession;
-        animalStates.TryAdd(typeof(FleeState), new FleeState(this));
     }
 
     private void OnCatPossession(object sender, IPossessable e)

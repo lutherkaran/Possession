@@ -11,7 +11,7 @@ public class Horse : AnimalNpc
 
     public override Animator GetAnimalAnimator()
     {
-        return animalAnimator;
+        return animalAnimation.GetAnimator();
     }
 
     public override void Initialize()
@@ -19,7 +19,6 @@ public class Horse : AnimalNpc
         base.Initialize();
 
         animal = animalType.Horse;
-        animalAnimator = GetComponent<Animator>();
     }
 
     public override void ApplySettings(StateSettings _settings)

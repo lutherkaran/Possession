@@ -10,18 +10,13 @@ public class PossessedState : BaseState
     {
         stateContext = _stateContext;
 
-        stateSettings = new StateSettings(stateContext, this, false, false, false, Vector3.zero, 0);
+        stateSettings = new StateSettings(stateContext, this, StateSettings.animationStates.isPossessed, Vector3.zero, 0);
     }
 
     protected override void EnterState()
     {
         base.EnterState();
         stateContext.ApplySettings(stateSettings);
-    }
-
-    private void Enemy_OnPossessed(object sender, IPossessable e)
-    {
-        //enemy.GetAnimator().ManualBlend(WalkSpeed);
     }
 
     protected override void PerformState()

@@ -8,7 +8,7 @@ public class PatrolState : BaseState
     {
         stateContext = _stateContext;
 
-        settings = new StateSettings(stateContext, this, false, false, true, Vector3.zero, 150f);
+        settings = new StateSettings(stateContext, this, StateSettings.animationStates.isWalking, Vector3.one, 150f);
     }
 
     protected override void EnterState()

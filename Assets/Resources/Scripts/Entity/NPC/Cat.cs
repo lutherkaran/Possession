@@ -11,7 +11,7 @@ public class Cat : AnimalNpc
 
     public override Animator GetAnimalAnimator()
     {
-        return animalAnimator;
+        return animalAnimation.GetAnimator();
     }
 
     public override void ApplySettings(StateSettings _settings)
@@ -26,7 +26,6 @@ public class Cat : AnimalNpc
         base.Initialize();
 
         animal = animalType.Cat;
-        animalAnimator = GetComponent<Animator>();
     }
 
     public override void PostInitialize()

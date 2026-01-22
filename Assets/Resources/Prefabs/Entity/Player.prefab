@@ -1039,6 +1039,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entitySO: {fileID: 11400000, guid: 5eebae3dea8447647aaafbeda5a32c41, type: 2}
   cameraAttachPoint: {fileID: 5011228572377031243}
+  playerAnimation: {fileID: 5890675016086935830}
   healthUI: {fileID: 1915882398233693777}
   playerSO: {fileID: 11400000, guid: 018ab39cc24273346b270c33e4f3b71a, type: 2}
   playerVolumeProfileSO: {fileID: 11400000, guid: ddd33e8a5688afc49ba352ac8c209488,
@@ -1397,9 +1398,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1570184908883085732}
   - component: {fileID: 640264625562538607}
-  - component: {fileID: 6617783702009704868}
+  - component: {fileID: 5890675016086935830}
   m_Layer: 0
-  m_Name: Visuals
+  m_Name: PlayerVisuals
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1444,7 +1445,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &6617783702009704868
+--- !u!114 &5890675016086935830
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1453,10 +1454,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 2198243110832018206}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: de633cb4576c038408d32ffa676cf59d, type: 3}
+  m_Script: {fileID: 11500000, guid: 29584567751143f4581bdb27b8e8ea17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 8426612707636161426}
+  entity: {fileID: 8426612707636161426}
+  entityAnimator: {fileID: 640264625562538607}
 --- !u!1 &2201682741134942502
 GameObject:
   m_ObjectHideFlags: 0

@@ -9,7 +9,7 @@ public class IdleState : BaseState
     public IdleState(IStateContext _stateContext) : base(_stateContext)
     {
         stateContext = _stateContext;
-        settings = new StateSettings(stateContext, this, false, false, false, Vector3.zero, 90f);
+        settings = new StateSettings(stateContext, this, StateSettings.animationStates.isIdle, Vector3.zero, 90f);
     }
 
     protected override void EnterState()

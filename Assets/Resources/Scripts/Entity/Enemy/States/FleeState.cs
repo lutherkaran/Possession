@@ -12,7 +12,7 @@ public class FleeState : BaseState
     {
         stateContext = _stateContext;
 
-        settings = new StateSettings(stateContext, this, false, false, false, Vector3.zero, 180f);
+        settings = new StateSettings(stateContext, this, StateSettings.animationStates.isRunning, Vector3.zero, 180f);
     }
 
     protected override void EnterState()

@@ -11,7 +11,7 @@ public class Tiger : AnimalNpc
 
     public override Animator GetAnimalAnimator()
     {
-        return animalAnimator;
+        return animalAnimation.GetAnimator();
     }
 
     public override void Initialize()
@@ -19,7 +19,6 @@ public class Tiger : AnimalNpc
         base.Initialize();
 
         animal = animalType.Tiger;
-        animalAnimator = GetComponent<Animator>();
     }
 
     public override void ApplySettings(StateSettings _settings)

@@ -11,7 +11,7 @@ public class Penguin : AnimalNpc
 
     public override Animator GetAnimalAnimator()
     {
-        return animalAnimator;
+        return animalAnimation.GetAnimator();
     }
 
     public override void Initialize()

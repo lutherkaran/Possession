@@ -7,12 +7,13 @@ public class PlayerController : Entity, IPossessable, IDamageable
 
     private CharacterController characterController;
 
+    [SerializeField] private EntityAnimation playerAnimation;
+
     [SerializeField] private HealthUI healthUI;
     [SerializeField] private PlayerSO playerSO;
     [SerializeField] private CameraSceneVolumeProfileSO playerVolumeProfileSO; // using the default for now
     [SerializeField] private Transform gunBarrel;
 
-    private bool isWalking = false;
     public bool isAlive { get; private set; }
     public bool isPossessed { get; private set; }
 
@@ -25,8 +26,10 @@ public class PlayerController : Entity, IPossessable, IDamageable
 
         isAlive = true;
 
+        playerAnimation = GetComponent<EntityAnimation>();
         characterController = GetComponent<CharacterController>();
         healthUI = GetComponent<HealthUI>();
+        playerAnimation = GetComponent<EntityAnimation>();
     }
 
     public void PostInitialize()
@@ -57,9 +60,14 @@ public class PlayerController : Entity, IPossessable, IDamageable
     {
         base.MoveWhenPossessed(input);
 
-        isWalking = input != Vector2.zero;
         moveDirection = new Vector3(input.x, 0, input.y);
-        transform.Translate(moveDirection * entitySO.speed * currentFixedDeltaTime);
+        float actualSpeed = (moveDirection.sqrMagnitude) * entitySO.speed * currentFixedDeltaTime / entitySO.speed;
+        if (playerAnimation)
+        {
+            playerAnimation.SetSpeed(actualSpeed);
+            Debug.Log($"PlayerSpeed: { actualSpeed}");
+            //transform.Translate(moveDirection * entitySO.speed * currentFixedDeltaTime);
+        }
     }
 
     public override void Attack()
@@ -142,6 +150,4 @@ public class PlayerController : Entity, IPossessable, IDamageable
     public override float GetPossessionCooldownTimerMax() => entitySO.possessionCooldownTimerMax;
 
     public bool isSprinting() => sprinting;
-
-    public bool IsWalking() => isWalking;
 }

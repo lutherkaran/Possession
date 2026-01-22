@@ -11,9 +11,9 @@ public abstract class AnimalNpc : Npc, IStateContext
     IPuzzleObject puzzleObject;
 
     [SerializeField] private Gem gem;
-    [SerializeField] protected Animator animalAnimator;
 
     [SerializeField] protected float safeDistance = 10f;
+    [SerializeField] protected EntityAnimation animalAnimation;
 
     protected NavMeshAgent animalAgent;
     protected Dictionary<Type, BaseState> animalStates;
@@ -44,6 +44,7 @@ public abstract class AnimalNpc : Npc, IStateContext
             { typeof(IdleState), new IdleState(this) },
             { typeof(PatrolState), new PatrolState(this) },
             { typeof(PossessedState), new PossessedState(this) },
+            { typeof(FleeState), new FleeState(this) },
         };
 
         animalStateMachine.Initialise(this, animalStates);
@@ -52,6 +53,11 @@ public abstract class AnimalNpc : Npc, IStateContext
     public override void Refresh(float deltaTime)
     {
         animalStateMachine.Refresh(deltaTime);
+
+        float actualSpeed = GetNavMeshAgent().velocity.magnitude / GetNavMeshAgent().speed;
+        if (animalAnimation)
+            animalAnimation.SetSpeed(actualSpeed);
+
     }
 
     public override void PhysicsRefresh(float fixedDeltaTime)
@@ -105,10 +111,10 @@ public abstract class AnimalNpc : Npc, IStateContext
         Vector3 targetLocation = pathPoints[randomIndex].position;
         return targetLocation;
     }
-    
+
     public virtual void ApplySettings(StateSettings _settings)
     {
-        
+
     }
 
     public void ResetChanges()

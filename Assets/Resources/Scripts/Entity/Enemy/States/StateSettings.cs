@@ -3,23 +3,29 @@ using UnityEngine;
 public class StateSettings
 {
     public IStateContext stateContext;
-    public BaseState currentActiveState;
 
-    public bool isAlert { get; set; } = false;
-    public bool isIdle { get; set; } = false;
+    public BaseState currentActiveState;
 
     public float fieldOfView { get; set; }
 
-    public bool isPatrolling { get; set; } = false;
     public Vector3 desiredVelocity = Vector3.zero;
 
-    public StateSettings(IStateContext _stateContext, BaseState _baseState, bool _isAlert, bool _isIdle, bool _isPatrolling, Vector3 _desiredVelocity, float _fieldOfView)
+    public enum animationStates
+    {
+        isIdle = 0,
+        isWalking = 1,
+        isRunning = 2,
+        isAttacking = 3,
+        isPossessed = 4,
+    }
+
+    public animationStates animStates;
+
+    public StateSettings(IStateContext _stateContext, BaseState _baseState, animationStates _boolState, Vector3 _desiredVelocity, float _fieldOfView)
     {
         stateContext = _stateContext;
         currentActiveState = _baseState;
-        isAlert = _isAlert;
-        isIdle = _isIdle;
-        isPatrolling = _isPatrolling;
+        animStates = _boolState;
         desiredVelocity = _desiredVelocity;
         fieldOfView = fieldOfView;
     }

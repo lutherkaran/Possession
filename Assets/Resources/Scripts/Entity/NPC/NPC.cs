@@ -1,8 +1,11 @@
+using NUnit.Framework.Constraints;
 using UnityEngine;
 
 public class Npc : Entity, IPossessable
 {
     protected float currentFixedDeltaTime = 0f;
+
+    protected float actualSpeed { get; private set; } = 0f;
 
     public virtual void Initialize()
     {
@@ -10,7 +13,7 @@ public class Npc : Entity, IPossessable
 
     public virtual void PostInitialize()
     {
-    
+
     }
 
     public virtual void Refresh(float deltaTime)
@@ -20,7 +23,7 @@ public class Npc : Entity, IPossessable
 
     public virtual void PhysicsRefresh(float fixedDeltaTime)
     {
-  
+
     }
 
     public virtual void LateRefresh(float deltaTime)
@@ -46,8 +49,10 @@ public class Npc : Entity, IPossessable
     public override void MoveWhenPossessed(Vector2 input)
     {
         base.MoveWhenPossessed(input);
-        if (PossessionManager.instance.GetCurrentPossessable() == possessedByPlayer)
-            transform.Translate(moveDirection * entitySO.speed * currentFixedDeltaTime);
+
+        actualSpeed = (moveDirection * entitySO.speed * currentFixedDeltaTime).magnitude;
+
+        transform.Translate(moveDirection * entitySO.speed * currentFixedDeltaTime);
     }
 
     public override void ProcessJump()
@@ -82,4 +87,6 @@ public class Npc : Entity, IPossessable
     public override float GetEntityPossessionTimerMax() => entitySO.entityPossessionTimerMax;
 
     public override float GetPossessionCooldownTimerMax() => entitySO.possessionCooldownTimerMax;
+
+    public float GetActualSpeed() => actualSpeed;
 }

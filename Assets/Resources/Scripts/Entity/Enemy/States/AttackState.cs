@@ -12,7 +12,7 @@ public class AttackState : BaseState
     public AttackState(IStateContext _stateContext) : base(_stateContext)
     {
         stateContext = _stateContext;
-        settings = new StateSettings(stateContext, this, true, false, false, Vector3.zero, 150f);
+        settings = new StateSettings(stateContext, this, StateSettings.animationStates.isAttacking, Vector3.zero, 150f);
     }
 
     protected override void EnterState()

@@ -11,14 +11,12 @@ public class Deer : AnimalNpc
 
     public override Animator GetAnimalAnimator()
     {
-        return animalAnimator;
+        return animalAnimation.GetAnimator();
     }
 
     public override void Initialize()
     {
         base.Initialize();
-
-        animal = animalType.Deer;
     }
 
     public override void PostInitialize()

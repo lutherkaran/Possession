@@ -30,6 +30,7 @@ public abstract class Entity : MonoBehaviour
     public virtual void Sprint()
     {
         sprinting = !sprinting;
+
         entitySO.speed = sprinting ? entitySO.maxSpeed : entitySO.speed;
     }
 
