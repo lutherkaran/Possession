@@ -25,10 +25,7 @@ public class PlayerManager : IManagable
 
     public void LateRefresh(float deltaTime)
     {
-        if (player.isAlive)
-        {
-            player.LateRefresh(deltaTime);
-        }
+        player.LateRefresh(deltaTime);
     }
 
     public void OnDemolish()
@@ -39,10 +36,7 @@ public class PlayerManager : IManagable
 
     public void PhysicsRefresh(float fixedDeltaTime)
     {
-        if (player.isAlive)
-        {
-            player.PhysicsRefresh(fixedDeltaTime);
-        }
+        player.PhysicsRefresh(fixedDeltaTime);
     }
 
     public void PostInitialize()

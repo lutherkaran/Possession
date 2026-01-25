@@ -24,23 +24,18 @@ public class InputManager : IManagable
     public void PostInitialize()
     {
         player = PlayerManager.instance.GetPlayer();
+        HandleInput();
+    }
 
+    private void HandleInput()
+    {
         playerInput.OnFoot.Possession.performed += HandlePossessionInput;
+
         playerInput.OnFoot.MouseInteraction.performed += ctx => CameraManager.instance.GetMouseAim()?.ToggleMouseInteraction();
 
         playerInput.OnFoot.Sprint.performed += ctx => PossessionManager.instance.GetCurrentPossessable().GetPossessedEntity().Sprint();
 
-        playerInput.OnFoot.Jump.performed += ctx => PossessionManager.instance.GetCurrentPossessable().GetPossessedEntity().ProcessJump();
-
-        playerInput.OnFoot.Movement.performed += HandleMovement;
-
-        playerInput.OnFoot.Attack.performed += ctx => player?.Attack();
         playerInput.OnFoot.Pause.performed += Pause_performed;
-    }
-
-    private void HandleMovement(UnityEngine.InputSystem.InputAction.CallbackContext context)
-    {
-
     }
 
     public void Refresh(float deltaTime)
@@ -50,7 +45,7 @@ public class InputManager : IManagable
 
     public void PhysicsRefresh(float fixedDeltaTime)
     {
-        moveDir = playerInput.OnFoot.Movement.ReadValue<Vector2>();
+        moveDir = playerInput.OnFoot.Movement.ReadValue<Vector2>().normalized;
         PossessionManager.instance.GetCurrentPossessable().GetPossessedEntity().MoveWhenPossessed(moveDir);
     }
 
@@ -82,7 +77,6 @@ public class InputManager : IManagable
     {
         playerInput.OnFoot.Possession.performed -= HandlePossessionInput;
         playerInput.OnFoot.MouseInteraction.performed -= ctx => CameraManager.instance.GetMouseAim()?.ToggleMouseInteraction();
-        playerInput.OnFoot.Attack.performed -= ctx => player?.Attack();
         playerInput.OnFoot.Pause.performed -= Pause_performed;
 
         playerInput.Dispose();

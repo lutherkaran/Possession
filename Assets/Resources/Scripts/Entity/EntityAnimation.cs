@@ -1,4 +1,3 @@
-using Codice.CM.Common;
 using UnityEngine;
 
 public class EntityAnimation : MonoBehaviour
@@ -7,13 +6,10 @@ public class EntityAnimation : MonoBehaviour
     [SerializeField] private Animator entityAnimator;
 
     private Vector2 moveDir;
-    private float speed = 2;
-
-    public Animator GetAnimator() => entityAnimator;
 
     public void SetSpeed(float speed)
     {
-        entityAnimator.SetFloat("Blend", speed, .5f, Time.deltaTime);
+        entityAnimator.SetFloat("Blend", speed, .1f, Time.deltaTime);
 
         //Debug.Log($"animalAnimation: {this}, animator: {this.GetAnimator()}, speed: {speed}");
     }
@@ -22,10 +18,7 @@ public class EntityAnimation : MonoBehaviour
     {
         moveDir = _moveDir;
         float x = Mathf.Clamp01(moveDir.magnitude);
-        entityAnimator.SetFloat("Blend", x, .5f, Time.deltaTime);
-
-        //entityAnimator.SetFloat("InputX", moveDir.x);
-        //entityAnimator.SetFloat("InputY", moveDir.y);
+        entityAnimator.SetFloat("Blend", x, .5f, Time.fixedDeltaTime);
     }
 
     public void SetBoolTransition(bool _isWalking)
@@ -33,4 +26,5 @@ public class EntityAnimation : MonoBehaviour
         entityAnimator.SetBool("Blend", _isWalking);
     }
 
+    public Animator GetAnimator() => entityAnimator;
 }

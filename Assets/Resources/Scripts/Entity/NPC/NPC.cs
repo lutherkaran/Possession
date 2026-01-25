@@ -36,35 +36,6 @@ public class Npc : Entity, IPossessable
 
     }
 
-    public override void Attack()
-    {
-
-    }
-
-    protected override bool IsAlive()
-    {
-        return false;
-    }
-
-    public override void MoveWhenPossessed(Vector2 input)
-    {
-        base.MoveWhenPossessed(input);
-
-        //actualSpeed = (moveDirection * entitySO.speed * currentFixedDeltaTime).magnitude;
-        //
-        //transform.Translate(moveDirection * entitySO.speed * currentFixedDeltaTime);
-    }
-
-    public override void ProcessJump()
-    {
-        base.ProcessJump();
-        if (PossessionManager.instance.GetCurrentPossessable() == possessedByPlayer)
-        {
-            transform.position += velocity * currentFixedDeltaTime;
-            velocity.y = gravity * currentFixedDeltaTime * 10;
-        }
-    }
-
     public override void Sprint()
     {
         base.Sprint();

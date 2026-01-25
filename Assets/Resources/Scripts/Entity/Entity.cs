@@ -2,32 +2,14 @@ using UnityEngine;
 
 public abstract class Entity : MonoBehaviour
 {
-    public IPossessable possessedByPlayer { get; set; }
-
-    protected PlayerController player;
-
-    protected Vector3 moveDirection = Vector3.zero;
-    protected Vector3 velocity = Vector3.zero;
+    protected IPossessable possessedByPlayer { get; set; }
 
     [SerializeField] protected EntitySO entitySO;
-
-    protected float jumpHeight = 1.5f;
-    protected float gravity = -9.8f;
-
-    protected bool sprinting = false;
-    protected bool isGrounded = true;
-
     [SerializeField] protected Transform cameraAttachPoint;
-
     [SerializeField] protected EntityAnimation entityAnimation;
 
-    public virtual void ProcessJump()
-    {
-        if (isGrounded)
-        {
-            velocity.y = Mathf.Sqrt(jumpHeight * -3f * gravity);
-        }
-    }
+    protected Vector3 velocity = Vector3.zero; 
+    protected bool sprinting = false;
 
     public virtual void Sprint()
     {
@@ -36,16 +18,15 @@ public abstract class Entity : MonoBehaviour
         entitySO.speed = sprinting ? entitySO.maxSpeed : entitySO.speed;
     }
 
-    public virtual void MoveWhenPossessed(Vector2 input)
+    public void MoveWhenPossessed(Vector2 input)
     {
-        moveDirection.x = input.x;
-        moveDirection.z = input.y;
-        moveDirection.y = 0;
+        Vector3 moveDir = new Vector3(input.x, 0, input.y);
+
+        transform.Translate(moveDir * entitySO.speed * Time.fixedDeltaTime);
+
+        float actualSpeed = moveDir.magnitude;
+        entityAnimation.SetSpeed(actualSpeed);
     }
-
-    public abstract void Attack();
-
-    protected abstract bool IsAlive();
 
     public abstract Transform GetCameraAttachPoint();
     public abstract EntityAnimation GetEntityAnimation();

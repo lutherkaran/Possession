@@ -15,7 +15,7 @@ public class MouseAim
         float mouseY = input.y;
 
         xRotation -= (mouseY * lateDeltaTime) * ySensitivity;
-        xRotation = Mathf.Clamp(xRotation, -80f, 10f);
+        xRotation = Mathf.Clamp(xRotation, -80f, 13.5f);
 
         if (!mouseVisible)
         {

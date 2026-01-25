@@ -60,8 +60,7 @@ public class CameraManager : IManagable
 
         if (Vector3.Distance(myCamera.transform.position, targetPosition) <= 0.1f)
         {
-            myCamera.transform.position = targetPosition;
-            myCamera.transform.SetParent(cameraAttachPoint);
+            myCamera.transform.localPosition = Vector3.zero;
             isTransitioning = false;
             InputManager.instance.GetOnFootActions().Enable();
         }
@@ -81,26 +80,19 @@ public class CameraManager : IManagable
     private void AttachCameraToPossessedObject(object sender, IPossessable possessedObject)
     {
         cameraAttachPoint = possessedObject.GetPossessedEntity().GetCameraAttachPoint();
-        AttachCamera(cameraAttachPoint);
-    }
 
-    public void AttachCamera(Transform _cameraAttachPoint)
-    {
-        cameraAttachPoint = _cameraAttachPoint;
-        targetPosition = _cameraAttachPoint.position;
+        myCamera.transform.SetParent(cameraAttachPoint);
+        targetPosition = cameraAttachPoint.position;
 
         isTransitioning = true;
     }
-
-    public MouseAim GetMouseAim() => mouseAim;
 
     public void OnDisable()
     {
         PossessionManager.instance.OnPossessed -= AttachCameraToPossessedObject;
     }
 
-    public void ApplyCameraSettings(float fieldOfView)
-    {
-        myCamera.fieldOfView = fieldOfView;
-    }
+    public void ApplyCameraSettings(float fieldOfView) => myCamera.fieldOfView = fieldOfView;
+
+    public MouseAim GetMouseAim() => mouseAim;
 }

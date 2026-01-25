@@ -35,7 +35,6 @@ public class Enemy : Entity, IPossessable, IDamageable, IStateContext
     private Transform targetTransform;
     private Transform player;
 
-    private float currentFixedDeltaTime = 0f;
     public void Initialize()
     {
         enemySO.currentHealth = enemySO.maxHealth;
@@ -85,27 +84,10 @@ public class Enemy : Entity, IPossessable, IDamageable, IStateContext
         stateMachine.Refresh(deltaTime);
     }
 
-    public override void Attack()
-    {
-        Shoot();
-    }
-
     public void Shoot()
     {
         shootDirection = (GetTargetPlayerTransform().position + Vector3.up * (UnityEngine.Random.Range(1f, 1.5f)) - GetGunBarrelTransform().position).normalized;
         onShoot?.Invoke(this, new OnShootEventArgs { _entity = this, _direction = shootDirection, _gunBarrel = gunBarrel });
-    }
-
-    public override void ProcessJump()
-    {
-        base.ProcessJump();
-    }
-
-    public override void MoveWhenPossessed(Vector2 input)
-    {
-        base.MoveWhenPossessed(input);
-
-        transform.Translate(moveDirection * entitySO.speed * currentFixedDeltaTime);
     }
 
     public override void Sprint() { base.Sprint(); }
@@ -126,8 +108,6 @@ public class Enemy : Entity, IPossessable, IDamageable, IStateContext
         OnDamaged?.Invoke(this, new IDamageable.OnDamagedEventArgs { health = healthChangedValue });
         enemySO.currentHealth = healthUI.GetHealth();
     }
-
-    protected override bool IsAlive() => healthUI.GetHealth() > 0;
 
     public float GetHealth() => healthUI.GetHealth();
 
@@ -157,7 +137,7 @@ public class Enemy : Entity, IPossessable, IDamageable, IStateContext
 
     public void PhysicsRefresh(float fixedDeltaTime)
     {
-        currentFixedDeltaTime = fixedDeltaTime;
+
     }
 
     public void LateRefresh(float deltaTime)

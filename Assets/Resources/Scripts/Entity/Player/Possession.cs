@@ -3,14 +3,14 @@ using UnityEngine;
 public class Possession
 {
     private GameObject targetEntity;
-    private IPossessable currentPossession;
+    private IPossessable currentlyPossessed;
     private bool canPossess = true;
 
     private float RaycastHitDistance = 40.0f;
 
     public Possession(IPossessable possessed)
     {
-        currentPossession = possessed;
+        currentlyPossessed = possessed;
     }
 
     public void PossessEntities()
@@ -32,11 +32,16 @@ public class Possession
     private void HandlePossession(RaycastHit hit)
     {
         IPossessable possessableEntity = hit.transform.GetComponent<IPossessable>();
-        if (possessableEntity == null) return;
+        if (possessableEntity == null || possessableEntity == currentlyPossessed)
+        {
+            Debug.LogWarning($"Cannot Possess {currentlyPossessed}");
+            return;
+        }
+
 
         targetEntity = possessableEntity.GetPossessedEntity().gameObject;
 
-        if (currentPossession.GetPossessedEntity() is PlayerController)
+        if (currentlyPossessed.GetPossessedEntity() is PlayerController)
         {
             if (possessableEntity is Enemy && !IsBehindEnemy(targetEntity)) return;
         }
@@ -48,7 +53,7 @@ public class Possession
 
     private bool IsBehindEnemy(GameObject enemy)
     {
-        float dotProduct = Vector3.Dot(enemy.transform.forward.normalized, (currentPossession.GetPossessedEntity().transform.position - enemy.transform.position).normalized);
+        float dotProduct = Vector3.Dot(enemy.transform.forward.normalized, (currentlyPossessed.GetPossessedEntity().transform.position - enemy.transform.position).normalized);
 
         return dotProduct < 0;
     }

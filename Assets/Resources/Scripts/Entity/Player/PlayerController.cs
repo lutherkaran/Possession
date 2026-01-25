@@ -12,16 +12,11 @@ public class PlayerController : Entity, IPossessable, IDamageable
     [SerializeField] private CameraSceneVolumeProfileSO playerVolumeProfileSO; // using the default for now
     [SerializeField] private Transform gunBarrel;
 
-    public bool isAlive { get; private set; }
     public bool isPossessed { get; private set; }
-
-    private float currentFixedDeltaTime;
 
     public void Initialize()
     {
         playerSO.health = playerSO.maxHealth;
-        player = this;
-        isAlive = true;
 
         characterController = GetComponent<CharacterController>();
         healthUI = GetComponent<HealthUI>();
@@ -39,31 +34,6 @@ public class PlayerController : Entity, IPossessable, IDamageable
             CameraManager.instance.ApplyCameraSettings(playerVolumeProfileSO.fieldOfView);
             GameManager.instance.ApplyVolumeProfile(playerVolumeProfileSO.volumeProfile);
         }
-    }
-
-    public override void ProcessJump()
-    {
-        base.ProcessJump();
-    }
-
-    public override void Sprint()
-    {
-        base.Sprint();
-    }
-
-    public override void MoveWhenPossessed(Vector2 input)
-    {
-        base.MoveWhenPossessed(input);
-
-        moveDirection = new Vector3(input.x, 0, input.y);
-        transform.Translate(moveDirection * entitySO.speed * currentFixedDeltaTime);
-    }
-
-    public override void Attack()
-    {
-        if (possessedByPlayer != this) return;
-
-        Shoot();
     }
 
     private void Shoot()
@@ -102,6 +72,11 @@ public class PlayerController : Entity, IPossessable, IDamageable
         //health = healthUI.GetHealth();
     }
 
+    public override void Sprint()
+    {
+        base.Sprint();
+    }
+
     public void Refresh(float deltaTime)
     {
 
@@ -109,7 +84,7 @@ public class PlayerController : Entity, IPossessable, IDamageable
 
     public void PhysicsRefresh(float fixedDeltaTime)
     {
-        currentFixedDeltaTime = fixedDeltaTime;
+    
     }
 
     public void LateRefresh(float deltaTime)
@@ -121,8 +96,6 @@ public class PlayerController : Entity, IPossessable, IDamageable
     {
 
     }
-
-    protected override bool IsAlive() => healthUI.GetHealth() > 0;
 
     public float GetMaxHealth() => playerSO.maxHealth;
 

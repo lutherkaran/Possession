@@ -1039,7 +1039,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entitySO: {fileID: 11400000, guid: 5eebae3dea8447647aaafbeda5a32c41, type: 2}
   cameraAttachPoint: {fileID: 5011228572377031243}
-  playerAnimation: {fileID: 5890675016086935830}
+  entityAnimation: {fileID: 5890675016086935830}
   healthUI: {fileID: 1915882398233693777}
   playerSO: {fileID: 11400000, guid: 018ab39cc24273346b270c33e4f3b71a, type: 2}
   playerVolumeProfileSO: {fileID: 11400000, guid: ddd33e8a5688afc49ba352ac8c209488,
@@ -2128,7 +2128,7 @@ Transform:
   m_GameObject: {fileID: 4144311454921686939}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 4, z: -7.5}
+  m_LocalPosition: {x: 0, y: 5, z: -5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2547,8 +2547,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
