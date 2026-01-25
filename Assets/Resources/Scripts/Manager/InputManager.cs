@@ -32,8 +32,15 @@ public class InputManager : IManagable
 
         playerInput.OnFoot.Jump.performed += ctx => PossessionManager.instance.GetCurrentPossessable().GetPossessedEntity().ProcessJump();
 
+        playerInput.OnFoot.Movement.performed += HandleMovement;
+
         playerInput.OnFoot.Attack.performed += ctx => player?.Attack();
         playerInput.OnFoot.Pause.performed += Pause_performed;
+    }
+
+    private void HandleMovement(UnityEngine.InputSystem.InputAction.CallbackContext context)
+    {
+
     }
 
     public void Refresh(float deltaTime)

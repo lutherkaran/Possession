@@ -17,5 +17,5 @@ MonoBehaviour:
   PossessableLayerMask:
     serializedVersion: 2
     m_Bits: 256
-  speed: 3
-  maxSpeed: 5
+  speed: 2
+  maxSpeed: 2

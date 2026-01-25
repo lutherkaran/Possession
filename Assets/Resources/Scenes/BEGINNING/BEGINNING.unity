@@ -3595,11 +3595,6 @@ PrefabInstance:
       objectReference: {fileID: 2067636812}
     - target: {fileID: 5674101592453080159, guid: 949cd505c4f27244fa49547f7ce3fc6c,
         type: 3}
-      propertyPath: pathPoints.Array.size
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 5674101592453080159, guid: 949cd505c4f27244fa49547f7ce3fc6c,
-        type: 3}
       propertyPath: 'pathPoints.Array.data[0]'
       value: 
       objectReference: {fileID: 1376214191}

@@ -50,9 +50,9 @@ public class Npc : Entity, IPossessable
     {
         base.MoveWhenPossessed(input);
 
-        actualSpeed = (moveDirection * entitySO.speed * currentFixedDeltaTime).magnitude;
-
-        transform.Translate(moveDirection * entitySO.speed * currentFixedDeltaTime);
+        //actualSpeed = (moveDirection * entitySO.speed * currentFixedDeltaTime).magnitude;
+        //
+        //transform.Translate(moveDirection * entitySO.speed * currentFixedDeltaTime);
     }
 
     public override void ProcessJump()
@@ -83,6 +83,8 @@ public class Npc : Entity, IPossessable
     public Entity GetPossessedEntity() => this;
 
     public override Transform GetCameraAttachPoint() => cameraAttachPoint;
+
+    public override EntityAnimation GetEntityAnimation() => entityAnimation;
 
     public override float GetEntityPossessionTimerMax() => entitySO.entityPossessionTimerMax;
 

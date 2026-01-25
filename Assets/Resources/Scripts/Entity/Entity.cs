@@ -16,8 +16,10 @@ public abstract class Entity : MonoBehaviour
 
     protected bool sprinting = false;
     protected bool isGrounded = true;
-    
+
     [SerializeField] protected Transform cameraAttachPoint;
+
+    [SerializeField] protected EntityAnimation entityAnimation;
 
     public virtual void ProcessJump()
     {
@@ -46,6 +48,8 @@ public abstract class Entity : MonoBehaviour
     protected abstract bool IsAlive();
 
     public abstract Transform GetCameraAttachPoint();
+    public abstract EntityAnimation GetEntityAnimation();
+
     public abstract float GetEntityPossessionTimerMax();
     public abstract float GetPossessionCooldownTimerMax();
 }

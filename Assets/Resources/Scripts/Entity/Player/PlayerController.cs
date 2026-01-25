@@ -7,8 +7,6 @@ public class PlayerController : Entity, IPossessable, IDamageable
 
     private CharacterController characterController;
 
-    [SerializeField] private EntityAnimation playerAnimation;
-
     [SerializeField] private HealthUI healthUI;
     [SerializeField] private PlayerSO playerSO;
     [SerializeField] private CameraSceneVolumeProfileSO playerVolumeProfileSO; // using the default for now
@@ -23,13 +21,10 @@ public class PlayerController : Entity, IPossessable, IDamageable
     {
         playerSO.health = playerSO.maxHealth;
         player = this;
-
         isAlive = true;
 
-        playerAnimation = GetComponent<EntityAnimation>();
         characterController = GetComponent<CharacterController>();
         healthUI = GetComponent<HealthUI>();
-        playerAnimation = GetComponent<EntityAnimation>();
     }
 
     public void PostInitialize()
@@ -61,13 +56,7 @@ public class PlayerController : Entity, IPossessable, IDamageable
         base.MoveWhenPossessed(input);
 
         moveDirection = new Vector3(input.x, 0, input.y);
-        float actualSpeed = (moveDirection.sqrMagnitude) * entitySO.speed * currentFixedDeltaTime / entitySO.speed;
-        if (playerAnimation)
-        {
-            playerAnimation.SetSpeed(actualSpeed);
-            Debug.Log($"PlayerSpeed: { actualSpeed}");
-            //transform.Translate(moveDirection * entitySO.speed * currentFixedDeltaTime);
-        }
+        transform.Translate(moveDirection * entitySO.speed * currentFixedDeltaTime);
     }
 
     public override void Attack()
@@ -144,6 +133,8 @@ public class PlayerController : Entity, IPossessable, IDamageable
     public CharacterController GetCharacterControllerReference() => characterController;
 
     public override Transform GetCameraAttachPoint() => cameraAttachPoint;
+
+    public override EntityAnimation GetEntityAnimation() => entityAnimation;
 
     public override float GetEntityPossessionTimerMax() => entitySO.entityPossessionTimerMax;
 

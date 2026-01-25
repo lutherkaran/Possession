@@ -64,11 +64,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entitySO: {fileID: 11400000, guid: b2dd17416d621c0499f92fd0aec1580e, type: 2}
   cameraAttachPoint: {fileID: 8116725942682369048}
+  entityAnimation: {fileID: 5431936193171383962}
   animal: 2
   gem: {fileID: 0}
   safeDistance: 10
   animalAnimation: {fileID: 5431936193171383962}
   pathPoints:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
@@ -142,7 +148,7 @@ Transform:
   m_GameObject: {fileID: 5266611990077489852}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -0.25}
+  m_LocalPosition: {x: 0, y: 1, z: -1.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

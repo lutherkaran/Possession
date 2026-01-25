@@ -55,7 +55,8 @@ public abstract class AnimalNpc : Npc, IStateContext
         animalStateMachine.Refresh(deltaTime);
 
         float actualSpeed = GetNavMeshAgent().velocity.magnitude / GetNavMeshAgent().speed;
-        if (animalAnimation)
+
+        if (PossessionManager.instance.GetCurrentPossessable() != possessedByPlayer)
             animalAnimation.SetSpeed(actualSpeed);
 
     }
@@ -128,4 +129,6 @@ public abstract class AnimalNpc : Npc, IStateContext
 
     public abstract Animator GetAnimalAnimator();
     public abstract AnimalNpc GetAnimal();
+
+    public override EntityAnimation GetEntityAnimation() => entityAnimation;
 }

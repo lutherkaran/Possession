@@ -34,7 +34,6 @@ public class AnimalNpcController
 
         else if (stateSettings.currentActiveState is PossessedState)
         {
-            animal.GetAnimalAnimator().SetFloat("Blending", animal.GetActualSpeed());
             animal.GetNavMeshAgent().isStopped = true;
         }
     }

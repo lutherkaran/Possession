@@ -57,5 +57,15 @@ public class Chicken : AnimalNpc
             return false;
     }
 
+    public override void MoveWhenPossessed(Vector2 input)
+    {
+        base.MoveWhenPossessed(input);
+
+        entityAnimation.SetBlendDirection(input);
+        transform.Translate(moveDirection * entitySO.speed * currentFixedDeltaTime);
+    }
+
+    public override EntityAnimation GetEntityAnimation() => entityAnimation;
+
     public new Transform GetTransform() => transform;
 }
