@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class StateMachine : MonoBehaviour
 {
-    public BaseState activeState;
+    public BaseState currentActiveState;
     public BaseState lastActiveState;
 
     private IStateContext stateContext;
@@ -45,40 +45,40 @@ public class StateMachine : MonoBehaviour
 
     public void Refresh(float deltaTime)
     {
-        if (activeState != null)
+        if (currentActiveState != null)
         {
-            activeState.Perform();
+            currentActiveState.Perform();
         }
     }
 
     public void ChangeState(BaseState newState)
     {
-        if (activeState != null && activeState.GetType() == newState.GetType())
+        if (currentActiveState != null && currentActiveState.GetType() == newState.GetType())
         {
             return;
         }
 
-        if (activeState != null)
+        if (currentActiveState != null)
         {
-            if (activeState != new PossessedState(stateContext))
+            if (currentActiveState != new PossessedState(stateContext))
             {
-                lastActiveState = activeState;
+                lastActiveState = currentActiveState;
             }
             else
             {
                 lastActiveState = null;
             }
 
-            activeState.Exit();
+            currentActiveState.Exit();
         }
 
-        activeState = newState;
+        currentActiveState = newState;
 
-        if (activeState != null)
+        if (currentActiveState != null)
         {
-            activeState.stateMachine = this;
-            activeState.Enter();
-            currentState = activeState?.ToString() ?? "None";
+            currentActiveState.stateMachine = this;
+            currentActiveState.Enter();
+            currentState = currentActiveState?.ToString() ?? "None";
         }
     }
 

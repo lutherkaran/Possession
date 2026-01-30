@@ -23,6 +23,7 @@ public class AnimalNpcController
         else if (stateSettings.currentActiveState is PatrolState)
         {
             animal.GetNavMeshAgent().SetDestination(animal.FindTargetLocation());
+            animal.GetNavMeshAgent().velocity = default;
             animal.GetNavMeshAgent().isStopped = false;
         }
 
@@ -34,7 +35,9 @@ public class AnimalNpcController
 
         else if (stateSettings.currentActiveState is PossessedState)
         {
+            animal.GetNavMeshAgent().enabled = false;
             animal.GetNavMeshAgent().isStopped = true;
+            animal.GetNavMeshAgent().velocity = Vector3.zero;
         }
     }
 
@@ -42,26 +45,22 @@ public class AnimalNpcController
     {
         if (stateSettings.currentActiveState is IdleState)
         {
-            //animal.GetAnimalAnimator().SetFloat("IsWalking", animal.GetNavMeshAgent().velocity.magnitude); // idle true
             animal.GetNavMeshAgent().isStopped = false;
         }
         else if (stateSettings.currentActiveState is PatrolState)
         {
-            //animal.GetAnimalAnimator().SetFloat("IsWalking", animal.GetNavMeshAgent().velocity.magnitude);
             animal.GetNavMeshAgent().isStopped = false;
         }
         else if (stateSettings.currentActiveState is FleeState)
         {
-            //animal.GetAnimalAnimator().SetFloat("IsWalking", animal.GetNavMeshAgent().velocity.magnitude);
-            //animal.GetNavMeshAgent().velocity = Vector3.zero;
             animal.GetNavMeshAgent().isStopped = false;
         }
 
         else if (stateSettings.currentActiveState is PossessedState)
         {
-            //animal.GetAnimalAnimator().SetFloat("IsWalking", animal.GetNavMeshAgent().velocity.magnitude);
-            //animal.GetNavMeshAgent().velocity = UnityEngine.Vector3.zero;
             animal.GetNavMeshAgent().isStopped = false;
+            animal.GetNavMeshAgent().enabled = true;
+            animal.GetStateMachine().ChangeState(animal.GetStateMachine().lastActiveState);
         }
     }
 }

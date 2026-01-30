@@ -8,7 +8,9 @@ public abstract class Entity : MonoBehaviour
     [SerializeField] protected Transform cameraAttachPoint;
     [SerializeField] protected EntityAnimation entityAnimation;
 
-    protected Vector3 velocity = Vector3.zero; 
+    protected Vector3 velocity = Vector3.zero;
+    protected Vector3 moveDir = Vector3.zero;
+
     protected bool sprinting = false;
 
     public virtual void Sprint()
@@ -18,14 +20,10 @@ public abstract class Entity : MonoBehaviour
         entitySO.speed = sprinting ? entitySO.maxSpeed : entitySO.speed;
     }
 
-    public void MoveWhenPossessed(Vector2 input)
+    public virtual void MoveWhenPossessed(Vector2 input)
     {
-        Vector3 moveDir = new Vector3(input.x, 0, input.y);
-
+        moveDir = new Vector3(input.x, 0, input.y).normalized;
         transform.Translate(moveDir * entitySO.speed * Time.fixedDeltaTime);
-
-        float actualSpeed = moveDir.magnitude;
-        entityAnimation.SetSpeed(actualSpeed);
     }
 
     public abstract Transform GetCameraAttachPoint();

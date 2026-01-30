@@ -9,7 +9,8 @@ public class EntityAnimation : MonoBehaviour
 
     public void SetSpeed(float speed)
     {
-        entityAnimator.SetFloat("Blend", speed, .1f, Time.deltaTime);
+        float x = Mathf.Clamp01(speed);
+        entityAnimator.SetFloat("Blend", x, .3f, Time.deltaTime);
 
         //Debug.Log($"animalAnimation: {this}, animator: {this.GetAnimator()}, speed: {speed}");
     }
@@ -18,7 +19,7 @@ public class EntityAnimation : MonoBehaviour
     {
         moveDir = _moveDir;
         float x = Mathf.Clamp01(moveDir.magnitude);
-        entityAnimator.SetFloat("Blend", x, .5f, Time.fixedDeltaTime);
+        entityAnimator.SetFloat("Blend", x, .3f, Time.fixedDeltaTime);
     }
 
     public void SetBoolTransition(bool _isWalking)

@@ -15,16 +15,20 @@ public class PossessedState : BaseState
     {
         base.EnterState();
         stateContext.ApplySettings(stateSettings);
+        //Debug.Log($"last active state was {stateMachine.lastActiveState}");
     }
 
-    protected override void PerformState()
+    protected override void PerformState() 
     {
-        PossessionManager.instance.GetCurrentPossessable().GetPossessedEntity().MoveWhenPossessed(InputManager.instance.GetMoveDirection());
+        Vector2 moveDir = InputManager.instance.GetMoveDirection();
+        PossessionManager.instance.GetCurrentPossessable().GetPossessedEntity().MoveWhenPossessed(moveDir);
+        float actualSpeed = moveDir.magnitude;
+        stateContext.GetAnimationEntity().SetSpeed(actualSpeed);
     }
 
     protected override void ExitState()
     {
-        stateMachine.ChangeState(stateMachine.lastActiveState);
+        stateContext.ResetChanges();
     }
 
 }

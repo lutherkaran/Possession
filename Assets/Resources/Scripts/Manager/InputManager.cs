@@ -46,7 +46,12 @@ public class InputManager : IManagable
     public void PhysicsRefresh(float fixedDeltaTime)
     {
         moveDir = playerInput.OnFoot.Movement.ReadValue<Vector2>().normalized;
-        PossessionManager.instance.GetCurrentPossessable().GetPossessedEntity().MoveWhenPossessed(moveDir);
+        var entity = PossessionManager.instance.GetCurrentPossessable().GetPossessedEntity();
+
+        if (entity is PlayerController)
+        {
+            entity.MoveWhenPossessed(moveDir);
+        }
     }
 
     public void LateRefresh(float deltaTime)

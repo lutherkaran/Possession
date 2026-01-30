@@ -3,6 +3,8 @@ public interface IStateContext
     public UnityEngine.AI.NavMeshAgent GetNavMeshAgent();
     public UnityEngine.Transform GetTransform();
 
+    public EntityAnimation GetAnimationEntity();
+
     public abstract bool IsSafe();
     public abstract bool CanSeePlayer();
 

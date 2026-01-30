@@ -191,4 +191,8 @@ public class Enemy : Entity, IPossessable, IDamageable, IStateContext
         enemyAI.Reset();
     }
 
+    public EntityAnimation GetAnimationEntity()
+    {
+        return entityAnimation;
+    }
 }

@@ -17,5 +17,8 @@ MonoBehaviour:
   PossessableLayerMask:
     serializedVersion: 2
     m_Bits: 256
-  speed: 1
+  speed: 5
   maxSpeed: 5
+  cameraHeightAndDistance: {x: 5, y: -5}
+  cameraAngle: 0
+  cameraFOV: 60

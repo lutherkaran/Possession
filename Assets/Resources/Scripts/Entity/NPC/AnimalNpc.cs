@@ -71,6 +71,8 @@ public abstract class AnimalNpc : Npc, IStateContext
         return animalAgent;
     }
 
+    public StateMachine GetStateMachine() => animalStateMachine;
+
     public override void Possessing(GameObject go)
     {
         base.Possessing(go);
@@ -82,9 +84,8 @@ public abstract class AnimalNpc : Npc, IStateContext
     public override void Depossessing(GameObject go)
     {
         base.Depossessing(go);
-
+        animalStateMachine.ChangeState(animalStateMachine.lastActiveState);
         possessedByPlayer = null;
-        animalStateMachine.ChangeState(new IdleState(this));
     }
 
     private void OnTriggerEnter(Collider other)
@@ -130,5 +131,8 @@ public abstract class AnimalNpc : Npc, IStateContext
     public abstract Animator GetAnimalAnimator();
     public abstract AnimalNpc GetAnimal();
 
-    public override EntityAnimation GetEntityAnimation() => entityAnimation;
+    public EntityAnimation GetAnimationEntity()
+    {
+        return entityAnimation;
+    }
 }

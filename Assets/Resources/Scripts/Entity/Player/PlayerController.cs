@@ -25,6 +25,9 @@ public class PlayerController : Entity, IPossessable, IDamageable
     public void PostInitialize()
     {
         PossessionManager.instance.OnPossessed += OnPlayerPossessed;
+
+        cameraAttachPoint.localPosition = new Vector3(0, entitySO.cameraHeightAndDistance.x, entitySO.cameraHeightAndDistance.y);
+        cameraAttachPoint.transform.eulerAngles = new Vector3(entitySO.cameraAngle, 0, 0);
     }
 
     private void OnPlayerPossessed(object sender, IPossessable e)
@@ -34,6 +37,14 @@ public class PlayerController : Entity, IPossessable, IDamageable
             CameraManager.instance.ApplyCameraSettings(playerVolumeProfileSO.fieldOfView);
             GameManager.instance.ApplyVolumeProfile(playerVolumeProfileSO.volumeProfile);
         }
+    }
+
+    public override void MoveWhenPossessed(Vector2 input)
+    {
+        base.MoveWhenPossessed(input);
+
+        float actualSpeed = moveDir.magnitude;
+        entityAnimation.SetSpeed(actualSpeed);
     }
 
     private void Shoot()
@@ -84,7 +95,7 @@ public class PlayerController : Entity, IPossessable, IDamageable
 
     public void PhysicsRefresh(float fixedDeltaTime)
     {
-    
+
     }
 
     public void LateRefresh(float deltaTime)
