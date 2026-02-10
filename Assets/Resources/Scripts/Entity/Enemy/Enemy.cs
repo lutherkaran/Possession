@@ -157,9 +157,10 @@ public class Enemy : Entity, IPossessable, IDamageable, IStateContext
 
     public Transform GetTransform() => transform;
 
-    bool IStateContext.CanSeePlayer()
+    public virtual bool CanSeePlayer()
     {
         player = PlayerManager.instance.GetPlayer().transform;
+
         if (Vector3.Distance(transform.position, player.position) < enemySO.sightDistance)
         {
             Vector3 targetDirection = player.position - transform.position;
@@ -177,16 +178,16 @@ public class Enemy : Entity, IPossessable, IDamageable, IStateContext
                 }
             }
         }
-        return false;
 
+        return false;
     }
 
-    void IStateContext.ApplySettings(StateSettings _settings)
+    public virtual void ApplySettings(StateSettings _settings)
     {
         enemyAI.RunAI(_settings);
     }
 
-    void IStateContext.ResetChanges()
+    public virtual void ResetChanges()
     {
         enemyAI.Reset();
     }

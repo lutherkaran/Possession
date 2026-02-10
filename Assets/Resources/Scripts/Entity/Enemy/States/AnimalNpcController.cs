@@ -35,8 +35,8 @@ public class AnimalNpcController
 
         else if (stateSettings.currentActiveState is PossessedState)
         {
-            animal.GetNavMeshAgent().enabled = false;
             animal.GetNavMeshAgent().isStopped = true;
+            animal.GetNavMeshAgent().enabled = false;
             animal.GetNavMeshAgent().velocity = Vector3.zero;
         }
     }
@@ -58,8 +58,8 @@ public class AnimalNpcController
 
         else if (stateSettings.currentActiveState is PossessedState)
         {
-            animal.GetNavMeshAgent().isStopped = false;
             animal.GetNavMeshAgent().enabled = true;
+            animal.GetNavMeshAgent().isStopped = false;
             animal.GetStateMachine().ChangeState(animal.GetStateMachine().lastActiveState);
         }
     }
