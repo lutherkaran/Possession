@@ -30540,11 +30540,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1770571031010897450, guid: 4f0d49257678eb145887c2ccb7174776,
-        type: 3}
-      propertyPath: m_BaseOffset
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 2578500261979154434, guid: 4f0d49257678eb145887c2ccb7174776,
         type: 3}
       propertyPath: gem
