@@ -83,11 +83,6 @@ public class PlayerController : Entity, IPossessable, IDamageable
         //health = healthUI.GetHealth();
     }
 
-    public override void Sprint()
-    {
-        base.Sprint();
-    }
-
     public void Refresh(float deltaTime)
     {
 

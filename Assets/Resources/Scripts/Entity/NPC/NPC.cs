@@ -36,11 +36,6 @@ public class Npc : Entity, IPossessable
 
     }
 
-    public override void Sprint()
-    {
-        base.Sprint();
-    }
-
     public virtual void Possessing(GameObject go)
     {
         possessedByPlayer = PossessionManager.instance.GetCurrentPossessable();

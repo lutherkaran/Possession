@@ -33,7 +33,7 @@ public class InputManager : IManagable
 
         playerInput.OnFoot.MouseInteraction.performed += ctx => CameraManager.instance.GetMouseAim()?.ToggleMouseInteraction();
 
-        playerInput.OnFoot.Sprint.performed += ctx => PossessionManager.instance.GetCurrentPossessable().GetPossessedEntity().Sprint();
+        playerInput.OnFoot.Sprint.performed += ctx => PossessionManager.instance.GetCurrentPossessable().GetPossessedEntity().ToggleSprint();
 
         playerInput.OnFoot.Pause.performed += Pause_performed;
     }

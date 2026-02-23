@@ -90,8 +90,6 @@ public class Enemy : Entity, IPossessable, IDamageable, IStateContext
         onShoot?.Invoke(this, new OnShootEventArgs { _entity = this, _direction = shootDirection, _gunBarrel = gunBarrel });
     }
 
-    public override void Sprint() { base.Sprint(); }
-
     public void Possessing(GameObject go)
     {
         possessedByPlayer = PossessionManager.instance.GetCurrentPossessable();

@@ -13,17 +13,20 @@ public abstract class Entity : MonoBehaviour
 
     protected bool sprinting = false;
 
-    public virtual void Sprint()
+    protected float currentSpeed = 0;
+
+    public void ToggleSprint()
     {
         sprinting = !sprinting;
-
-        entitySO.speed = sprinting ? entitySO.maxSpeed : entitySO.speed;
     }
 
     public virtual void MoveWhenPossessed(Vector2 input)
     {
         moveDir = new Vector3(input.x, 0, input.y).normalized;
-        transform.Translate(moveDir * entitySO.speed * Time.fixedDeltaTime);
+
+        currentSpeed = sprinting ? entitySO.maxSpeed : entitySO.speed;
+
+        transform.Translate(moveDir * currentSpeed * Time.fixedDeltaTime);
     }
 
     public abstract Transform GetCameraAttachPoint();
