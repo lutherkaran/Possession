@@ -84,6 +84,7 @@ public class InputManager : IManagable
         playerInput.OnFoot.MouseInteraction.performed -= ctx => CameraManager.instance.GetMouseAim()?.ToggleMouseInteraction();
         playerInput.OnFoot.Pause.performed -= Pause_performed;
 
+        playerInput.OnFoot.Disable();
         playerInput.Dispose();
         Instance = null;
     }
