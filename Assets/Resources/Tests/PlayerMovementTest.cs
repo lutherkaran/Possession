@@ -1,4 +1,3 @@
-using NSubstitute;
 using NUnit.Framework;
 using System.Collections;
 using UnityEngine;
@@ -41,7 +40,7 @@ public class PlayerMovementTest
         Assert.NotNull(testPlayer, "Player is NULL");
         Assert.NotNull(testCamera, "Player is NULL");
 
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(.5f);
     }
 
     #region PlayerMovement
@@ -49,7 +48,7 @@ public class PlayerMovementTest
     public IEnumerator PlayerMovesForward()
     {
         testPlayer.GetComponent<PlayerController>().MoveWhenPossessed(new Vector2(0, 1).normalized); // Move forward
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(.5f);
 
         FloatEqualityComparer floatEqualityComparer = new FloatEqualityComparer(0.01f);
 
@@ -60,7 +59,7 @@ public class PlayerMovementTest
     public IEnumerator PlayerMovesBackward()
     {
         testPlayer.GetComponent<PlayerController>().MoveWhenPossessed(new Vector2(0, -1).normalized); // Move forward
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(.5f);
 
         FloatEqualityComparer floatEqualityComparer = new FloatEqualityComparer(0.01f);
 
@@ -71,7 +70,7 @@ public class PlayerMovementTest
     public IEnumerator PlayerMovesRight()
     {
         testPlayer.GetComponent<PlayerController>().MoveWhenPossessed(new Vector2(1, 0)); // Move right
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(.5f);
 
         Assert.That(startPos.x, Is.LessThan(testPlayer.transform.position.x), "Player should move Right.");
     }
@@ -80,7 +79,7 @@ public class PlayerMovementTest
     public IEnumerator PlayerMovesLeft()
     {
         testPlayer.GetComponent<PlayerController>().MoveWhenPossessed(new Vector2(-1, 0)); // Move left
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(.5f);
 
         Assert.That(startPos.x, Is.GreaterThan(testPlayer.transform.position.x), "Player should move Left.");
     }
@@ -88,7 +87,7 @@ public class PlayerMovementTest
     [UnityTest]
     public IEnumerator PlayerDoesNotMoveWithoutInput()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(.5f);
         Assert.AreEqual(testPlayer.transform.position, startPos, "Player should not move without input.");
     }
 
@@ -97,7 +96,7 @@ public class PlayerMovementTest
     {
         Vector3 startPos = testPlayer.transform.position;
         testPlayer.GetComponent<PlayerController>().MoveWhenPossessed(new Vector2(0, 1)); // Move forward
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(.5f);
 
         float distanceMoved = Vector3.Distance(startPos, testPlayer.transform.position) * Time.fixedDeltaTime;
         float expectedDistance = speed * 1f * Time.fixedDeltaTime;
@@ -105,4 +104,11 @@ public class PlayerMovementTest
         Assert.AreEqual(expectedDistance, distanceMoved, 0.5f, "Player should move at the correct speed.");
     }
     #endregion
+
+    [OneTimeTearDown]
+    public void Cleanup()
+    {
+        Object.Destroy(testPlayer);
+        Object.Destroy(testCamera);
+    }
 }
