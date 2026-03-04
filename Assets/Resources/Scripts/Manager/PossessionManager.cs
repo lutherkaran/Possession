@@ -25,20 +25,29 @@ public class PossessionManager : IManagable
 
     public Possession ToPossess(GameObject possessable)
     {
-        if (possessable)
-        {
-            if (currentPossessable != null)
-                ToDepossess(currentPossessable.GetPossessedEntity().gameObject);
+        if (!possessable) return null;
 
-            currentPossessable = possessable.GetComponent<IPossessable>();
-            currentPossessable.Possessing(possessable);
+        var component = possessable.GetComponent<IPossessable>();
+        return ToPossess(component);
+    }
 
-            currentPossession = new Possession(currentPossessable);
-            OnPossessed?.Invoke(this, currentPossessable);
-            return currentPossession;
-        }
+    public Possession ToPossess(IPossessable possessable)
+    {
+        if (possessable == null)
+            return null;
 
-        return null;
+        if (currentPossessable != null)
+            ToDepossess(currentPossessable.GetPossessedEntity().gameObject);
+
+        currentPossessable = possessable;
+        currentPossessable.Possessing(
+            currentPossessable.GetPossessedEntity().gameObject
+        );
+
+        currentPossession = new Possession(currentPossessable);
+        OnPossessed?.Invoke(this, currentPossessable);
+
+        return currentPossession;
     }
 
     public void ToDepossess(GameObject possessable)

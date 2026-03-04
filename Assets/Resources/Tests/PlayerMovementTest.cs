@@ -7,25 +7,21 @@ using UnityEngine.TestTools.Utils;
 public class PlayerMovementTest
 {
     GameObject testPlayer;
-    GameObject testCamera;
+
     Vector3 startPos = Vector3.zero;
 
     float speed = 5f;
 
     [OneTimeSetUp]
-    public void OneTimeSetup()
+    public void OneTimeSetup_ShouldCreateRequiredSceneObjects()
     {
-
         GameObject plane = GameObject.CreatePrimitive(PrimitiveType.Plane);
-        plane.gameObject.transform.position = new Vector3(0, 0, 0);
-        plane.gameObject.transform.localScale = (new Vector3(10, 1, 10));
+        plane.gameObject.transform.position = new Vector3(0, .4f, 0);
+        plane.gameObject.transform.localScale = (new Vector3(10f, 1, 10f));
         plane.AddComponent<BoxCollider>();
 
         testPlayer = MonoBehaviour.Instantiate(Resources.Load<GameObject>("Prefabs/Entity/Player"));
-        testPlayer.transform.localPosition = new Vector3(0, 0f, 0);
-
-        testCamera = MonoBehaviour.Instantiate(Resources.Load<GameObject>("Prefabs/Others/MainCamera"));
-        testCamera.transform.SetParent(testPlayer.transform, false);
+        testPlayer.transform.position = new Vector3(0, 0f, 0);
     }
 
     [SetUp]
@@ -35,20 +31,28 @@ public class PlayerMovementTest
     }
 
     [UnityTest]
-    public IEnumerator Check_If_Its_Null()
+    public IEnumerator Setup_ShouldInstantiatePlayerCameraAndNpc()
     {
         Assert.NotNull(testPlayer, "Player is NULL");
-        Assert.NotNull(testCamera, "Player is NULL");
 
-        yield return new WaitForSeconds(.5f);
+        yield return new WaitForSeconds(.1f);
     }
 
     #region PlayerMovement
+
     [UnityTest]
-    public IEnumerator PlayerMovesForward()
+    public IEnumerator DoesNotMove_WhenNoInput()
+    {
+        testPlayer.GetComponent<PlayerController>().MoveWhenPossessed(new Vector2(0, 0).normalized);
+        yield return new WaitForSeconds(.5f);
+        Assert.AreEqual(startPos, testPlayer.transform.position, "Player should not move without input.");
+    }
+
+    [UnityTest]
+    public IEnumerator MovesForward_WhenInputIsPositiveY()
     {
         testPlayer.GetComponent<PlayerController>().MoveWhenPossessed(new Vector2(0, 1).normalized); // Move forward
-        yield return new WaitForSeconds(.5f);
+        yield return new WaitForSeconds(.1f);
 
         FloatEqualityComparer floatEqualityComparer = new FloatEqualityComparer(0.01f);
 
@@ -56,10 +60,10 @@ public class PlayerMovementTest
     }
 
     [UnityTest]
-    public IEnumerator PlayerMovesBackward()
+    public IEnumerator MovesBackward_WhenInputIsNegativeY()
     {
         testPlayer.GetComponent<PlayerController>().MoveWhenPossessed(new Vector2(0, -1).normalized); // Move forward
-        yield return new WaitForSeconds(.5f);
+        yield return new WaitForSeconds(.1f);
 
         FloatEqualityComparer floatEqualityComparer = new FloatEqualityComparer(0.01f);
 
@@ -67,36 +71,29 @@ public class PlayerMovementTest
     }
 
     [UnityTest]
-    public IEnumerator PlayerMovesRight()
+    public IEnumerator MovesRight_WhenInputIsPositiveX()
     {
         testPlayer.GetComponent<PlayerController>().MoveWhenPossessed(new Vector2(1, 0)); // Move right
-        yield return new WaitForSeconds(.5f);
+        yield return new WaitForSeconds(.1f);
 
         Assert.That(startPos.x, Is.LessThan(testPlayer.transform.position.x), "Player should move Right.");
     }
 
     [UnityTest]
-    public IEnumerator PlayerMovesLeft()
+    public IEnumerator MovesLeft_WhenInputIsNegativeX()
     {
         testPlayer.GetComponent<PlayerController>().MoveWhenPossessed(new Vector2(-1, 0)); // Move left
-        yield return new WaitForSeconds(.5f);
+        yield return new WaitForSeconds(.1f);
 
         Assert.That(startPos.x, Is.GreaterThan(testPlayer.transform.position.x), "Player should move Left.");
     }
 
     [UnityTest]
-    public IEnumerator PlayerDoesNotMoveWithoutInput()
-    {
-        yield return new WaitForSeconds(.5f);
-        Assert.AreEqual(testPlayer.transform.position, startPos, "Player should not move without input.");
-    }
-
-    [UnityTest]
-    public IEnumerator PlayerMovesAtCorrectSpeed()
+    public IEnumerator MovesAtCorrectSpeed_WhenInputIsGiven()
     {
         Vector3 startPos = testPlayer.transform.position;
         testPlayer.GetComponent<PlayerController>().MoveWhenPossessed(new Vector2(0, 1)); // Move forward
-        yield return new WaitForSeconds(.5f);
+        yield return new WaitForSeconds(.1f);
 
         float distanceMoved = Vector3.Distance(startPos, testPlayer.transform.position) * Time.fixedDeltaTime;
         float expectedDistance = speed * 1f * Time.fixedDeltaTime;
@@ -109,6 +106,5 @@ public class PlayerMovementTest
     public void Cleanup()
     {
         Object.Destroy(testPlayer);
-        Object.Destroy(testCamera);
     }
 }
