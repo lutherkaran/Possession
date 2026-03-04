@@ -1,14 +1,33 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class MainEntry : MonoBehaviour
 {
+    private GameFlow gameFlow;
+
     void Awake()
     {
         SettingQuality();
-        
+
         if (IsGameScene())
-            GameFlow.instance.Initialize();
+        {
+            var managers = new List<IManagable>
+            {
+                CameraManager.instance,
+                PathManager.instance,
+                EnemyManager.instance,
+                BulletManager.instance,
+                EntityManager.instance,
+                PlayerManager.instance,
+                NpcManager.instance,
+                InputManager.instance,
+                PossessionManager.instance
+            };
+
+            gameFlow = new GameFlow(managers);
+            gameFlow.Initialize();
+        }
     }
 
     private void SettingQuality()
@@ -21,31 +40,31 @@ public class MainEntry : MonoBehaviour
     void Start()
     {
         if (IsGameScene())
-            GameFlow.instance.PostInitialize();
+            gameFlow.PostInitialize();
     }
 
     void Update()
     {
         if (IsGameScene())
-            GameFlow.instance.Refresh(Time.deltaTime);
+            gameFlow.Refresh(Time.deltaTime);
     }
 
     void FixedUpdate()
     {
         if (IsGameScene())
-            GameFlow.instance.PhysicsRefresh(Time.fixedDeltaTime);
+            gameFlow.PhysicsRefresh(Time.fixedDeltaTime);
     }
 
     void LateUpdate()
     {
         if (IsGameScene())
-            GameFlow.instance.LateRefresh(Time.deltaTime);
+            gameFlow.LateRefresh(Time.deltaTime);
     }
 
     private void OnDestroy()
     {
         if (IsGameScene())
-            GameFlow.instance.OnDemolish();
+            gameFlow.OnDemolish();
     }
 
     private bool IsGameScene()
