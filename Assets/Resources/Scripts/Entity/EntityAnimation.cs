@@ -9,8 +9,8 @@ public class EntityAnimation : MonoBehaviour
 
     public void SetSpeed(float speed)
     {
-        float x = Mathf.Clamp01(speed);
-        entityAnimator.SetFloat("Blend", x, .3f, Time.deltaTime);
+        //float x = Mathf.Clamp01(speed);
+        entityAnimator.SetFloat("Blend", speed, .3f, Time.deltaTime);
 
         //Debug.Log($"animalAnimation: {this}, animator: {this.GetAnimator()}, speed: {speed}");
     }

@@ -20,6 +20,7 @@ public class PlayerController : Entity, IPossessable, IDamageable
 
         characterController = GetComponent<CharacterController>();
         healthUI = GetComponent<HealthUI>();
+        rb = GetComponent<Rigidbody>();
     }
 
     public void PostInitialize()
@@ -120,4 +121,6 @@ public class PlayerController : Entity, IPossessable, IDamageable
     public override float GetPossessionCooldownTimerMax() => entitySO.possessionCooldownTimerMax;
 
     public bool isSprinting() => sprinting;
+
+    public override Rigidbody GetRigidBody() => rb;
 }

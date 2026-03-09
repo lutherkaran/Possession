@@ -7,6 +7,8 @@ public abstract class Entity : MonoBehaviour
     [SerializeField] protected EntitySO entitySO;
     [SerializeField] protected Transform cameraAttachPoint;
     [SerializeField] protected EntityAnimation entityAnimation;
+    
+    protected Rigidbody rb;
 
     protected Vector3 velocity = Vector3.zero;
     protected Vector3 moveDir = Vector3.zero;
@@ -22,15 +24,18 @@ public abstract class Entity : MonoBehaviour
 
     public virtual void MoveWhenPossessed(Vector2 input)
     {
-        moveDir = new Vector3(input.x, 0, input.y).normalized;
+        //if (!GetRigidBody()) return; // not using RigidBody for now.
 
+        moveDir = new Vector3(input.x, 0, input.y).normalized;
         currentSpeed = sprinting ? entitySO.maxSpeed : entitySO.speed;
+        //GetRigidBody().MovePosition(moveDir * currentSpeed * Time.fixedDeltaTime);
 
         transform.Translate(moveDir * currentSpeed * Time.fixedDeltaTime);
     }
 
     public abstract Transform GetCameraAttachPoint();
     public abstract EntityAnimation GetEntityAnimation();
+    public abstract Rigidbody GetRigidBody();
 
     public abstract float GetEntityPossessionTimerMax();
     public abstract float GetPossessionCooldownTimerMax();

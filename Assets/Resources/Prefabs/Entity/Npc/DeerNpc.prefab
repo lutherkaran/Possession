@@ -562,8 +562,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: GameAssembly::Deer
   entitySO: {fileID: 11400000, guid: b2dd17416d621c0499f92fd0aec1580e, type: 2}
   cameraAttachPoint: {fileID: 7942068626607721710}
+  entityAnimation: {fileID: 0}
   animal: 0
   gem: {fileID: 0}
+  safeDistance: 10
+  animalAnimation: {fileID: 0}
+  pathPoints: []
   deerSceneVolumeProfile: {fileID: 0}
 --- !u!135 &3427426404355915389
 SphereCollider:

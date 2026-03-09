@@ -80,6 +80,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entitySO: {fileID: 11400000, guid: b2dd17416d621c0499f92fd0aec1580e, type: 2}
   cameraAttachPoint: {fileID: 4288552816613834461}
+  entityAnimation: {fileID: 0}
 --- !u!136 &2596498985181087132
 CapsuleCollider:
   m_ObjectHideFlags: 0

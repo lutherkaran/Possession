@@ -1,4 +1,3 @@
-using NUnit.Framework.Constraints;
 using UnityEngine;
 
 public class Npc : Entity, IPossessable
@@ -9,6 +8,7 @@ public class Npc : Entity, IPossessable
 
     public virtual void Initialize()
     {
+        //rb = GetComponent<Rigidbody>();
     }
 
     public virtual void PostInitialize()
@@ -57,4 +57,6 @@ public class Npc : Entity, IPossessable
     public override float GetPossessionCooldownTimerMax() => entitySO.possessionCooldownTimerMax;
 
     public float GetActualSpeed() => actualSpeed;
+
+    public override Rigidbody GetRigidBody() => rb;
 }

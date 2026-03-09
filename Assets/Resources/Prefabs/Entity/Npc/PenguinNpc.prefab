@@ -829,8 +829,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: GameAssembly::Penguin
   entitySO: {fileID: 11400000, guid: b2dd17416d621c0499f92fd0aec1580e, type: 2}
   cameraAttachPoint: {fileID: 8100008266221926739}
+  entityAnimation: {fileID: 0}
   animal: 0
   gem: {fileID: 0}
+  safeDistance: 10
+  animalAnimation: {fileID: 0}
+  pathPoints: []
   penguinSceneVolumeProfile: {fileID: 0}
 --- !u!136 &600511559797657855
 CapsuleCollider:

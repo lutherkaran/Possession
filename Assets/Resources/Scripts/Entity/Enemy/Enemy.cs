@@ -41,6 +41,7 @@ public class Enemy : Entity, IPossessable, IDamageable, IStateContext
 
         enemyAgent = GetComponent<NavMeshAgent>();
         stateMachine = GetComponent<StateMachine>();
+        //rb = GetComponent<Rigidbody>();
 
         enemyAI = new EnemyController(this);
         defaultVelocity = enemyAgent.velocity;
@@ -194,4 +195,6 @@ public class Enemy : Entity, IPossessable, IDamageable, IStateContext
     {
         return entityAnimation;
     }
+
+    public override Rigidbody GetRigidBody() => rb;
 }
