@@ -31,7 +31,7 @@ public class PlayerPossessionTests
         mockPossessable = Substitute.For<IPossessable>();
 
         mockPossessable.GetPossessedEntity().Returns(objectToPossess.GetComponent<Entity>());
-        possessionManager.ToPossess(mockPossessable);
+
     }
 
     [UnityTest]
@@ -46,6 +46,7 @@ public class PlayerPossessionTests
     [UnityTest]
     public IEnumerator ToPossess_ShouldCallPossessing_OnIPossessable()
     {
+        possessionManager.ToPossess(mockPossessable);
         mockPossessable.Received(1).Possessing(objectToPossess);
 
         yield return new WaitForSeconds(1f);

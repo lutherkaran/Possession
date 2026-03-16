@@ -12,7 +12,7 @@ public class MainEntry : MonoBehaviour
 
         if (IsGameScene())
         {
-            var managers = new List<IManagable>
+            var managers = new HashSet<IManagable>
             {
                 CameraManager.instance,
                 PathManager.instance,

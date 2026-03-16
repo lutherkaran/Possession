@@ -2,9 +2,9 @@ using System.Collections.Generic;
 
 public class GameFlow : IManagable
 {
-    private readonly List<IManagable> managers;
+    private readonly HashSet<IManagable> managers;
 
-    public GameFlow(List<IManagable> managers)
+    public GameFlow(HashSet<IManagable> managers)
     {
         this.managers = managers;
     }

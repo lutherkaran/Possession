@@ -40,9 +40,7 @@ public class PossessionManager : IManagable
             ToDepossess(currentPossessable.GetPossessedEntity().gameObject);
 
         currentPossessable = possessable;
-        currentPossessable.Possessing(
-            currentPossessable.GetPossessedEntity().gameObject
-        );
+        currentPossessable.Possessing(currentPossessable.GetPossessedEntity().gameObject);
 
         currentPossession = new Possession(currentPossessable);
         OnPossessed?.Invoke(this, currentPossessable);

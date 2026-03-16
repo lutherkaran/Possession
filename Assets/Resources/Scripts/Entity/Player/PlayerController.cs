@@ -5,8 +5,6 @@ public class PlayerController : Entity, IPossessable, IDamageable
 {
     public event EventHandler<IDamageable.OnDamagedEventArgs> OnDamaged;
 
-    private CharacterController characterController;
-
     [SerializeField] private HealthUI healthUI;
     [SerializeField] private PlayerSO playerSO;
     [SerializeField] private CameraSceneVolumeProfileSO playerVolumeProfileSO; // using the default for now
@@ -18,7 +16,6 @@ public class PlayerController : Entity, IPossessable, IDamageable
     {
         playerSO.health = playerSO.maxHealth;
 
-        characterController = GetComponent<CharacterController>();
         healthUI = GetComponent<HealthUI>();
         rb = GetComponent<Rigidbody>();
     }
@@ -109,8 +106,6 @@ public class PlayerController : Entity, IPossessable, IDamageable
     public PlayerController GetPlayer() => this;
 
     public Entity GetPossessedEntity() => this;
-
-    public CharacterController GetCharacterControllerReference() => characterController;
 
     public override Transform GetCameraAttachPoint() => cameraAttachPoint;
 

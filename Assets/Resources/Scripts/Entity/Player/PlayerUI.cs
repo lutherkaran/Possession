@@ -9,6 +9,7 @@ public class PlayerUI : MonoBehaviour
     [SerializeField] private PlayerController player;
 
     private Transform crosshairTransform;
+    private Transform targetLockTransform;
 
     private void Awake()
     {
@@ -19,6 +20,7 @@ public class PlayerUI : MonoBehaviour
         Instance = this;
 
         crosshairTransform = GetComponentInChildren<Transform>();
+        targetLockTransform = GetComponentInChildren<Transform>();
     }
 
     public void UpdateText(string promptMessage)
@@ -29,5 +31,10 @@ public class PlayerUI : MonoBehaviour
     public Transform GetCrosshairTransform()
     {
         return crosshairTransform;
+    }
+
+    public Transform GetTargetLockTransfrom()
+    {
+        return targetLockTransform;
     }
 }
