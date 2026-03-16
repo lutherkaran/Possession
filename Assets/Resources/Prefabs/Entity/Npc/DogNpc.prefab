@@ -835,9 +835,9 @@ GameObject:
   - component: {fileID: 1870273324623969495}
   - component: {fileID: 2471254393514352280}
   - component: {fileID: 3323540765310089383}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: DogNpc
-  m_TagString: Untagged
+  m_TagString: Npc
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -921,7 +921,7 @@ SphereCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Radius: 0.5
-  m_Center: {x: 0, y: 1, z: 0}
+  m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!195 &3323540765310089383
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -941,7 +941,7 @@ NavMeshAgent:
   m_AutoBraking: 1
   m_AutoRepath: 1
   m_Height: 1
-  m_BaseOffset: -0.5
+  m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 2
 --- !u!1 &7310795717324875155

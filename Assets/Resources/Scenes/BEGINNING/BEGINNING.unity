@@ -29329,11 +29329,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 35536121589722369, guid: a6c99371f3c29b049bf9e18efa763758,
-        type: 3}
-      propertyPath: m_Center.y
-      value: 0.25
-      objectReference: {fileID: 0}
     - target: {fileID: 2349114193508303044, guid: a6c99371f3c29b049bf9e18efa763758,
         type: 3}
       propertyPath: gem
@@ -29379,11 +29374,6 @@ PrefabInstance:
       propertyPath: 'pathPoints.Array.data[7]'
       value: 
       objectReference: {fileID: 600452720}
-    - target: {fileID: 2531240803985929065, guid: a6c99371f3c29b049bf9e18efa763758,
-        type: 3}
-      propertyPath: m_BaseOffset
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 2649137196139949053, guid: a6c99371f3c29b049bf9e18efa763758,
         type: 3}
       propertyPath: m_Name
@@ -30457,16 +30447,6 @@ PrefabInstance:
       propertyPath: 'pathPoints.Array.data[7]'
       value: 
       objectReference: {fileID: 984035955}
-    - target: {fileID: 2471254393514352280, guid: ef0a6a660f281b6419d47a6792c208ad,
-        type: 3}
-      propertyPath: m_Center.y
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 3323540765310089383, guid: ef0a6a660f281b6419d47a6792c208ad,
-        type: 3}
-      propertyPath: m_BaseOffset
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 4765063055511176063, guid: ef0a6a660f281b6419d47a6792c208ad,
         type: 3}
       propertyPath: m_LocalPosition.x

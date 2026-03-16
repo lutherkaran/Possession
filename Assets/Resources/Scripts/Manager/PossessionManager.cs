@@ -12,10 +12,12 @@ public class PossessionManager : IManagable
     private IPossessable currentPossessable;
 
     private PlayerController playerController;
+    private TargetLocker targetLocker;
 
     public void Initialize()
     {
         playerController = PlayerManager.instance.GetPlayer();
+        targetLocker = playerController.GetComponent<TargetLocker>();
     }
 
     public void PostInitialize()
@@ -42,7 +44,7 @@ public class PossessionManager : IManagable
         currentPossessable = possessable;
         currentPossessable.Possessing(currentPossessable.GetPossessedEntity().gameObject);
 
-        currentPossession = new Possession(currentPossessable);
+        currentPossession = new Possession(currentPossessable,targetLocker);
         OnPossessed?.Invoke(this, currentPossessable);
 
         return currentPossession;

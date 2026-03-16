@@ -1619,9 +1619,9 @@ GameObject:
   - component: {fileID: 6147629640034721952}
   - component: {fileID: 1205070440010203609}
   - component: {fileID: 6991494820293279839}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: HorseNpc
-  m_TagString: Untagged
+  m_TagString: Npc
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

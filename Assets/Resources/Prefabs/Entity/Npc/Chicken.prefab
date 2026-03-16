@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 5674101592453080159}
   - component: {fileID: 7055792395835176938}
   - component: {fileID: 4540119044766643092}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Chicken
-  m_TagString: Untagged
+  m_TagString: Npc
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

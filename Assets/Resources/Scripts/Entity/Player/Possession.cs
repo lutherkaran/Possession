@@ -3,14 +3,17 @@ using UnityEngine;
 public class Possession
 {
     private GameObject targetEntity;
+    private TargetLocker targetLocker;
+
     private IPossessable currentlyPossessed;
     private bool canPossess = true;
 
     private float RaycastHitDistance = 40.0f;
 
-    public Possession(IPossessable possessed)
+    public Possession(IPossessable possessed, TargetLocker _targetLocker)
     {
         currentlyPossessed = possessed;
+        targetLocker = _targetLocker;
     }
 
     public void PossessEntities()
@@ -18,8 +21,14 @@ public class Possession
         if (!canPossess) return;
 
         Ray ray = DrawRayFromCrosshair();
-
-        if (Physics.Raycast(ray, out RaycastHit hit, RaycastHitDistance))
+        
+        Transform locked = targetLocker.GetCurrentLockedTarget();
+        
+        if(locked!=null && locked.TryGetComponent<IPossessable>(out var possessable))
+        {
+            HandlePossession(possessable);
+        }
+        else if (Physics.Raycast(ray, out RaycastHit hit, RaycastHitDistance))
         {
             HandlePossession(hit);
         }
@@ -27,6 +36,22 @@ public class Possession
         {
             HandleDepossession();
         }
+
+        targetLocker.ForceUnlock();
+    }
+
+    private void HandlePossession(IPossessable possessable)
+    {
+        targetEntity = possessable.GetPossessedEntity().gameObject;
+
+        if (currentlyPossessed.GetPossessedEntity() is PlayerController)
+        {
+            if (possessable is Enemy && !IsBehindEnemy(targetEntity)) return;
+        }
+
+        PossessionManager.instance.ToPossess(targetEntity);
+
+        canPossess = false;
     }
 
     private void HandlePossession(RaycastHit hit)
@@ -37,7 +62,6 @@ public class Possession
             Debug.LogWarning($"Cannot Possess {currentlyPossessed}");
             return;
         }
-
 
         targetEntity = possessableEntity.GetPossessedEntity().gameObject;
 

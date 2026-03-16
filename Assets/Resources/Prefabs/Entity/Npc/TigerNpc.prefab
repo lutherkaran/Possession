@@ -671,9 +671,9 @@ GameObject:
   - component: {fileID: 6254496937829120554}
   - component: {fileID: 2476483707760084094}
   - component: {fileID: 1770571031010897450}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: TigerNpc
-  m_TagString: Untagged
+  m_TagString: Npc
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
