@@ -14,24 +14,27 @@ public class LookAtCamera : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (Camera.main)
+        if (CameraManager.instance != null)
         {
+            Transform cam = CameraManager.instance.myCamera.transform;
+
             switch (mode)
             {
                 case Mode.LookAt:
-                    transform.LookAt(Camera.main.transform);
+                    transform.LookAt(cam);
                     break;
                 case Mode.LookAtInverted:
-                    Vector3 dirFromCamera = transform.forward - Camera.main.transform.position;
+                    Vector3 dirFromCamera = transform.forward - cam.position;
                     transform.LookAt(transform.position + dirFromCamera);
                     break;
                 case Mode.CameraForward:
-                    transform.forward = Camera.main.transform.forward;
+                    transform.forward = cam.forward;
                     break;
                 case Mode.CameraForwardInverted:
-                    transform.forward = -1 * Camera.main.transform.forward;
+                    transform.forward = -1 * cam.forward;
                     break;
             }
         }
+
     }
 }

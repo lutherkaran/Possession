@@ -50,6 +50,8 @@ public class Npc : Entity, IPossessable
 
     public override Transform GetCameraAttachPoint() => cameraAttachPoint;
 
+    public override Transform GetTargetLockerPoint() => targetLockerPoint;
+
     public override EntityAnimation GetEntityAnimation() => entityAnimation;
 
     public override float GetEntityPossessionTimerMax() => entitySO.entityPossessionTimerMax;

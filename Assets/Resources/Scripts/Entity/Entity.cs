@@ -6,6 +6,7 @@ public abstract class Entity : MonoBehaviour
 
     [SerializeField] protected EntitySO entitySO;
     [SerializeField] protected Transform cameraAttachPoint;
+    [SerializeField] protected Transform targetLockerPoint;
     [SerializeField] protected EntityAnimation entityAnimation;
     
     protected Rigidbody rb;
@@ -34,6 +35,7 @@ public abstract class Entity : MonoBehaviour
     }
 
     public abstract Transform GetCameraAttachPoint();
+    public abstract Transform GetTargetLockerPoint();
     public abstract EntityAnimation GetEntityAnimation();
     public abstract Rigidbody GetRigidBody();
 

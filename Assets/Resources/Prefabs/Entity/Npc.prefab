@@ -64,6 +64,7 @@ Transform:
   m_Children:
   - {fileID: 7458094860608990044}
   - {fileID: 4288552816613834461}
+  - {fileID: 2701734903239934859}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 30, z: 0}
 --- !u!114 &1592549132173025779
@@ -80,6 +81,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entitySO: {fileID: 11400000, guid: b2dd17416d621c0499f92fd0aec1580e, type: 2}
   cameraAttachPoint: {fileID: 4288552816613834461}
+  targetLockerPoint: {fileID: 2701734903239934859}
   entityAnimation: {fileID: 0}
 --- !u!136 &2596498985181087132
 CapsuleCollider:
@@ -104,6 +106,37 @@ CapsuleCollider:
   m_Height: 3
   m_Direction: 1
   m_Center: {x: 0, y: 2, z: 0}
+--- !u!1 &6671050506511863274
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2701734903239934859}
+  m_Layer: 0
+  m_Name: TargetLockerPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2701734903239934859
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6671050506511863274}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 4, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2648078475085479225}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &6920555706890226871
 PrefabInstance:
   m_ObjectHideFlags: 0

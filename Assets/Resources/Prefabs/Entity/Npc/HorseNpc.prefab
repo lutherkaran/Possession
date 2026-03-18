@@ -194,6 +194,37 @@ Transform:
   - {fileID: 3204007273789104159}
   m_Father: {fileID: 1613714630597496753}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1287545161717573104
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2906202171506827651}
+  m_Layer: 0
+  m_Name: TargetLockerPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2906202171506827651
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1287545161717573104}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 528854014726444417}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1341504528776093269
 GameObject:
   m_ObjectHideFlags: 0
@@ -697,12 +728,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4082593179535450192}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 3, z: -4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 3252449698302782023}
+  m_Father: {fileID: 528854014726444417}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4464045506307796246
 GameObject:
@@ -866,7 +897,6 @@ Transform:
   m_Children:
   - {fileID: 1844409400781071356}
   - {fileID: 5167485425994866331}
-  - {fileID: 6887235921898230817}
   m_Father: {fileID: 528854014726444417}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &2509075235537382741
@@ -1640,6 +1670,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3252449698302782023}
+  - {fileID: 6887235921898230817}
+  - {fileID: 2906202171506827651}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1122218434358725708
@@ -1669,6 +1701,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: GameAssembly::Horse
   entitySO: {fileID: 11400000, guid: b2dd17416d621c0499f92fd0aec1580e, type: 2}
   cameraAttachPoint: {fileID: 6887235921898230817}
+  targetLockerPoint: {fileID: 2906202171506827651}
   entityAnimation: {fileID: 2726726894318185094}
   animal: 5
   gem: {fileID: 0}

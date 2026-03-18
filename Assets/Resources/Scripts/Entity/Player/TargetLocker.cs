@@ -12,7 +12,9 @@ public class TargetLocker : MonoBehaviour
     private Transform currentLockedTarget;
 
     private GameObject activeIndicator;
-
+    
+    private Vector3 indicatorLocation;
+    
     private void Update()
     {
         Transform best = FindBestTargetInView();
@@ -35,7 +37,9 @@ public class TargetLocker : MonoBehaviour
 
         if (newTarget != null && lockIndicatorPrefab != null)
         {
-            activeIndicator = Instantiate(lockIndicatorPrefab, newTarget.position + new Vector3(0, 0.55f, 0), Quaternion.identity, newTarget);
+            var possessable = newTarget.GetComponent<IPossessable>();
+            indicatorLocation = possessable.GetPossessedEntity().GetTargetLockerPoint().position;
+            activeIndicator = Instantiate(lockIndicatorPrefab, indicatorLocation, Quaternion.identity);
         }
     }
 
@@ -52,7 +56,7 @@ public class TargetLocker : MonoBehaviour
         {
             if (col.transform == currentTransform) continue;
             if (!col.TryGetComponent<IPossessable>(out IPossessable possessable)) continue;
-
+           
             Vector3 toTarget = (col.transform.position - myCameraTransform.position).normalized;
             Vector3 screenPoint = CameraManager.instance.myCamera.WorldToViewportPoint(col.transform.position);
 
