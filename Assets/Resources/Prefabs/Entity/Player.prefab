@@ -1061,14 +1061,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxLockDistance: 25
-  maxScreenRadius: 0.03
-  lockFOVAngle: 5
+  maxScreenRadius: 0.05
+  lockFOVAngle: 10
   lockIndicatorPrefab: {fileID: 944400393671435420, guid: 96d1976b7ce481242b78e28c1dec4fde,
     type: 3}
   possessableLayer:
     serializedVersion: 2
     m_Bits: 256
-  closeRange: 3
+  closeRange: 1.25
 --- !u!54 &4372927102567460494
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1144,7 +1144,7 @@ Transform:
   m_GameObject: {fileID: 1530433815260268487}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 4.5, z: 0}
+  m_LocalPosition: {x: 0, y: 4.25, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

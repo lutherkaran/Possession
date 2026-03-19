@@ -2,26 +2,34 @@ using UnityEngine;
 
 public class TargetLocker : MonoBehaviour
 {
-    [SerializeField] private float maxLockDistance = 25f;
+    [Header("Target Settings")] // Recommended Default Values
+    [SerializeField] private float maxLockDistance = 25f; 
     [SerializeField] private float maxScreenRadius = 0.05f;
-    [SerializeField] private float lockFOVAngle = 45f;
+    [SerializeField] private float lockFOVAngle = 10f;
+    [SerializeField] private float closeRange = 1.25f;
 
     [SerializeField] private GameObject lockIndicatorPrefab;
-
     [SerializeField] private LayerMask possessableLayer;
-    [SerializeField] private float closeRange = 3f;
 
+    private GameObject currentActiveIndicator;
     private Transform currentLockedTarget;
-
-    private GameObject activeIndicator;
-
     private Vector3 indicatorLocation;
+
+    private void Awake()
+    {
+        currentActiveIndicator = Instantiate(lockIndicatorPrefab);
+    }
+
+    private void Start()
+    {
+        ToggleVisibility(false);
+    }
 
     private void Update()
     {
         Transform best = FindBestTargetInView();
 
-        if (best != currentLockedTarget)
+        if (best != currentActiveIndicator.transform)
         {
             SetLockedTarget(best);
         }
@@ -29,18 +37,16 @@ public class TargetLocker : MonoBehaviour
 
     private void SetLockedTarget(Transform newTarget)
     {
-        if (activeIndicator != null)
+        if (newTarget != null)
         {
-            Destroy(activeIndicator);
-            activeIndicator = null;
+            currentLockedTarget = newTarget;
+            currentActiveIndicator.transform.SetParent(currentLockedTarget, false);
+            currentActiveIndicator.transform.position = indicatorLocation;
+            ToggleVisibility(true);
         }
-
-        currentLockedTarget = newTarget;
-
-        if (newTarget != null && lockIndicatorPrefab != null)
+        else
         {
-            activeIndicator = Instantiate(lockIndicatorPrefab, newTarget);
-            activeIndicator.transform.position = indicatorLocation;
+            ToggleVisibility(false);
         }
     }
 
@@ -92,8 +98,19 @@ public class TargetLocker : MonoBehaviour
         return false;
     }
 
-    public Transform GetCurrentLockedTarget() => currentLockedTarget;
+    private void ToggleVisibility(bool isVisible)
+    {
+        currentActiveIndicator.SetActive(isVisible);
+    }
 
-    public void ForceUnlock() => SetLockedTarget(null);
+    public Transform GetCurrentLockedTarget()
+    {
+        if (currentActiveIndicator.activeInHierarchy)
+            return currentLockedTarget;
+        else
+            return null;
+    }
+
+    public void ForceUnlock() => ToggleVisibility(false);
 
 }
