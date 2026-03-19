@@ -109,7 +109,7 @@ public class PlayerController : Entity, IPossessable, IDamageable
 
     public override Transform GetCameraAttachPoint() => cameraAttachPoint;
 
-    public override Transform GetTargetLockerPoint() => targetLockerPoint;
+    public override Transform GetTargetLockTransform() => targetLockerPoint;
 
     public override EntityAnimation GetEntityAnimation() => entityAnimation;
 

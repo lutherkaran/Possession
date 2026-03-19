@@ -35,7 +35,7 @@ public abstract class Entity : MonoBehaviour
     }
 
     public abstract Transform GetCameraAttachPoint();
-    public abstract Transform GetTargetLockerPoint();
+    public abstract Transform GetTargetLockTransform();
     public abstract EntityAnimation GetEntityAnimation();
     public abstract Rigidbody GetRigidBody();
 

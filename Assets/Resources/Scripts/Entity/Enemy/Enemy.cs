@@ -118,7 +118,7 @@ public class Enemy : Entity, IPossessable, IDamageable, IStateContext
 
     public override Transform GetCameraAttachPoint() => cameraAttachPoint;
 
-    public override Transform GetTargetLockerPoint() => targetLockerPoint;
+    public override Transform GetTargetLockTransform() => targetLockerPoint;
 
     public override EntityAnimation GetEntityAnimation() => entityAnimation;
 
