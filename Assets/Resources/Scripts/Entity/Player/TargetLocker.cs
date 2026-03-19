@@ -8,13 +8,16 @@ public class TargetLocker : MonoBehaviour
     [SerializeField] private GameObject lockIndicatorPrefab;
 
     [SerializeField] private LayerMask possessableLayer;
+    [SerializeField] private float closeRange = 3f;
 
     private Transform currentLockedTarget;
 
     private GameObject activeIndicator;
-    
+
     private Vector3 indicatorLocation;
-    
+    private float dist = 0;
+    private float distanceFromCenter = 0;
+
     private void Update()
     {
         Transform best = FindBestTargetInView();
@@ -37,9 +40,8 @@ public class TargetLocker : MonoBehaviour
 
         if (newTarget != null && lockIndicatorPrefab != null)
         {
-            var possessable = newTarget.GetComponent<IPossessable>();
-            indicatorLocation = possessable.GetPossessedEntity().GetTargetLockerPoint().position;
-            activeIndicator = Instantiate(lockIndicatorPrefab, indicatorLocation, Quaternion.identity);
+            activeIndicator = Instantiate(lockIndicatorPrefab, newTarget);
+            activeIndicator.transform.position = indicatorLocation;
         }
     }
 
@@ -56,35 +58,47 @@ public class TargetLocker : MonoBehaviour
         {
             if (col.transform == currentTransform) continue;
             if (!col.TryGetComponent<IPossessable>(out IPossessable possessable)) continue;
-           
-            Vector3 toTarget = (col.transform.position - myCameraTransform.position).normalized;
+
             Vector3 screenPoint = CameraManager.instance.myCamera.WorldToViewportPoint(col.transform.position);
 
-            float distanceFromCenter = DistanceFromCenter(screenPoint);
+            distanceFromCenter = DistanceFromCenter(screenPoint);
 
-            float dist = Vector3.Distance(myCameraTransform.position, col.transform.position);
+            dist = Vector3.Distance(myCameraTransform.position, col.transform.position);
 
-            if (distanceFromCenter <= maxScreenRadius && dist <= maxLockDistance)
+            bool isClose = dist <= closeRange;
+            if ((distanceFromCenter <= maxScreenRadius || isClose) && dist <= maxLockDistance && HasLineOfSight(myCameraTransform, col))
             {
-                float score = -distanceFromCenter; // closer to center = better
+                float score = isClose ? 1f : -distanceFromCenter;
 
                 if (score > bestScore)
                 {
                     bestScore = score;
                     best = col.transform;
+                    indicatorLocation = possessable.GetPossessedEntity().GetTargetLockerPoint().position;
                 }
             }
-
         }
         return best;
     }
 
+    private bool HasLineOfSight(Transform currentTransform, Collider col)
+    {
+        Vector3 dir = (col.bounds.center - currentTransform.position).normalized;
+
+        if (Physics.Raycast(currentTransform.position, dir, out RaycastHit hit, maxLockDistance))
+        {
+            return hit.transform == col.transform;
+        }
+        return false;
+    }
+
     private float DistanceFromCenter(Vector3 screenPoint)
     {
-        return Vector2.Distance(new Vector2(0.5f, 0.5f),new Vector2(screenPoint.x, screenPoint.y));
+        return Vector2.Distance(new Vector2(0.5f, 0.5f), new Vector2(screenPoint.x, screenPoint.y));
     }
 
     public Transform GetCurrentLockedTarget() => currentLockedTarget;
 
     public void ForceUnlock() => SetLockedTarget(null);
+
 }
