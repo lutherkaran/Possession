@@ -6,11 +6,12 @@ using UnityEngine.TestTools.Utils;
 
 public class PlayerMovementTest
 {
-    GameObject testPlayer;
+    private GameObject testPlayer;
+    private GameObject myCamera;
 
-    Vector3 startPos = Vector3.zero;
+    private Vector3 startPos = Vector3.zero;
 
-    float speed = 5f;
+    private float speed = 5f;
 
     [OneTimeSetUp]
     public void OneTimeSetup_ShouldCreateRequiredSceneObjects()
@@ -21,6 +22,10 @@ public class PlayerMovementTest
         plane.AddComponent<BoxCollider>();
 
         testPlayer = MonoBehaviour.Instantiate(Resources.Load<GameObject>("Prefabs/Entity/Player"));
+        if (testPlayer == null)
+        {
+            Debug.LogError("PlayerISNULL");
+        }
         testPlayer.transform.position = new Vector3(0, 0f, 0);
     }
 
@@ -31,7 +36,7 @@ public class PlayerMovementTest
     }
 
     [UnityTest]
-    public IEnumerator Setup_ShouldInstantiatePlayerCameraAndNpc()
+    public IEnumerator Setup_ShouldInstantiatePlayer()
     {
         Assert.NotNull(testPlayer, "Player is NULL");
 

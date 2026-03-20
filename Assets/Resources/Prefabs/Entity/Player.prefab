@@ -1063,12 +1063,12 @@ MonoBehaviour:
   maxLockDistance: 25
   maxScreenRadius: 0.05
   lockFOVAngle: 10
+  closeRange: 1.25
   lockIndicatorPrefab: {fileID: 944400393671435420, guid: 96d1976b7ce481242b78e28c1dec4fde,
     type: 3}
   possessableLayer:
     serializedVersion: 2
     m_Bits: 256
-  closeRange: 1.25
 --- !u!54 &4372927102567460494
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1597,7 +1597,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cooldownTimerImage: {fileID: 8485584270282910566}
-  player: {fileID: 0}
+  player: {fileID: 8426612707636161426}
 --- !u!1 &2431374715319095429
 GameObject:
   m_ObjectHideFlags: 0

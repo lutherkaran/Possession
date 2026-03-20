@@ -9,62 +9,59 @@ public class PossessionManager : IManagable
     public event EventHandler<IPossessable> OnPossessed;
 
     private Possession currentPossession;
-    private IPossessable currentPossessable;
+    private IPossessable currentlyPossessed;
 
     private PlayerController playerController;
     private TargetLocker targetLocker;
 
+    private bool isFirstPossession;
+
     public void Initialize()
     {
-        playerController = PlayerManager.instance.GetPlayer();
-        targetLocker = playerController.GetComponent<TargetLocker>();
+        isFirstPossession = true;
     }
 
     public void PostInitialize()
     {
-        ToPossess(playerController.gameObject);
+        playerController = PlayerManager.instance.GetPlayer();
+        targetLocker = playerController.GetComponent<TargetLocker>();
+
+        currentlyPossessed = playerController;
+        ToPossess(playerController);
+        isFirstPossession = false;
     }
 
     public Possession ToPossess(GameObject possessable)
     {
-        if (!possessable) return null;
-
-        var component = possessable.GetComponent<IPossessable>();
-        return ToPossess(component);
+        var targetToPossess = possessable.GetComponent<IPossessable>();
+        return ToPossess(targetToPossess);
     }
 
     public Possession ToPossess(IPossessable possessable)
     {
-        if (possessable == null)
-            return null;
+        if (!isFirstPossession)
+            ToDepossess(currentlyPossessed.GetPossessedEntity().gameObject);
 
-        if (currentPossessable != null)
-            ToDepossess(currentPossessable.GetPossessedEntity().gameObject);
+        currentlyPossessed = possessable;
+        currentlyPossessed.Possessing(currentlyPossessed.GetPossessedEntity().gameObject);
 
-        currentPossessable = possessable;
-        currentPossessable.Possessing(currentPossessable.GetPossessedEntity().gameObject);
-
-        currentPossession = new Possession(currentPossessable,targetLocker);
-        OnPossessed?.Invoke(this, currentPossessable);
+        currentPossession = new Possession(currentlyPossessed, targetLocker);
+        OnPossessed?.Invoke(this, currentlyPossessed);
 
         return currentPossession;
     }
 
     public void ToDepossess(GameObject possessable)
     {
-        currentPossessable = possessable.GetComponent<IPossessable>();
-        currentPossessable.Depossessing(possessable);
+        currentlyPossessed.Depossessing(possessable);
 
-        if (currentPossessable != null)
-        {
-            currentPossessable = null;
-            currentPossession = null;
-        }
+        currentlyPossessed = null;
+        currentPossession = null;
     }
 
     public Possession GetCurrentPossession() => currentPossession;
 
-    public IPossessable GetCurrentPossessable() => currentPossessable;
+    public IPossessable GetCurrentPossessable() => currentlyPossessed;
 
     public void Refresh(float deltaTime)
     {

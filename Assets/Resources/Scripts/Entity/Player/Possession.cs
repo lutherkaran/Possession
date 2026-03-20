@@ -24,13 +24,13 @@ public class Possession
         
         Transform locked = targetLocker.GetCurrentLockedTarget();
         
-        if(locked!=null && locked.TryGetComponent<IPossessable>(out var possessable))
+        if(locked!=null && locked.TryGetComponent<IPossessable>(out var possessableCollider))
         {
-            HandlePossession(possessable);
+            HandlePossession(possessableCollider);
         }
-        else if (Physics.Raycast(ray, out RaycastHit hit, RaycastHitDistance))
+        else if (Physics.Raycast(ray, out RaycastHit hit, RaycastHitDistance) && hit.transform.TryGetComponent<IPossessable>(out var possessableRaycast))
         {
-            HandlePossession(hit);
+            HandlePossession(possessableRaycast);
         }
         else
         {
@@ -42,32 +42,17 @@ public class Possession
 
     private void HandlePossession(IPossessable possessable)
     {
-        targetEntity = possessable.GetPossessedEntity().gameObject;
-
-        if (currentlyPossessed.GetPossessedEntity() is PlayerController)
-        {
-            if (possessable is Enemy && !IsBehindEnemy(targetEntity)) return;
-        }
-
-        PossessionManager.instance.ToPossess(targetEntity);
-
-        canPossess = false;
-    }
-
-    private void HandlePossession(RaycastHit hit)
-    {
-        IPossessable possessableEntity = hit.transform.GetComponent<IPossessable>();
-        if (possessableEntity == null || possessableEntity == currentlyPossessed)
+        if (possessable == null || possessable == currentlyPossessed)
         {
             Debug.LogWarning($"Cannot Possess {currentlyPossessed}");
             return;
         }
 
-        targetEntity = possessableEntity.GetPossessedEntity().gameObject;
+        targetEntity = possessable.GetPossessedEntity().gameObject;
 
         if (currentlyPossessed.GetPossessedEntity() is PlayerController)
         {
-            if (possessableEntity is Enemy && !IsBehindEnemy(targetEntity)) return;
+            if (possessable is Enemy && !IsBehindEnemy(targetEntity)) return;
         }
 
         PossessionManager.instance.ToPossess(targetEntity);

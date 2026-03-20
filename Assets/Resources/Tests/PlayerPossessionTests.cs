@@ -21,7 +21,7 @@ public class PlayerPossessionTests
         plane.gameObject.transform.localScale = (new Vector3(10f, 1, 10f));
         plane.AddComponent<BoxCollider>();
 
-        objectToPossess = MonoBehaviour.Instantiate(Resources.Load<GameObject>("Prefabs/Entity/Npc/Chicken"));
+        objectToPossess = MonoBehaviour.Instantiate(Resources.Load<GameObject>("Prefabs/Entity/Npc/ChickenNpc"));
         objectToPossess.transform.localPosition = new Vector3(0f, .5f, 0f);
 
         testCamera = MonoBehaviour.Instantiate(Resources.Load<GameObject>("Prefabs/Others/MainCamera"));
