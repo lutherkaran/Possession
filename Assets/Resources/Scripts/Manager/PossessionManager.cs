@@ -37,11 +37,12 @@ public class PossessionManager : IManagable
 
     public Possession ToPossess(IPossessable possessable)
     {
-        if (!isFirstPossession)
-            ToDepossess(currentlyPossessed.GetPossessedEntity().gameObject);
+        if (!isFirstPossession & currentlyPossessed != null)
+            ToDepossess(currentlyPossessed);
 
         currentlyPossessed = possessable;
-        currentlyPossessed.Possessing(currentlyPossessed.GetPossessedEntity().gameObject);
+        var toPossess = currentlyPossessed.GetPossessedEntity().gameObject;
+        currentlyPossessed.Possessing(toPossess);
 
         currentPossession = new Possession(currentlyPossessed);
         OnPossessed?.Invoke(this, currentlyPossessed);
@@ -49,9 +50,10 @@ public class PossessionManager : IManagable
         return currentPossession;
     }
 
-    public void ToDepossess(GameObject possessable)
+    public void ToDepossess(IPossessable depossessable)
     {
-        currentlyPossessed.Depossessing(possessable);
+        var toDepossess = depossessable.GetPossessedEntity().gameObject;
+        currentlyPossessed.Depossessing(toDepossess);
 
         currentlyPossessed = null;
         currentPossession = null;

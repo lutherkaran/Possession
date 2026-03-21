@@ -16,6 +16,9 @@ public class PlayerPossessionTests
     [OneTimeSetUp]
     public void OneTimeSetup_ShouldCreateRequiredSceneObjects()
     {
+        possessionManager = new PossessionManager();
+        mockPossessable = Substitute.For<IPossessable>();
+
         GameObject plane = GameObject.CreatePrimitive(PrimitiveType.Plane);
         plane.gameObject.transform.position = new Vector3(0f, .4f, 0f);
         plane.gameObject.transform.localScale = (new Vector3(10f, 1, 10f));
@@ -27,11 +30,7 @@ public class PlayerPossessionTests
         testCamera = MonoBehaviour.Instantiate(Resources.Load<GameObject>("Prefabs/Others/MainCamera"));
         testCamera.transform.SetParent(objectToPossess.transform, false);
 
-        possessionManager = new PossessionManager();
-        mockPossessable = Substitute.For<IPossessable>();
-
         mockPossessable.GetPossessedEntity().Returns(objectToPossess.GetComponent<Entity>());
-
     }
 
     [UnityTest]
