@@ -7,7 +7,6 @@ using UnityEngine.TestTools.Utils;
 public class PlayerMovementTest
 {
     private GameObject testPlayer;
-    private GameObject myCamera;
 
     private Vector3 startPos = Vector3.zero;
 

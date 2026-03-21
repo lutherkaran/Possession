@@ -10,15 +10,15 @@ public class Possession
 
     private float RaycastHitDistance = 40.0f;
 
-    public Possession(IPossessable possessed, TargetLocker _targetLocker)
+    public Possession(IPossessable possessed)
     {
         currentlyPossessed = possessed;
-        targetLocker = _targetLocker;
     }
 
     public void PossessEntities()
     {
         if (!canPossess) return;
+        targetLocker = CameraManager.instance.GetMouseAim().GetTargetLocker();
 
         Ray ray = DrawRayFromCrosshair();
         

@@ -1,9 +1,10 @@
 using UnityEngine;
 
-public class TargetLocker : MonoBehaviour
+[System.Serializable]
+public class TargetLocker
 {
     [Header("Target Settings")] // Recommended Default Values
-    [SerializeField] private float maxLockDistance = 25f; 
+    [SerializeField] private float maxLockDistance = 25f;
     [SerializeField] private float maxScreenRadius = 0.05f;
     [SerializeField] private float lockFOVAngle = 10f;
     [SerializeField] private float closeRange = 1.25f;
@@ -15,17 +16,13 @@ public class TargetLocker : MonoBehaviour
     private Transform currentLockedTarget;
     private Vector3 indicatorLocation;
 
-    private void Awake()
+    public void Initialize()
     {
-        currentActiveIndicator = Instantiate(lockIndicatorPrefab);
+        currentActiveIndicator = GameObject.Instantiate(lockIndicatorPrefab);
+        ForceUnlock();
     }
 
-    private void Start()
-    {
-        ToggleVisibility(false);
-    }
-
-    private void Update()
+    public void Refresh()
     {
         Transform best = FindBestTargetInView();
 

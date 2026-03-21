@@ -1,7 +1,6 @@
 using UnityEngine;
 
-[System.Serializable]
-public class MouseAim
+public class MouseAim : MonoBehaviour
 {
     [Header("Mouse Controls")]
     [SerializeField] private float xRotation = 0f;
@@ -9,7 +8,25 @@ public class MouseAim
     [SerializeField] private float ySensitivity = 45f;
     [SerializeField] private bool mouseVisible = false;
 
+    [SerializeField] private TargetLocker targetLocker;
+
+    public void InitializeTargetLocker()
+    {
+        targetLocker.Initialize();
+    }
+
     public void ProcessLook(Vector2 input, float lateDeltaTime)
+    {
+        HandleLook(input, lateDeltaTime);
+        HandleTargetLocker();
+    }
+
+    private void HandleTargetLocker()
+    {
+        targetLocker.Refresh();
+    }
+
+    private void HandleLook(Vector2 input, float lateDeltaTime)
     {
         float mouseX = input.x;
         float mouseY = input.y;
@@ -31,28 +48,25 @@ public class MouseAim
         if (mouseVisible)
         {
             Cursor.lockState = CursorLockMode.None;
-            ShowMouse();
+            ToggleVisibility(true);
         }
         else
         {
             Cursor.lockState = CursorLockMode.Locked;
-            HideMouse();
+            ToggleVisibility(false);
         }
     }
 
     public void OnFocus()
     {
-        HideMouse();
+        ToggleVisibility(false);
         Cursor.lockState = CursorLockMode.Locked;
     }
 
-    public void ShowMouse()
+    public void ToggleVisibility(bool visibility)
     {
-        Cursor.visible = true;
+        Cursor.visible = visibility;
     }
 
-    public void HideMouse()
-    {
-        Cursor.visible = false;
-    }
+    public TargetLocker GetTargetLocker() => targetLocker;
 }

@@ -9,30 +9,30 @@ public class CameraManager : IManagable
         get { return Instance == null ? Instance = new CameraManager() : Instance; }
     }
 
-    private Vector3 targetPosition;
-    private Vector3 velocity = Vector3.zero;
+    [Header("Camera Settings")]
+    [SerializeField] private float smoothTime = .3f; // Adjust for desired speed
 
     [SerializeField] private MouseAim mouseAim;
 
-    [Header("Camera Settings")]
-    [SerializeField]
-    private float smoothTime = .3f; // Adjust for desired speed
+    private Vector3 targetPosition;
+    private Vector3 velocity = Vector3.zero;
 
+    private bool isTransitioning = false;
+    
     private Transform cameraAttachPoint;
+    private GameObject newCamera;
 
     public Camera myCamera { get; private set; }
 
-    private bool isTransitioning = false;
-
     public void Initialize()
     {
-        GameObject newCamera = GameObject.Instantiate(Resources.Load<GameObject>("Prefabs/Others/MainCamera"));
+        newCamera = GameObject.Instantiate(Resources.Load<GameObject>("Prefabs/Others/MainCamera"));
         myCamera = newCamera.GetComponent<Camera>();
-        InitializingMouse();
     }
 
     public void PostInitialize()
     {
+        InitializingMouse(newCamera);
         PossessionManager.instance.OnPossessed += AttachCameraToPossessedObject;
     }
 
@@ -71,9 +71,10 @@ public class CameraManager : IManagable
         Instance = null;
     }
 
-    private void InitializingMouse()
+    private void InitializingMouse(GameObject newCamera)
     {
-        mouseAim = new MouseAim();
+        mouseAim = newCamera.GetComponent<MouseAim>();
+        mouseAim.InitializeTargetLocker();
         mouseAim.OnFocus();
     }
 

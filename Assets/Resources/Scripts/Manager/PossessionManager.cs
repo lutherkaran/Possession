@@ -9,12 +9,11 @@ public class PossessionManager : IManagable
     public event EventHandler<IPossessable> OnPossessed;
 
     private Possession currentPossession;
+    private PlayerController playerController;
+
     private IPossessable currentlyPossessed;
 
-    private PlayerController playerController;
-    private TargetLocker targetLocker;
-
-    private bool isFirstPossession;
+    public bool isFirstPossession { get; set; }
 
     public void Initialize()
     {
@@ -24,7 +23,6 @@ public class PossessionManager : IManagable
     public void PostInitialize()
     {
         playerController = PlayerManager.instance.GetPlayer();
-        targetLocker = playerController.GetComponent<TargetLocker>();
 
         currentlyPossessed = playerController;
         ToPossess(playerController);
@@ -45,7 +43,7 @@ public class PossessionManager : IManagable
         currentlyPossessed = possessable;
         currentlyPossessed.Possessing(currentlyPossessed.GetPossessedEntity().gameObject);
 
-        currentPossession = new Possession(currentlyPossessed, targetLocker);
+        currentPossession = new Possession(currentlyPossessed);
         OnPossessed?.Invoke(this, currentlyPossessed);
 
         return currentPossession;
