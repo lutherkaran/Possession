@@ -20,7 +20,7 @@ public class HealState : BaseState
         enemy.GetAnimator().RunBlend();
         healingPosition = this.interactable.gameObject.transform.position;
         enemy.GetEnemyAgent().SetDestination(healingPosition);
-        enemy.fieldOfView = 180f;
+        enemy.GetEnemySO().fieldOfView = 180f;
     }
 
     protected override void PerformState()

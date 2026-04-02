@@ -2,46 +2,42 @@ using UnityEngine;
 
 public class PatrolState : BaseState
 {
-    private Enemy enemy;
-    private EnemyPath enemyPath;
+    private readonly StateSettings settings;
 
-    public PatrolState(Enemy _enemy) : base(_enemy.gameObject)
+    public PatrolState(IStateContext _stateContext) : base(_stateContext)
     {
-        enemy = _enemy;
+        stateContext = _stateContext;
+
+        settings = new StateSettings(stateContext, this, StateSettings.animationStates.isWalking, Vector3.one, 150f);
     }
 
     protected override void EnterState()
     {
-        EnemyManager.instance.enemyPathEnemyDictionary.TryGetValue(enemy, out EnemyPath enemyPath);
-
-        enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Patrolling, true);
-        enemy.GetAnimator().WalkBlend();
-
-        enemy.GetEnemyAgent().velocity = enemy.defaultVelocity;
-        enemy.GetEnemyAgent().SetDestination(enemyPath.GetRandomPathPosition());
-        enemy.fieldOfView = 150f;
+        stateContext.ApplySettings(settings);
     }
 
     protected override void PerformState()
     {
-        PatrolCycle();
-
-        if (enemy.CanSeePlayer())
+        if (stateContext.IsSafe())
         {
-            stateMachine.ChangeState(new AttackState(enemy));
+            PatrolCycle();
+        }
+        else
+        {
+            stateMachine.ChangeState(new FleeState(stateContext));
         }
     }
 
     protected override void ExitState()
     {
-        enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Patrolling, false);
+        stateContext.ResetChanges();
     }
 
     protected void PatrolCycle()
     {
-        if (enemy.GetEnemyAgent().remainingDistance <= enemy.GetEnemyAgent().stoppingDistance)//0.2f && (enemy.Agent.remainingDistance >= 0.1f))
+        if (stateContext.GetNavMeshAgent().remainingDistance <= stateContext.GetNavMeshAgent().stoppingDistance)
         {
-            stateMachine.ChangeState(new IdleState(enemy));
+            stateMachine.ChangeState(new IdleState(stateContext));
         }
     }
 }

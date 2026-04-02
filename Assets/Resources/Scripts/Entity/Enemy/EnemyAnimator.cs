@@ -54,10 +54,10 @@ public class EnemyAnimator : MonoBehaviour
 
     public void Shoot()
     {
-        BulletManager.instance.Shoot(enemy, enemy.GetGunBarrelTransform(), enemy.shootDirection);
+        // BulletManager.instance.Shoot(enemy, enemy.GetGunBarrelTransform(), enemy.shootDirection);
     }
 
-    public void AttackingBlend()
+    public void AlertBlend()
     {
         enemyAnimator.SetFloat("Blend", 0.3f);
         enemyAnimator.SetLayerWeight(1, 1f);
@@ -87,4 +87,6 @@ public class EnemyAnimator : MonoBehaviour
         enemyAnimator.SetLayerWeight(1, 0f);
 
     }
+
+    public Animator GetAnimator() => enemyAnimator;
 }

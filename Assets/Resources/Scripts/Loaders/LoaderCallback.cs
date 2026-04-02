@@ -24,7 +24,7 @@ public class LoaderCallback : MonoBehaviour
         }
 
         if (progressText != null)
-            progressText.SetText("" + Loader.loadText, true);
+            progressText.SetText("" + Loader.loadText);
 
         if (progressBar != null)
             progressBar.fillAmount =+ Loader.loadProgress;

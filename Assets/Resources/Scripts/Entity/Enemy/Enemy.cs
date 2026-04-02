@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Enemy : Entity, IPossessable, IDamageable
+public class Enemy : Entity, IPossessable, IDamageable, IStateContext
 {
     public event EventHandler<IDamageable.OnDamagedEventArgs> OnDamaged;
 
@@ -18,28 +18,17 @@ public class Enemy : Entity, IPossessable, IDamageable
 
     [SerializeField] private EnemyAnimator enemyAnimator;
     [SerializeField] private HealthUI healthUI;
-    
-    private NavMeshAgent agent;
+    [SerializeField] private CameraSceneVolumeProfileSO enemyVolumeProfileSO; // using the default for now.
+    [SerializeField] private Transform gunBarrel;
+    [SerializeField] private EnemySO enemySO;
+
+    private NavMeshAgent enemyAgent;
     private StateMachine stateMachine;
+    private EnemyController enemyAI;
 
     public Vector3 defaultVelocity { get; private set; }
     public Vector3 targetsLastPosition { get; private set; }
     public Vector3 shootDirection { get; private set; }
-
-    [Header("Sight Properties")]
-    [SerializeField] private float sightDistance = 20f;
-    [SerializeField] private float eyeHeight;
-    [SerializeField] private LayerMask targetLayerMask;
-    public float fieldOfView = 90f;
-
-    [Range(1f, 1.8f)]
-    [SerializeField] private float targetHeight;
-
-    [SerializeField] private Transform gunBarrel;
-
-    [Header("Health Properties")]
-    [SerializeField] private float maxHealth = 100f;
-    [SerializeField] private float currentHealth;
 
     private Dictionary<Type, BaseState> statesDictionary;
 
@@ -48,11 +37,14 @@ public class Enemy : Entity, IPossessable, IDamageable
 
     public void Initialize()
     {
-        currentHealth = maxHealth;
+        enemySO.currentHealth = enemySO.maxHealth;
 
-        agent = GetComponent<NavMeshAgent>();
+        enemyAgent = GetComponent<NavMeshAgent>();
         stateMachine = GetComponent<StateMachine>();
-        defaultVelocity = agent.velocity;
+        //rb = GetComponent<Rigidbody>();
+
+        enemyAI = new EnemyController(this);
+        defaultVelocity = enemyAgent.velocity;
     }
 
     public void PostInitialize()
@@ -60,7 +52,18 @@ public class Enemy : Entity, IPossessable, IDamageable
         enemyAnimator = GetComponentInChildren<EnemyAnimator>();
         healthUI = GetComponentInChildren<HealthUI>();
 
+        PossessionManager.instance.OnPossessed += OnEnemyPossessed;
+
         InitializeStatesDictionary();
+    }
+
+    private void OnEnemyPossessed(object sender, IPossessable e)
+    {
+        if (e.GetPossessedEntity() == this)
+        {
+            CameraManager.instance.ApplyCameraSettings(enemyVolumeProfileSO.fieldOfView);
+            GameManager.instance.ApplyVolumeProfile(enemyVolumeProfileSO.volumeProfile);
+        }
     }
 
     private void InitializeStatesDictionary()
@@ -70,8 +73,6 @@ public class Enemy : Entity, IPossessable, IDamageable
             {typeof(IdleState), new IdleState(this) },
             {typeof(PatrolState), new PatrolState(this) },
             {typeof(AttackState), new AttackState(this) },
-            {typeof(HealState), new HealState(this) },
-            {typeof(FleeState), new FleeState(this) },
             {typeof(SearchState), new SearchState(this) },
             {typeof(PossessedState), new PossessedState(this) },
         };
@@ -84,28 +85,11 @@ public class Enemy : Entity, IPossessable, IDamageable
         stateMachine.Refresh(deltaTime);
     }
 
-    public override void Attack()
-    {
-        Shoot();
-    }
-
     public void Shoot()
     {
         shootDirection = (GetTargetPlayerTransform().position + Vector3.up * (UnityEngine.Random.Range(1f, 1.5f)) - GetGunBarrelTransform().position).normalized;
         onShoot?.Invoke(this, new OnShootEventArgs { _entity = this, _direction = shootDirection, _gunBarrel = gunBarrel });
     }
-
-    public override void ProcessJump()
-    {
-        base.ProcessJump();
-    }
-
-    public override void MoveWhenPossessed(Vector2 input)
-    {
-        base.MoveWhenPossessed(input);
-    }
-
-    public override void Sprint() { base.Sprint(); }
 
     public void Possessing(GameObject go)
     {
@@ -121,60 +105,36 @@ public class Enemy : Entity, IPossessable, IDamageable
     public void HealthChanged(float healthChangedValue)
     {
         OnDamaged?.Invoke(this, new IDamageable.OnDamagedEventArgs { health = healthChangedValue });
-        currentHealth = healthUI.GetHealth();
+        enemySO.currentHealth = healthUI.GetHealth();
     }
-
-    public bool CanSeePlayer()
-    {
-        player = PlayerManager.instance.GetPlayer().transform;
-        if (Vector3.Distance(transform.position, player.position) < sightDistance)
-        {
-            Vector3 targetDirection = player.position - transform.position;
-            float angleToPlayer = Vector3.Angle(targetDirection, transform.forward);
-
-            if (angleToPlayer >= -fieldOfView && angleToPlayer <= fieldOfView)
-            {
-                Ray ray = new Ray(transform.position + (Vector3.up * eyeHeight), targetDirection);
-
-                if (Physics.Raycast(ray, out RaycastHit hitInfo, sightDistance, targetLayerMask))
-                {
-                    targetTransform = hitInfo.transform;
-                    targetsLastPosition = targetTransform.position;
-
-                    Vector3.RotateTowards(transform.forward, targetDirection.normalized, 1, 2);
-
-                    Debug.DrawRay(ray.origin, ray.direction * sightDistance, Color.red);
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    protected override bool IsAlive() => healthUI.GetHealth() > 0;
 
     public float GetHealth() => healthUI.GetHealth();
 
-    public float GetMaxHealth() => maxHealth;
+    public float GetMaxHealth() => enemySO.maxHealth;
 
-    public bool IsSafe() => Vector3.Distance(transform.position, targetTransform.position) >= 20f;
+    public bool IsSafe() => true;
 
     public Entity GetPossessedEntity() => this;
 
     public override Transform GetCameraAttachPoint() => cameraAttachPoint;
 
-    public override float GetEntityPossessionTimerMax() => entityPossessionTimerMax;
+    public override Transform GetTargetLockTransform() => targetLockerPoint;
 
-    public override float GetPossessionCooldownTimerMax() => possessionCooldownTimerMax;
+    public override EntityAnimation GetEntityAnimation() => entityAnimation;
+
+    public override float GetEntityPossessionTimerMax() => entitySO.entityPossessionTimerMax;
+
+    public override float GetPossessionCooldownTimerMax() => entitySO.possessionCooldownTimerMax;
 
     public EnemyAnimator GetAnimator() => enemyAnimator;
 
-    public NavMeshAgent GetEnemyAgent() => agent;
-    
+    public NavMeshAgent GetEnemyAgent() => enemyAgent;
+
     public Transform GetGunBarrelTransform() => gunBarrel;
 
     public Transform GetTargetPlayerTransform() => targetTransform;
+
+    public EnemySO GetEnemySO() => enemySO;
 
     public void PhysicsRefresh(float fixedDeltaTime)
     {
@@ -190,4 +150,53 @@ public class Enemy : Entity, IPossessable, IDamageable
     {
 
     }
+
+    public NavMeshAgent GetNavMeshAgent()
+    {
+        return enemyAgent;
+    }
+
+    public Transform GetTransform() => transform;
+
+    public virtual bool CanSeePlayer()
+    {
+        player = PlayerManager.instance.GetPlayer().transform;
+
+        if (Vector3.Distance(transform.position, player.position) < enemySO.sightDistance)
+        {
+            Vector3 targetDirection = player.position - transform.position;
+            float angleToPlayer = Vector3.Angle(targetDirection, transform.forward);
+            if (angleToPlayer >= -enemySO.fieldOfView && angleToPlayer <= enemySO.fieldOfView)
+            {
+                Ray ray = new Ray(transform.position + (Vector3.up * enemySO.eyeHeight), targetDirection);
+                if (Physics.Raycast(ray, out RaycastHit hitInfo, enemySO.sightDistance, enemySO.targetLayerMask))
+                {
+                    targetTransform = hitInfo.transform;
+                    targetsLastPosition = targetTransform.position;
+                    Vector3.RotateTowards(transform.forward, targetDirection.normalized, 1, 2);
+                    Debug.DrawRay(ray.origin, ray.direction * enemySO.sightDistance, Color.red);
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public virtual void ApplySettings(StateSettings _settings)
+    {
+        enemyAI.RunAI(_settings);
+    }
+
+    public virtual void ResetChanges()
+    {
+        enemyAI.Reset();
+    }
+
+    public EntityAnimation GetAnimationEntity()
+    {
+        return entityAnimation;
+    }
+
+    public override Rigidbody GetRigidBody() => rb;
 }

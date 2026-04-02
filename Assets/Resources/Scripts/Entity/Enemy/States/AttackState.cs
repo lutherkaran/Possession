@@ -4,45 +4,35 @@ public class AttackState : BaseState
 {
     private Enemy enemy;
 
+    private StateSettings settings;
+
     private float moveTimer;
     private float losePlayerTimer;
 
-    public AttackState(Enemy _enemy) : base(_enemy.gameObject)
+    public AttackState(IStateContext _stateContext) : base(_stateContext)
     {
-        enemy = _enemy;
+        stateContext = _stateContext;
+        settings = new StateSettings(stateContext, this, StateSettings.animationStates.isAttacking, Vector3.zero, 150f);
     }
 
     protected override void EnterState()
     {
-        enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Attacking, true);
-        enemy.GetAnimator().AttackingBlend();
+        stateContext.ApplySettings(settings);
     }
 
     protected override void ExitState()
     {
-        enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Attacking, false);
-        enemy.GetEnemyAgent().velocity = enemy.defaultVelocity;
- 
-        moveTimer = 0;
-        losePlayerTimer = 0;
+        stateContext.ResetChanges();
     }
 
     protected override void PerformState()
     {
-        if (enemy.CanSeePlayer())
+        if (stateContext.CanSeePlayer())
         {
             enemy.transform.LookAt(enemy.GetTargetPlayerTransform());
 
-            enemy.Attack();
-
-            losePlayerTimer = 0;
-            moveTimer += Time.deltaTime;
-
-            if (moveTimer > Random.Range(3, 7))
-            {
-                enemy.GetEnemyAgent().SetDestination(enemy.transform.position + (Random.insideUnitSphere * 5));
-                moveTimer = 0;
-            }
+            // lock the aim towards the player.
+            MoveRandomlyInCirle();
         }
 
         else
@@ -51,8 +41,25 @@ public class AttackState : BaseState
 
             if (losePlayerTimer > 3)
             {
-                stateMachine.ChangeState(new SearchState(enemy));
+                // Calls all the enemies to current position or sorrounds
+                // Then Alert them
+                //stateMachine.ChangeState(new SearchState(enemy));
+                losePlayerTimer = 0;
             }
         }
     }
+
+    private void MoveRandomlyInCirle()
+    {
+        moveTimer += Time.deltaTime;
+
+        if (moveTimer > Random.Range(3, 7))
+        {
+            enemy.GetEnemyAgent().SetDestination(enemy.transform.position + (Random.insideUnitSphere * 5));
+            moveTimer = 0;
+        }
+    }
+
+    // Move towards the player position, aim towards him, and alert other enemies or call them there.
+    // if Enemy lost player then he starts searching, then he also alert and calls other enemies.
 }

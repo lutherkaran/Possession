@@ -2,45 +2,33 @@ using UnityEngine;
 
 public class PossessedState : BaseState
 {
-    private Enemy enemy;
+    private StateSettings stateSettings;
 
-    private readonly float WalkSpeed = 10f;
-    private Vector3 moveDirection;
-
-    public PossessedState(Enemy _enemy) : base(_enemy.gameObject)
+    public PossessedState(IStateContext _stateContext) : base(_stateContext)
     {
-        enemy = _enemy;
+        stateContext = _stateContext;
+
+        stateSettings = new StateSettings(stateContext, this, StateSettings.animationStates.isPossessed, Vector3.zero, 0);
     }
 
     protected override void EnterState()
     {
-        enemy.GetEnemyAgent().velocity = Vector3.zero;
-        enemy.GetEnemyAgent().isStopped = true;
-        enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Possessed, true);
-        PossessionManager.instance.OnPossessed += Enemy_OnPossessed;
+        base.EnterState();
+        stateContext.ApplySettings(stateSettings);
+        //Debug.Log($"last active state was {stateMachine.lastActiveState}");
     }
 
-    private void Enemy_OnPossessed(object sender, IPossessable e)
+    protected override void PerformState() 
     {
-        enemy.GetAnimator().ManualBlend(WalkSpeed);
-    }
-
-    protected override void PerformState()
-    {
-        moveDirection.x = InputManager.instance.GetOnFootActions().Movement.ReadValue<Vector2>().x;
-        moveDirection.z = InputManager.instance.GetOnFootActions().Movement.ReadValue<Vector2>().y;
-        moveDirection.y = 0;
-
-        if (PossessionManager.instance.GetCurrentPossessable() == enemy.possessedByPlayer)
-            enemy.transform.Translate(moveDirection * WalkSpeed * Time.deltaTime);
-        //    enemy.GetAnimator().ManualBlend(WalkSpeed * Time.deltaTime);
+        Vector2 moveDir = InputManager.instance.GetMoveDirection();
+        PossessionManager.instance.GetCurrentPossessable().GetPossessedEntity().MoveWhenPossessed(moveDir);
+        float actualSpeed = moveDir.magnitude;
+        stateContext.GetAnimationEntity().SetSpeed(actualSpeed);
     }
 
     protected override void ExitState()
     {
-        enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Possessed, false);
-        enemy.GetAnimator().WalkBlend();
-        stateMachine.ChangeState(stateMachine.lastActiveState);
+        stateContext.ResetChanges();
     }
 
 }

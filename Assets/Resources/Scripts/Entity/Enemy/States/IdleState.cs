@@ -2,42 +2,42 @@ using UnityEngine;
 
 public class IdleState : BaseState
 {
-    private Enemy enemy;
-    private EnemyAnimator enemyAnimator;
-
     private float duration = 0;
 
-    public IdleState(Enemy _enemy) : base(_enemy.gameObject)
+    private readonly StateSettings settings;
+
+    public IdleState(IStateContext _stateContext) : base(_stateContext)
     {
-        enemy = _enemy;
+        stateContext = _stateContext;
+        settings = new StateSettings(stateContext, this, StateSettings.animationStates.isIdle, Vector3.zero, 90f);
     }
 
     protected override void EnterState()
     {
-        enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Idle, true);
-        enemy.GetEnemyAgent().velocity = Vector3.zero;
-        enemy.GetAnimator().ResetBlend();
+        stateContext.ApplySettings(settings);
 
-        enemy.fieldOfView = 90f;
         duration = Random.Range(4f, 10f);
-        enemy.GetEnemyAgent().isStopped = false;
     }
 
     protected override void PerformState()
     {
-        if (enemy.CanSeePlayer())
-        {
-            stateMachine.ChangeState(new AttackState(enemy));
-        }
+        if (stateContext.CanSeePlayer())
+            stateMachine.ChangeState(new AttackState(stateContext));
         else
         {
-            stateMachine.Waiting(new PatrolState(enemy), duration);
+            if (stateContext.IsSafe())
+            {
+                stateMachine.Waiting(new PatrolState(stateContext), duration);
+            }
+            else
+            {
+                stateMachine.ChangeState(new FleeState(stateContext));
+            }
         }
     }
 
     protected override void ExitState()
     {
-        enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Idle, false);
-        enemy.GetEnemyAgent().velocity = enemy.defaultVelocity;
+        stateContext.ResetChanges();
     }
 }

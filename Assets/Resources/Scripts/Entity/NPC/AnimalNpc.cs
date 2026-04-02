@@ -1,0 +1,138 @@
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.AI;
+
+public abstract class AnimalNpc : Npc, IStateContext
+{
+    public enum animalType { Cat, Dog, Chicken, Tiger, Penguin, Horse, Deer }
+    public animalType animal;
+
+    IPuzzleObject puzzleObject;
+
+    [SerializeField] private Gem gem;
+
+    [SerializeField] protected float safeDistance = 10f;
+    [SerializeField] protected EntityAnimation animalAnimation;
+
+    protected NavMeshAgent animalAgent;
+    protected Dictionary<Type, BaseState> animalStates;
+    protected StateMachine animalStateMachine;
+
+    protected AnimalNpcController animalNpcController;
+
+    [SerializeField] private Transform[] pathPoints;
+
+    public override void Initialize()
+    {
+        base.Initialize();
+
+        animalAgent = GetComponent<NavMeshAgent>();
+        animalStateMachine = GetComponent<StateMachine>();
+        animalNpcController = new AnimalNpcController(this);
+    }
+
+    public override void PostInitialize()
+    {
+        InitializeAnimalStateDictionary();
+    }
+
+    private void InitializeAnimalStateDictionary()
+    {
+        animalStates = new Dictionary<Type, BaseState>()
+        {
+            { typeof(IdleState), new IdleState(this) },
+            { typeof(PatrolState), new PatrolState(this) },
+            { typeof(PossessedState), new PossessedState(this) },
+            { typeof(FleeState), new FleeState(this) },
+        };
+
+        animalStateMachine.Initialise(this, animalStates);
+    }
+
+    public override void Refresh(float deltaTime)
+    {
+        animalStateMachine.Refresh(deltaTime);
+
+        float actualSpeed = GetNavMeshAgent().velocity.magnitude / GetNavMeshAgent().speed;
+
+        if (PossessionManager.instance.GetCurrentPossessable() != possessedByPlayer)
+            animalAnimation.SetSpeed(actualSpeed);
+
+    }
+
+    public override void PhysicsRefresh(float fixedDeltaTime)
+    {
+        currentFixedDeltaTime = fixedDeltaTime;
+    }
+
+    public NavMeshAgent GetNavMeshAgent()
+    {
+        return animalAgent;
+    }
+
+    public StateMachine GetStateMachine() => animalStateMachine;
+
+    public override void Possessing(GameObject go)
+    {
+        base.Possessing(go);
+
+        possessedByPlayer = PossessionManager.instance.GetCurrentPossessable();
+        animalStateMachine.ChangeState(new PossessedState(this));
+    }
+
+    public override void Depossessing(GameObject go)
+    {
+        base.Depossessing(go);
+        animalStateMachine.ChangeState(animalStateMachine.lastActiveState);
+        possessedByPlayer = null;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        puzzleObject = other.transform.GetComponent<IPuzzleObject>();
+
+        if (DoorPuzzle.puzzleDictionary[puzzleObject] == gem.GetGemSO().animal)
+        {
+            puzzleObject.Collected();
+        }
+        else
+        {
+            Debug.Log("Find another Gem");
+        }
+    }
+
+    public virtual bool IsSafe()
+    {
+        return true;
+    }
+
+    public Vector3 FindTargetLocation()
+    {
+        int randomIndex = UnityEngine.Random.Range(0, pathPoints.Length);
+        Vector3 targetLocation = pathPoints[randomIndex].position;
+        return targetLocation;
+    }
+
+    public virtual void ApplySettings(StateSettings _settings)
+    {
+
+    }
+
+    public void ResetChanges()
+    {
+        animalNpcController.Reset();
+    }
+
+    bool IStateContext.CanSeePlayer() => false;
+
+    public Transform GetTransform() => transform;
+
+    public abstract Animator GetAnimalAnimator();
+    public abstract AnimalNpc GetAnimal();
+
+    public EntityAnimation GetAnimationEntity()
+    {
+        return entityAnimation;
+    }
+}

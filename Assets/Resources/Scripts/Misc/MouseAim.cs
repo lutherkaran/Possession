@@ -1,23 +1,40 @@
 using UnityEngine;
 
-[System.Serializable]
-public class MouseAim: MonoBehaviour
+public class MouseAim : MonoBehaviour
 {
     [Header("Mouse Controls")]
     [SerializeField] private float xRotation = 0f;
-    [SerializeField] private float xSensitivity = 30f;
-    [SerializeField] private float ySensitivity = 30f;
-    [SerializeField] private bool MouseVisible = false;
+    [SerializeField] private float xSensitivity = 45f;
+    [SerializeField] private float ySensitivity = 45f;
+    [SerializeField] private bool mouseVisible = false;
+
+    [SerializeField] private TargetLocker targetLocker;
+
+    public void InitializeTargetLocker()
+    {
+        targetLocker.Initialize();
+    }
 
     public void ProcessLook(Vector2 input, float lateDeltaTime)
+    {
+        HandleLook(input, lateDeltaTime);
+        HandleTargetLocker();
+    }
+
+    private void HandleTargetLocker()
+    {
+        targetLocker.Refresh();
+    }
+
+    private void HandleLook(Vector2 input, float lateDeltaTime)
     {
         float mouseX = input.x;
         float mouseY = input.y;
 
         xRotation -= (mouseY * lateDeltaTime) * ySensitivity;
-        xRotation = Mathf.Clamp(xRotation, -80f, 80f);
+        xRotation = Mathf.Clamp(xRotation, -80f, 13.5f);
 
-        if (!MouseVisible)
+        if (!mouseVisible)
         {
             CameraManager.instance.myCamera.transform.localRotation = Quaternion.Euler(xRotation, 0, 0);
             PossessionManager.instance.GetCurrentPossessable().GetPossessedEntity().transform.Rotate(Vector3.up * (mouseX * lateDeltaTime) * xSensitivity);
@@ -26,33 +43,30 @@ public class MouseAim: MonoBehaviour
 
     public void ToggleMouseInteraction()
     {
-        MouseVisible = !MouseVisible;
+        mouseVisible = !mouseVisible;
 
-        if (MouseVisible)
+        if (mouseVisible)
         {
             Cursor.lockState = CursorLockMode.None;
-            ShowMouse();
+            ToggleVisibility(true);
         }
         else
         {
             Cursor.lockState = CursorLockMode.Locked;
-            HideMouse();
+            ToggleVisibility(false);
         }
     }
 
     public void OnFocus()
     {
-        HideMouse();
+        ToggleVisibility(false);
         Cursor.lockState = CursorLockMode.Locked;
     }
 
-    public void ShowMouse()
+    public void ToggleVisibility(bool visibility)
     {
-        Cursor.visible = true;
+        Cursor.visible = visibility;
     }
 
-    public void HideMouse()
-    {
-        Cursor.visible = false;
-    }
+    public TargetLocker GetTargetLocker() => targetLocker;
 }

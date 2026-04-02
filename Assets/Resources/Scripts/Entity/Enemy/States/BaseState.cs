@@ -10,7 +10,13 @@ public abstract class BaseState
 
     protected GameObject gameObject;
     protected EnemyAnimator animator;
+    protected IStateContext stateContext;
     protected Dictionary<Type, BaseState> availableStates;
+    
+    protected BaseState(IStateContext _stateContext)
+    {
+        stateContext = _stateContext;
+    }
 
     protected BaseState(GameObject _gameObject)
     {

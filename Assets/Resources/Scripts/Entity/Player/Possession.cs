@@ -3,42 +3,56 @@ using UnityEngine;
 public class Possession
 {
     private GameObject targetEntity;
-    private IPossessable currentPossession;
+    private TargetLocker targetLocker;
+
+    private IPossessable currentlyPossessed;
     private bool canPossess = true;
 
     private float RaycastHitDistance = 40.0f;
 
     public Possession(IPossessable possessed)
     {
-        currentPossession = possessed;
+        currentlyPossessed = possessed;
     }
 
     public void PossessEntities()
     {
         if (!canPossess) return;
+        targetLocker = CameraManager.instance.GetMouseAim().GetTargetLocker();
 
         Ray ray = DrawRayFromCrosshair();
-
-        if (Physics.Raycast(ray, out RaycastHit hit, RaycastHitDistance))
+        
+        Transform locked = targetLocker.GetCurrentLockedTarget();
+        
+        if(locked!=null && locked.TryGetComponent<IPossessable>(out var possessableCollider))
         {
-            HandlePossession(hit);
+            HandlePossession(possessableCollider);
+        }
+        else if (Physics.Raycast(ray, out RaycastHit hit, RaycastHitDistance) && hit.transform.TryGetComponent<IPossessable>(out var possessableRaycast))
+        {
+            HandlePossession(possessableRaycast);
         }
         else
         {
             HandleDepossession();
         }
+
+        targetLocker.ForceUnlock();
     }
 
-    private void HandlePossession(RaycastHit hit)
+    private void HandlePossession(IPossessable possessable)
     {
-        IPossessable possessableEntity = hit.transform.GetComponent<IPossessable>();
-        if (possessableEntity == null) return;
-
-        targetEntity = possessableEntity.GetPossessedEntity().gameObject;
-
-        if (currentPossession.GetPossessedEntity() is PlayerController)
+        if (possessable == null || possessable == currentlyPossessed)
         {
-            if (possessableEntity is Enemy && !IsBehindEnemy(targetEntity)) return;
+            Debug.LogWarning($"Cannot Possess {currentlyPossessed}");
+            return;
+        }
+
+        targetEntity = possessable.GetPossessedEntity().gameObject;
+
+        if (currentlyPossessed.GetPossessedEntity() is PlayerController)
+        {
+            if (possessable is Enemy && !IsBehindEnemy(targetEntity)) return;
         }
 
         PossessionManager.instance.ToPossess(targetEntity);
@@ -48,7 +62,7 @@ public class Possession
 
     private bool IsBehindEnemy(GameObject enemy)
     {
-        float dotProduct = Vector3.Dot(enemy.transform.forward.normalized, (currentPossession.GetPossessedEntity().transform.position - enemy.transform.position).normalized);
+        float dotProduct = Vector3.Dot(enemy.transform.forward.normalized, (currentlyPossessed.GetPossessedEntity().transform.position - enemy.transform.position).normalized);
 
         return dotProduct < 0;
     }

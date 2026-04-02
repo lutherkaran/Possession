@@ -9,9 +9,12 @@ public class EntityManager : IManagable
     private List<Entity> entityList = new List<Entity>();
     private Transform entityManagerTransform;
 
+    public Vector3 playerSpawnLocation {  get; private set; } = Vector3.zero;
+
     public void Initialize()
     {
         entityManagerTransform = new GameObject("EntityManager").transform;
+        playerSpawnLocation = GameObject.Find("PlayerSpawnLocation").transform.position;
     }
 
     public void LateRefresh(float deltaTime)
@@ -41,7 +44,7 @@ public class EntityManager : IManagable
 
     private void SetEntityParent()
     {
-        entityList.AddRange(GameObject.FindObjectsOfType<Entity>());
+        entityList.AddRange(GameObject.FindObjectsByType<Entity>(FindObjectsSortMode.None));
 
         foreach (Entity entity in entityList)
         {

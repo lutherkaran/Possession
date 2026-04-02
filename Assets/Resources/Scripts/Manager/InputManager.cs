@@ -12,6 +12,8 @@ public class InputManager : IManagable
     private PlayerInput playerInput;
     private PlayerController player;
 
+    private Vector2 moveDir = Vector2.zero;
+
     public void Initialize()
     {
         playerInput = new PlayerInput();
@@ -22,22 +24,34 @@ public class InputManager : IManagable
     public void PostInitialize()
     {
         player = PlayerManager.instance.GetPlayer();
+        HandleInput();
+    }
 
+    private void HandleInput()
+    {
         playerInput.OnFoot.Possession.performed += HandlePossessionInput;
+
         playerInput.OnFoot.MouseInteraction.performed += ctx => CameraManager.instance.GetMouseAim()?.ToggleMouseInteraction();
-        playerInput.OnFoot.Attack.performed += ctx => player?.Attack();
+
+        playerInput.OnFoot.Sprint.performed += ctx => PossessionManager.instance.GetCurrentPossessable().GetPossessedEntity().ToggleSprint();
+
         playerInput.OnFoot.Pause.performed += Pause_performed;
     }
 
     public void Refresh(float deltaTime)
     {
-        playerInput.OnFoot.Sprint.performed += ctx => PossessionManager.instance.GetCurrentPossessable().GetPossessedEntity().Sprint();
-        playerInput.OnFoot.Jump.performed += ctx => PossessionManager.instance.GetCurrentPossessable().GetPossessedEntity().ProcessJump();
+
     }
 
     public void PhysicsRefresh(float fixedDeltaTime)
     {
-        PossessionManager.instance.GetCurrentPossessable().GetPossessedEntity().MoveWhenPossessed(playerInput.OnFoot.Movement.ReadValue<Vector2>());
+        moveDir = playerInput.OnFoot.Movement.ReadValue<Vector2>().normalized;
+        var entity = PossessionManager.instance.GetCurrentPossessable().GetPossessedEntity();
+
+        if (entity is PlayerController)
+        {
+            entity.MoveWhenPossessed(moveDir);
+        }
     }
 
     public void LateRefresh(float deltaTime)
@@ -68,13 +82,13 @@ public class InputManager : IManagable
     {
         playerInput.OnFoot.Possession.performed -= HandlePossessionInput;
         playerInput.OnFoot.MouseInteraction.performed -= ctx => CameraManager.instance.GetMouseAim()?.ToggleMouseInteraction();
-        playerInput.OnFoot.Attack.performed -= ctx => player?.Attack();
         playerInput.OnFoot.Pause.performed -= Pause_performed;
 
+        playerInput.OnFoot.Disable();
         playerInput.Dispose();
         Instance = null;
     }
 
     public PlayerInput.OnFootActions GetOnFootActions() => playerInput.OnFoot;
-
+    public Vector2 GetMoveDirection() => moveDir;
 }

@@ -21,6 +21,8 @@ public class PlayerInteract : MonoBehaviour
 
     private void Update()
     {
+        if (!playerUI || !cam) return;
+
         playerUI.UpdateText(string.Empty);
         Ray ray = new Ray(cam.transform.position, cam.transform.forward);
         Debug.DrawRay(ray.origin, ray.direction, (Color.red));
