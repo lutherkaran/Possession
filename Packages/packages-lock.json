@@ -7,7 +7,7 @@
       "dependencies": {}
     },
     "com.unity.ai.navigation": {
-      "version": "2.0.9",
+      "version": "2.0.11",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -16,7 +16,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.burst": {
-      "version": "1.8.27",
+      "version": "1.8.28",
       "depth": 2,
       "source": "registry",
       "dependencies": {
@@ -26,7 +26,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.cinemachine": {
-      "version": "2.10.5",
+      "version": "2.10.6",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -35,7 +35,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.collab-proxy": {
-      "version": "2.11.2",
+      "version": "2.11.4",
       "depth": 0,
       "source": "registry",
       "dependencies": {},
@@ -61,7 +61,7 @@
       "dependencies": {}
     },
     "com.unity.ide.rider": {
-      "version": "3.0.38",
+      "version": "3.0.39",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -79,7 +79,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.inputsystem": {
-      "version": "1.17.0",
+      "version": "1.19.0",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -110,7 +110,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.probuilder": {
-      "version": "6.0.8",
+      "version": "6.0.9",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -197,7 +197,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.timeline": {
-      "version": "1.8.10",
+      "version": "1.8.11",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -218,7 +218,7 @@
       }
     },
     "com.unity.visualscripting": {
-      "version": "1.9.9",
+      "version": "1.9.10",
       "depth": 0,
       "source": "registry",
       "dependencies": {

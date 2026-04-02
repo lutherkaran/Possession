@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -22,7 +19,7 @@ public class GamePaused : MonoBehaviour
             Hide();
         });
 
-        quitButton.onClick.AddListener(() => Application.Quit());
+        quitButton.onClick.AddListener(() => Quit());
     }
 
     private void Start()
@@ -51,5 +48,17 @@ public class GamePaused : MonoBehaviour
     private void Hide()
     {
         gameObject.SetActive(false);
+    }
+
+    private void Quit()
+    {
+        if (Application.isEditor)
+        {
+            UnityEditor.EditorApplication.isPlaying = false;
+        }
+        else
+        {
+            Application.Quit();
+        }
     }
 }
