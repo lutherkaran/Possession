@@ -2,35 +2,42 @@ using UnityEngine;
 
 public class PatrolState : BaseState
 {
-    public override void Enter()
+    private readonly StateSettings settings;
+
+    public PatrolState(IStateContext _stateContext) : base(_stateContext)
     {
-        enemy.GetAnimator().SetBool(Enemy.IS_PATROLLING, true);
-        enemy.Agent.velocity = enemy.defaultVelocity;
-        enemy.Agent.SetDestination(enemy.enemyPath.Waypoints[Random.Range(0, enemy.enemyPath.Waypoints.Count - 1)].position);
-        enemy.fieldOfView = 150f;
+        stateContext = _stateContext;
+
+        settings = new StateSettings(stateContext, this, StateSettings.animationStates.isWalking, Vector3.one, 150f);
     }
 
-    public override void Perform()
+    protected override void EnterState()
     {
-        if (stateMachine.activeState is PossessedState) return;
+        stateContext.ApplySettings(settings);
+    }
 
-        PatrolCycle();
-        if (enemy.CanSeePlayer())
+    protected override void PerformState()
+    {
+        if (stateContext.IsSafe())
         {
-            stateMachine.ChangeState(new AttackState());
+            PatrolCycle();
+        }
+        else
+        {
+            stateMachine.ChangeState(new FleeState(stateContext));
         }
     }
 
-    public override void Exit()
+    protected override void ExitState()
     {
-        enemy.GetAnimator().SetBool(Enemy.IS_PATROLLING, false);
+        stateContext.ResetChanges();
     }
 
-    public void PatrolCycle()
+    protected void PatrolCycle()
     {
-        if (enemy.Agent.remainingDistance <= enemy.Agent.stoppingDistance)//0.2f && (enemy.Agent.remainingDistance >= 0.1f))
+        if (stateContext.GetNavMeshAgent().remainingDistance <= stateContext.GetNavMeshAgent().stoppingDistance)
         {
-            stateMachine.ChangeState(new IdleState());
+            stateMachine.ChangeState(new IdleState(stateContext));
         }
     }
 }

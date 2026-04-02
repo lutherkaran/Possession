@@ -1,75 +1,99 @@
 using UnityEngine;
-using System.Collections;
 
-public class CameraManager : MonoBehaviour
+public class CameraManager : IManagable
 {
-    private GameObject currentlyPossessed;
-    private Vector3 targetPosition;
-    private Vector3 velocity = Vector3.zero;
+    private static CameraManager Instance;
+
+    public static CameraManager instance
+    {
+        get { return Instance == null ? Instance = new CameraManager() : Instance; }
+    }
+
+    [Header("Camera Settings")]
+    [SerializeField] private float smoothTime = .3f; // Adjust for desired speed
 
     [SerializeField] private MouseAim mouseAim;
 
-    [Header("Camera Settings")]
-    [SerializeField] private float smoothTime = 0.3f; // Adjust for desired speed
-    [SerializeField] private Vector3 DefaultPosition = new Vector3(0, .6f, 0);
+    private Vector3 targetPosition;
+    private Vector3 velocity = Vector3.zero;
+
+    private bool isTransitioning = false;
+    
     private Transform cameraAttachPoint;
+    private GameObject newCamera;
 
-    public Camera cam;
-    public static CameraManager instance { get; private set; }
+    public Camera myCamera { get; private set; }
 
-    private void OnEnable()
+    public void Initialize()
     {
-        PossessionManager.Instance.OnPossessed += AttachCameraToPossessedObject;
+        newCamera = GameObject.Instantiate(Resources.Load<GameObject>("Prefabs/Others/MainCamera"));
+        myCamera = newCamera.GetComponent<Camera>();
     }
 
-    private void Awake()
+    public void PostInitialize()
     {
-        if (instance != null)
+        InitializingMouse(newCamera);
+        PossessionManager.instance.OnPossessed += AttachCameraToPossessedObject;
+    }
+
+    public void Refresh(float deltaTime)
+    {
+    }
+
+    public void PhysicsRefresh(float fixedDeltaTime)
+    {
+    }
+
+    public void LateRefresh(float deltaTime)
+    {
+        if (!isTransitioning) return;
+
+        MoveCamera(deltaTime);
+    }
+
+    private void MoveCamera(float deltaTIme)
+    {
+        InputManager.instance.GetOnFootActions().Disable();
+
+        myCamera.transform.position =
+            Vector3.SmoothDamp(myCamera.transform.position, targetPosition, ref velocity, smoothTime);
+
+        if (Vector3.Distance(myCamera.transform.position, targetPosition) <= 0.1f)
         {
-            Destroy(instance);
+            myCamera.transform.localPosition = Vector3.zero;
+            isTransitioning = false;
+            InputManager.instance.GetOnFootActions().Enable();
         }
-        instance = this;
     }
 
-    private void Start()
+    public void OnDemolish()
     {
-        cam = GetComponent<Camera>();
-        InitializingMouse();
+        Instance = null;
     }
 
-    private void InitializingMouse()
+    private void InitializingMouse(GameObject newCamera)
     {
-        mouseAim = new MouseAim();
+        mouseAim = newCamera.GetComponent<MouseAim>();
+        mouseAim.InitializeTargetLocker();
         mouseAim.OnFocus();
     }
 
     private void AttachCameraToPossessedObject(object sender, IPossessable possessedObject)
     {
-        currentlyPossessed = possessedObject.GetPossessedEntity().gameObject;
         cameraAttachPoint = possessedObject.GetPossessedEntity().GetCameraAttachPoint();
 
-        StartCoroutine(MovetoPosition(cameraAttachPoint.gameObject));
-        cam.transform.SetParent(cameraAttachPoint);
-    }
-
-    public IEnumerator MovetoPosition(GameObject currentlyPossessed)
-    {
-        InputManager.Instance.GetOnFootActions().Disable();
-        targetPosition = Vector3.zero;
+        myCamera.transform.SetParent(cameraAttachPoint);
         targetPosition = cameraAttachPoint.position;
 
-        while (Vector3.Distance(cam.transform.position, targetPosition) > 0.1f)
-        {
-            cam.transform.position = Vector3.SmoothDamp(cam.transform.position, targetPosition, ref velocity, smoothTime);
-            yield return null;
-        }
-        InputManager.Instance.GetOnFootActions().Enable();
+        isTransitioning = true;
     }
-
-    public MouseAim GetMouseAim() => mouseAim;
 
     public void OnDisable()
     {
-        PossessionManager.Instance.OnPossessed -= AttachCameraToPossessedObject;
+        PossessionManager.instance.OnPossessed -= AttachCameraToPossessedObject;
     }
+
+    public void ApplyCameraSettings(float fieldOfView) => myCamera.fieldOfView = fieldOfView;
+
+    public MouseAim GetMouseAim() => mouseAim;
 }

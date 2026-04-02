@@ -1,47 +1,86 @@
 using System;
 using UnityEngine;
 
-public class PossessionManager
+public class PossessionManager : IManagable
 {
-    private static PossessionManager instance;
-    private Possession currentPossession;
-    private IPossessable currentPossessable;
+    private static PossessionManager Instance;
+    public static PossessionManager instance { get { return Instance == null ? Instance = new PossessionManager() : Instance; } }
 
-    public static PossessionManager Instance { get { return instance == null ? instance = new PossessionManager() : instance; } }
     public event EventHandler<IPossessable> OnPossessed;
+
+    private Possession currentPossession;
+    private PlayerController playerController;
+
+    private IPossessable currentlyPossessed;
+
+    public bool isFirstPossession { get; set; }
+
+    public void Initialize()
+    {
+        isFirstPossession = true;
+    }
+
+    public void PostInitialize()
+    {
+        playerController = PlayerManager.instance.GetPlayer();
+
+        currentlyPossessed = playerController;
+        ToPossess(playerController);
+        isFirstPossession = false;
+    }
 
     public Possession ToPossess(GameObject possessable)
     {
-        if (possessable)
-        {
-            if (currentPossessable != null)
-                ToDepossess(currentPossessable.GetPossessedEntity().gameObject);
-
-            currentPossessable = possessable.GetComponent<IPossessable>();
-            currentPossessable.Possessing(possessable);
-
-            currentPossession = new Possession(currentPossessable);
-            OnPossessed?.Invoke(this, currentPossessable);
-            return currentPossession;
-
-        }
-        return null;
+        var targetToPossess = possessable.GetComponent<IPossessable>();
+        return ToPossess(targetToPossess);
     }
 
-    public void ToDepossess(GameObject possessable)
+    public Possession ToPossess(IPossessable possessable)
     {
-        currentPossessable = possessable.GetComponent<IPossessable>();
-        currentPossessable.Depossessing(possessable);
+        if (!isFirstPossession & currentlyPossessed != null)
+            ToDepossess(currentlyPossessed);
 
-        if (currentPossessable != null)
-        {
-            currentPossessable = null;
-            currentPossession = null;
-        }
+        currentlyPossessed = possessable;
+        var toPossess = currentlyPossessed.GetPossessedEntity().gameObject;
+        currentlyPossessed.Possessing(toPossess);
 
+        currentPossession = new Possession(currentlyPossessed);
+        OnPossessed?.Invoke(this, currentlyPossessed);
+
+        return currentPossession;
+    }
+
+    public void ToDepossess(IPossessable depossessable)
+    {
+        var toDepossess = depossessable.GetPossessedEntity().gameObject;
+        currentlyPossessed.Depossessing(toDepossess);
+
+        currentlyPossessed = null;
+        currentPossession = null;
     }
 
     public Possession GetCurrentPossession() => currentPossession;
 
-    public IPossessable GetCurrentPossessable() => currentPossessable;
+    public IPossessable GetCurrentPossessable() => currentlyPossessed;
+
+    public void Refresh(float deltaTime)
+    {
+
+    }
+
+    public void PhysicsRefresh(float fixedDeltaTime)
+    {
+
+    }
+
+    public void LateRefresh(float deltaTime)
+    {
+
+    }
+
+    public void OnDemolish()
+    {
+        Instance = null;
+    }
+
 }

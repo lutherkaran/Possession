@@ -1,55 +1,95 @@
-using Unity.VisualScripting;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
+
 public class StateMachine : MonoBehaviour
 {
-    public BaseState activeState;
+    public BaseState currentActiveState;
+    public BaseState lastActiveState;
 
-    public void Initialise()
+    private IStateContext stateContext;
+
+    private Dictionary<Type, BaseState> availableStates;
+
+    private float waitTimer = 0;
+
+    [Header("State Machine")]
+    [SerializeField] private string currentState;
+
+    public void Initialise(IStateContext _stateContext, Dictionary<Type, BaseState> _availableStates)
     {
-        ChangeState(new IdleState());
-        activeState.enemy.OnEnemyHealthChanged += HealthChanged;
+        if (_stateContext == null)
+        {
+            Debug.LogError("Statemachine requires a component implementation" + stateContext);
+        }
+        else
+        {
+            stateContext = _stateContext;
+            //enemy.OnDamaged += Enemy_OnDamaged;
+            ChangeState(new IdleState(stateContext));
+        }
     }
 
-    private void Update()
+    //private void Enemy_OnDamaged(object sender, IDamageable.OnDamagedEventArgs e)
+    //{
+    //    if (enemy.GetHealth() > 30 && enemy.GetHealth() < 50)
+    //    {
+    //        ChangeState(new FleeState(enemy));
+    //    }
+
+    //    else if (enemy.GetHealth() < 30)
+    //    {
+    //        ChangeState(new HealState(enemy));
+    //    }
+    //}
+
+    public void Refresh(float deltaTime)
     {
-        if (activeState != null)
+        if (currentActiveState != null)
         {
-            activeState.Perform();
+            currentActiveState.Perform();
         }
     }
 
     public void ChangeState(BaseState newState)
     {
-        if (activeState != null && activeState.GetType() == newState.GetType())
+        if (currentActiveState != null && currentActiveState.GetType() == newState.GetType())
         {
             return;
         }
 
-        if (activeState != null)
+        if (currentActiveState != null)
         {
-            activeState.Exit();
+            if (currentActiveState != new PossessedState(stateContext))
+            {
+                lastActiveState = currentActiveState;
+            }
+            else
+            {
+                lastActiveState = null;
+            }
+
+            currentActiveState.Exit();
         }
 
-        activeState = newState;
+        currentActiveState = newState;
 
-        if (activeState != null)
+        if (currentActiveState != null)
         {
-            activeState.stateMachine = this;
-            activeState.enemy = GetComponent<Enemy>();
-            activeState.Enter();
+            currentActiveState.stateMachine = this;
+            currentActiveState.Enter();
+            currentState = currentActiveState?.ToString() ?? "None";
         }
     }
 
-    private void HealthChanged(object sender, float health)
+    public void Waiting(BaseState newState, float duration)
     {
-        if (health > 30 && health < 50)
-        {
-            ChangeState(new FleeState());
-        }
+        waitTimer += Time.deltaTime;
 
-        else if (health < 30)
+        if (waitTimer > duration)
         {
-            ChangeState(new HealState());
+            ChangeState(newState);
+            waitTimer = 0;
         }
     }
 }

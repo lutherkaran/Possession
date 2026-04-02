@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,21 +10,22 @@ public class GamePaused : MonoBehaviour
 
     private void Awake()
     {
-        resumeButton.onClick.AddListener(() => GameManager.Instance.TogglePause());
-        
-        MainMenuButton.onClick.AddListener(() => Loader.Load(Loader.Scene.MainMenuScene));
+        resumeButton.onClick.AddListener(() => GameManager.instance.TogglePause());
+
+        MainMenuButton.onClick.AddListener(() => Loader.Load(Loader.Scene.MENU));
 
         settingsButton.onClick.AddListener(() =>
         {
             Hide();
-            //OptionsUI.Instance.Show(Show);
         });
+
+        quitButton.onClick.AddListener(() => Quit());
     }
 
     private void Start()
     {
-        GameManager.Instance.OnGamePaused += GamePaused_OnGamePaused;
-        GameManager.Instance.OnGameUnpaused += GamePaused_OnGameUnpaused;
+        GameManager.instance.OnGamePaused += GamePaused_OnGamePaused;
+        GameManager.instance.OnGameUnpaused += GamePaused_OnGameUnpaused;
 
         Hide();
     }
@@ -50,5 +48,17 @@ public class GamePaused : MonoBehaviour
     private void Hide()
     {
         gameObject.SetActive(false);
+    }
+
+    private void Quit()
+    {
+        if (Application.isEditor)
+        {
+            UnityEditor.EditorApplication.isPlaying = false;
+        }
+        else
+        {
+            Application.Quit();
+        }
     }
 }

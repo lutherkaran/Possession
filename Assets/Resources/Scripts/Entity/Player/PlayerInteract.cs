@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerInteract : MonoBehaviour
@@ -10,21 +8,21 @@ public class PlayerInteract : MonoBehaviour
     [SerializeField]
     LayerMask layer;
     private PlayerUI playerUI;
-    private InputManager playerInput;
 
     private void Awake()
     {
         playerUI = this.GetComponent<PlayerUI>();
-        playerInput = this.GetComponent<InputManager>();
     }
 
     private void Start()
     {
-        cam = CameraManager.instance.cam;
+        cam = CameraManager.instance.myCamera;
     }
 
     private void Update()
     {
+        if (!playerUI || !cam) return;
+
         playerUI.UpdateText(string.Empty);
         Ray ray = new Ray(cam.transform.position, cam.transform.forward);
         Debug.DrawRay(ray.origin, ray.direction, (Color.red));
@@ -36,7 +34,7 @@ public class PlayerInteract : MonoBehaviour
             {
                 playerUI.UpdateText(hitInfo.collider.GetComponent<Interactable>().PromptMessage);
 
-                if (InputManager.Instance.GetOnFootActions().Interact.triggered)
+                if (InputManager.instance.GetOnFootActions().Interact.triggered)
                 {
                     interactable.BaseInteract();
                 }

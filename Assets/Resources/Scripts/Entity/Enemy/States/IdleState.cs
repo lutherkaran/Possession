@@ -2,43 +2,42 @@ using UnityEngine;
 
 public class IdleState : BaseState
 {
-    public float waitTimer = 0;
-    public float duration = 0;
+    private float duration = 0;
 
-    public override void Enter()
+    private readonly StateSettings settings;
+
+    public IdleState(IStateContext _stateContext) : base(_stateContext)
     {
-        enemy.GetAnimator().SetBool(Enemy.IS_IDLE, true);
-        enemy.Agent.velocity = Vector3.zero;
-        enemy.fieldOfView = 90f;
-        duration = Random.Range(4f, 10f);
-        enemy.Agent.isStopped = false;
+        stateContext = _stateContext;
+        settings = new StateSettings(stateContext, this, StateSettings.animationStates.isIdle, Vector3.zero, 90f);
     }
 
-    public override void Perform()
+    protected override void EnterState()
     {
-        if (enemy.CanSeePlayer()) 
-        { 
-            stateMachine.ChangeState(new AttackState());
-        }
+        stateContext.ApplySettings(settings);
+
+        duration = Random.Range(4f, 10f);
+    }
+
+    protected override void PerformState()
+    {
+        if (stateContext.CanSeePlayer())
+            stateMachine.ChangeState(new AttackState(stateContext));
         else
         {
-            Waiting();
+            if (stateContext.IsSafe())
+            {
+                stateMachine.Waiting(new PatrolState(stateContext), duration);
+            }
+            else
+            {
+                stateMachine.ChangeState(new FleeState(stateContext));
+            }
         }
     }
 
-    public override void Exit()
+    protected override void ExitState()
     {
-        enemy.GetAnimator().SetBool(Enemy.IS_IDLE, false);
-        waitTimer = 0;
-        enemy.Agent.velocity = enemy.defaultVelocity;
-    }
-
-    public void Waiting()
-    {
-        waitTimer += Time.deltaTime;
-        if (waitTimer > duration)
-        {
-            stateMachine.ChangeState(new PatrolState());
-        }
+        stateContext.ResetChanges();
     }
 }

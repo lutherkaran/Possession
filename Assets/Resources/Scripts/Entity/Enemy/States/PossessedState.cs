@@ -2,28 +2,33 @@ using UnityEngine;
 
 public class PossessedState : BaseState
 {
-    private readonly float WalkSpeed = 10f;
-    private Vector3 moveDirection;
+    private StateSettings stateSettings;
 
-    public override void Enter()
+    public PossessedState(IStateContext _stateContext) : base(_stateContext)
     {
-        enemy.Agent.velocity = Vector3.zero;
-        enemy.Agent.isStopped = true;
+        stateContext = _stateContext;
+
+        stateSettings = new StateSettings(stateContext, this, StateSettings.animationStates.isPossessed, Vector3.zero, 0);
     }
 
-    public override void Perform()
+    protected override void EnterState()
     {
-        moveDirection.x = InputManager.Instance.GetOnFootActions().Movement.ReadValue<Vector2>().x;
-        moveDirection.z = InputManager.Instance.GetOnFootActions().Movement.ReadValue<Vector2>().y;
-        moveDirection.y = 0;
-
-        if (PossessionManager.Instance.GetCurrentPossessable() == enemy.possessedByPlayer)
-            enemy.transform.Translate(moveDirection * WalkSpeed * Time.deltaTime);
+        base.EnterState();
+        stateContext.ApplySettings(stateSettings);
+        //Debug.Log($"last active state was {stateMachine.lastActiveState}");
     }
 
-    public override void Exit()
+    protected override void PerformState() 
     {
+        Vector2 moveDir = InputManager.instance.GetMoveDirection();
+        PossessionManager.instance.GetCurrentPossessable().GetPossessedEntity().MoveWhenPossessed(moveDir);
+        float actualSpeed = moveDir.magnitude;
+        stateContext.GetAnimationEntity().SetSpeed(actualSpeed);
+    }
 
+    protected override void ExitState()
+    {
+        stateContext.ResetChanges();
     }
 
 }

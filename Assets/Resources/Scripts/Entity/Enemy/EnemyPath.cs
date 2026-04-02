@@ -1,19 +1,13 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyPath : MonoBehaviour
 {
-    public List<Transform> Waypoints = new List<Transform>();
-    // Start is called before the first frame update
-    void Start()
+    [Header("Pathfinding Properties")]
+    [SerializeField] private List<Transform> Waypoints = new List<Transform>();
+
+    public Vector3 GetRandomPathPosition()
     {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
+        return Waypoints[Random.Range(0, Waypoints.Count - 1)].position;
     }
 }

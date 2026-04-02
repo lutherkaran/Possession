@@ -1,37 +1,64 @@
 using UnityEngine;
+using UnityEngine.AI;
 
 public class FleeState : BaseState
 {
-    Vector3 fleeDirection = Vector3.zero;
-    float FleeDistance = 10f;
+    private readonly StateSettings settings;
 
-    public override void Enter()
+    private Vector3 lastFleeTarget;
+    private float fleeDistance = 4f;
+
+    public FleeState(IStateContext _stateContext) : base(_stateContext)
     {
-        enemy.GetAnimator().SetBool(Enemy.IS_FLEEING, true);
-        enemy.Agent.velocity = enemy.defaultVelocity * 4f;
+        stateContext = _stateContext;
+
+        settings = new StateSettings(stateContext, this, StateSettings.animationStates.isRunning, Vector3.zero, 180f);
     }
 
-    public override void Perform()
+    protected override void EnterState()
     {
-        if (!enemy.IsSafe() && enemy.CanSeePlayer())
+        stateContext.ApplySettings(settings);
+    }
+
+    protected override void PerformState()
+    {
+        if (stateContext.IsSafe())
         {
-            Flee();
+            stateMachine.ChangeState(stateMachine.lastActiveState);
         }
         else
-        {
-            stateMachine.ChangeState(new HealState());
-        }
+            Flee();
+    }
+
+    protected override void ExitState()
+    {
+        stateContext.ResetChanges();
     }
 
     private void Flee()
     {
-        fleeDirection = (enemy.transform.position - enemy.player.transform.position).normalized + (Random.insideUnitSphere * 10).normalized;
-        enemy.Agent.SetDestination(enemy.transform.position + fleeDirection * FleeDistance);
+        Vector3 fleeDir = CalculateFleeDirection();
+        if (fleeDir == Vector3.zero) fleeDir = stateContext.GetTransform().forward;
+
+        Vector3 randomOffset = new Vector3(
+            Random.Range(-8f, 8f),
+            0f,                      // no random Y
+            Random.Range(-8f, 8f)
+        );
+
+        Vector3 targetPos = stateContext.GetTransform().position + fleeDir * fleeDistance + randomOffset;
+
+        if (NavMesh.SamplePosition(targetPos, out NavMeshHit hit, 10f, NavMesh.AllAreas))
+        {
+            targetPos = hit.position;
+        }
+
+        stateContext.GetNavMeshAgent().SetDestination(targetPos);
+        lastFleeTarget = targetPos;
     }
 
-    public override void Exit()
+    private Vector3 CalculateFleeDirection()
     {
-        enemy.GetAnimator().SetBool(Enemy.IS_FLEEING, false);
-        enemy.Agent.velocity = enemy.defaultVelocity;
+        return ((stateContext.GetTransform().position - PlayerManager.instance.GetPlayer().transform.position)).normalized;
     }
 }

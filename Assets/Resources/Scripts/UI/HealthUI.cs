@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -22,6 +20,7 @@ public class HealthUI : MonoBehaviour
     [SerializeField] private float durationTimer;
 
     [SerializeField] private GameObject damagableObject;
+
     private IDamageable hasDamagable;
 
     private void Start()
@@ -47,7 +46,7 @@ public class HealthUI : MonoBehaviour
         UpdateHealth(health);
     }
 
-    void UpdateHealth(float health)
+    private void UpdateHealth(float health)
     {
         float fillF = frontHealthBar.fillAmount;
         float fillB = backHealthBar.fillAmount;
@@ -71,10 +70,9 @@ public class HealthUI : MonoBehaviour
             percentComplete = percentComplete * percentComplete;
             frontHealthBar.fillAmount = Mathf.Lerp(fillF, hFraction, percentComplete);
         }
-
     }
 
-    public void HealthChange(float healthChangeValue)
+    private void HealthChange(float healthChangeValue)
     {
         health += healthChangeValue;
         lerpTimer = 0;
@@ -84,7 +82,6 @@ public class HealthUI : MonoBehaviour
 
         durationTimer = 0;
         damageOverlay.color = new Color(damageOverlay.color.r, damageOverlay.color.g, damageOverlay.color.b, 1);
-
     }
 
     public float GetHealth() => health;

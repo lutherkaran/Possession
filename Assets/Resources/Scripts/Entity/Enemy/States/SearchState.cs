@@ -1,63 +1,63 @@
-using System.Collections;
 using UnityEngine;
 
 public class SearchState : BaseState
 {
-    private float searchTimer;
-    private float moveTimer;
-    private bool isSettingIdle;
-    private float searchDuration = 10f;
+    private Enemy enemy;
 
-    public override void Enter()
+    private float maxSearchDuration = 20f;
+    private float searchTimer;
+
+    private readonly StateSettings stateSettings;
+
+    public SearchState(IStateContext _stateContext) : base(_stateContext)
     {
-        enemy.GetAnimator().SetBool(Enemy.IS_SEARCHING, true);
-        enemy.Agent.SetDestination(enemy.LastKnownPos);
-        enemy.Agent.velocity = enemy.defaultVelocity * 2f;
-        enemy.fieldOfView = 180f;
-        isSettingIdle = false;
+        stateContext = _stateContext;
+        stateSettings = new StateSettings(stateContext, this, StateSettings.animationStates.isRunning, Vector3.zero, 180);
+
+        if (stateContext is Enemy enemy)
+            this.enemy = enemy;
     }
 
-    public override void Perform()
+    protected override void EnterState()
     {
-        if (enemy.CanSeePlayer())
-        {
-            stateMachine.ChangeState(new AttackState());
-        }
+        stateContext.ApplySettings(stateSettings);
+    }
 
-        if (enemy.Agent.remainingDistance <= enemy.Agent.stoppingDistance)
+    protected override void PerformState()
+    {
+        searchTimer += Time.deltaTime;
+
+        if (searchTimer < maxSearchDuration)
         {
-            searchTimer += Time.deltaTime;
-            moveTimer += Time.deltaTime;
-            if (moveTimer >= Random.Range(3f, searchDuration - 1) && !isSettingIdle)
+            if (stateContext.CanSeePlayer())
             {
-                enemy.StartCoroutine(SettingUpIdle());
-                moveTimer = 0;
+                stateMachine.ChangeState(new AttackState(stateContext));
+            }
+
+            if (stateContext.GetNavMeshAgent().remainingDistance <= stateContext.GetNavMeshAgent().stoppingDistance)
+            {
+                stateMachine.Waiting(new IdleState(stateContext), 3);
+                FindAnotherDestinationNearby();
             }
         }
 
-        if (searchTimer > searchDuration)
+        else
         {
-            stateMachine.ChangeState(new PatrolState());
+            stateMachine.ChangeState(new PatrolState(stateContext));
         }
     }
 
-    public override void Exit()
+    protected override void ExitState()
     {
-        enemy.GetAnimator().SetBool(Enemy.IS_SEARCHING, false);
-        searchTimer = 0;
-        moveTimer = 0;
-        isSettingIdle = false;
-        enemy.LastKnownPos = Vector3.zero;
-        enemy.Agent.SetDestination(enemy.transform.position); // Clear destination
+        enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Searching, false);
         enemy.StopAllCoroutines();
+        searchTimer = 0;
     }
 
-    private IEnumerator SettingUpIdle()
+    private void FindAnotherDestinationNearby()
     {
-        isSettingIdle = true;
-        enemy.GetAnimator().Play("Idle");
-        yield return new WaitForSeconds(3f);
-        isSettingIdle = false; // Allow future idles
-        enemy.Agent.SetDestination(enemy.transform.position + (Random.insideUnitSphere * 30f));
+        stateMachine.ChangeState(new SearchState(stateContext));
+        // It should be player's last position not the current possition.
+        stateContext.GetNavMeshAgent().SetDestination(stateContext.GetTransform().position + PlayerManager.instance.GetPlayer().transform.position + (Random.insideUnitSphere * 20f));
     }
 }

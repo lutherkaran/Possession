@@ -2,64 +2,64 @@ using UnityEngine;
 
 public class AttackState : BaseState
 {
+    private Enemy enemy;
+
+    private StateSettings settings;
+
     private float moveTimer;
     private float losePlayerTimer;
-    private float shotTimer;
 
-    public override void Enter()
+    public AttackState(IStateContext _stateContext) : base(_stateContext)
     {
-        enemy.anim.SetBool(Enemy.IS_ATTACKING, true);
+        stateContext = _stateContext;
+        settings = new StateSettings(stateContext, this, StateSettings.animationStates.isAttacking, Vector3.zero, 150f);
     }
 
-    public override void Exit()
+    protected override void EnterState()
     {
-        enemy.anim.SetBool(Enemy.IS_ATTACKING, false);
-        enemy.Agent.velocity = enemy.defaultVelocity;
-        moveTimer = 0;
-        losePlayerTimer = 0;
-        shotTimer = 0;
+        stateContext.ApplySettings(settings);
     }
 
-    public override void Perform()
+    protected override void ExitState()
     {
-        if (enemy.CanSeePlayer())
+        stateContext.ResetChanges();
+    }
+
+    protected override void PerformState()
+    {
+        if (stateContext.CanSeePlayer())
         {
-            enemy.transform.LookAt(enemy.player.transform);
+            enemy.transform.LookAt(enemy.GetTargetPlayerTransform());
 
-            losePlayerTimer = 0;
-            moveTimer += Time.deltaTime;
-            shotTimer += Time.deltaTime;
-
-            if (shotTimer > enemy.fireRate)
-            {
-                Shoot();
-            }
-            if (moveTimer > Random.Range(3, 7))
-            {
-                enemy.Agent.SetDestination(enemy.transform.position + (Random.insideUnitSphere * 5));
-                moveTimer = 0;
-            }
+            // lock the aim towards the player.
+            MoveRandomlyInCirle();
         }
 
         else
         {
             losePlayerTimer += Time.deltaTime;
 
-            if (losePlayerTimer > 5)
+            if (losePlayerTimer > 3)
             {
-                enemy.LastKnownPos = enemy.player.transform.position;
-                stateMachine.ChangeState(new SearchState());
+                // Calls all the enemies to current position or sorrounds
+                // Then Alert them
+                //stateMachine.ChangeState(new SearchState(enemy));
+                losePlayerTimer = 0;
             }
         }
     }
 
-    public void Shoot()
+    private void MoveRandomlyInCirle()
     {
-        Transform gunBarrel = enemy.gunBarrel;
-        GameObject bullet = GameObject.Instantiate(Resources.Load("Prefabs/Bullet") as GameObject, gunBarrel.position, enemy.transform.rotation);
-        Vector3 shootDirection = (enemy.player.transform.position - gunBarrel.transform.position).normalized;
-        bullet.GetComponent<Rigidbody>().linearVelocity = Quaternion.AngleAxis(Random.Range(-3f, 3f), Vector3.up) * shootDirection * 30f;
-        //Debug.Log("Shoot");
-        shotTimer = 0;
+        moveTimer += Time.deltaTime;
+
+        if (moveTimer > Random.Range(3, 7))
+        {
+            enemy.GetEnemyAgent().SetDestination(enemy.transform.position + (Random.insideUnitSphere * 5));
+            moveTimer = 0;
+        }
     }
+
+    // Move towards the player position, aim towards him, and alert other enemies or call them there.
+    // if Enemy lost player then he starts searching, then he also alert and calls other enemies.
 }

@@ -1,71 +1,64 @@
 using UnityEngine;
 
-public class NPC : Entity, IPossessable
+public class Npc : Entity, IPossessable
 {
-    Rigidbody rb;
+    protected float currentFixedDeltaTime = 0f;
 
-    void Awake()
+    protected float actualSpeed { get; private set; } = 0f;
+
+    public virtual void Initialize()
     {
-        rb = this.GetComponent<Rigidbody>();
+        //rb = GetComponent<Rigidbody>();
     }
 
-    public void Update()
-    {
-
-    }
-
-    public override void Attack()
+    public virtual void PostInitialize()
     {
 
     }
 
-    public override bool IsAlive()
+    public virtual void Refresh(float deltaTime)
     {
-        return false;
+
     }
 
-    public override void ProcessMove(Vector2 input)
+    public virtual void PhysicsRefresh(float fixedDeltaTime)
     {
-        base.ProcessMove(input);
-        if (PossessionManager.Instance.GetCurrentPossessable() == possessedByPlayer)
-            transform.Translate(moveDirection * speed * Time.deltaTime);
+
     }
 
-    public override void ProcessJump()
+    public virtual void LateRefresh(float deltaTime)
     {
-        base.ProcessJump();
-        if (PossessionManager.Instance.GetCurrentPossessable() == possessedByPlayer)
-        {
-            transform.position += velocity * Time.deltaTime;
-            velocity.y = gravity * Time.deltaTime * 10;
-        }
+
     }
 
-    public override void Sprint()
+    public virtual void OnDemolish()
     {
-        base.Sprint();
+
     }
 
-    public void Possessing(GameObject go)
+    public virtual void Possessing(GameObject go)
     {
-        //Debug.Log("Possessing..." + go.name);
-        possessedByPlayer = PossessionManager.Instance.GetCurrentPossessable();
+        possessedByPlayer = PossessionManager.instance.GetCurrentPossessable();
     }
 
-    public void Depossessing(GameObject go)
+    public virtual void Depossessing(GameObject go)
     {
-        //Debug.Log("DePossessing..." + go.name);
         possessedByPlayer = null;
     }
 
     public Entity GetPossessedEntity() => this;
 
-    public override Entity GetEntity() => this;
-
     public override Transform GetCameraAttachPoint() => cameraAttachPoint;
 
-    public override float GetEntityPossessionTimerMax() => entityPossessionTimerMax;
+    public override Transform GetTargetLockTransform() => targetLockerPoint;
 
-    public override float GetPossessionCooldownTimerMax() => possessionCooldownTimerMax;
+    public override EntityAnimation GetEntityAnimation() => entityAnimation;
 
+    public override float GetEntityPossessionTimerMax() => entitySO.entityPossessionTimerMax;
+
+    public override float GetPossessionCooldownTimerMax() => entitySO.possessionCooldownTimerMax;
+
+    public float GetActualSpeed() => actualSpeed;
+
+    public override Rigidbody GetRigidBody() => rb;
 }

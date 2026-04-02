@@ -1,14 +1,15 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager Instance { get; private set; }
+    public static GameManager instance { get; private set; }
 
     public event EventHandler OnGamePaused;
     public event EventHandler OnGameUnpaused;
+
+    [SerializeField] private Volume globalVolume;
 
     private enum GameState
     {
@@ -18,7 +19,7 @@ public class GameManager : MonoBehaviour
         GameOver
     }
 
-    private GameState gameState;
+    private GameState state;
 
     private float waitingToStartTimer = 1f;
     private float countdownToStartTimer = 3f;
@@ -29,23 +30,24 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance != null) { Debug.LogError("There's more than one GameManager in the Scene"); }
-        Instance = this;
-        DontDestroyOnLoad(this.gameObject);
+        if (instance != null)
+        {
+            Destroy(gameObject);
+            instance = null;
+        }
 
-        gameState = GameState.WaitingToStart;
+        instance = this;
+        state = GameState.WaitingToStart;
     }
 
     private void Start()
     {
-        InputManager.Instance.OnGamePaused += GameManager_OnGamePaused;
-        Debug.Log("InputManager: " + InputManager.Instance);
+        InputManager.instance.OnGamePaused += GameManager_OnGamePaused;
     }
-
 
     private void Update()
     {
-        switch (gameState)
+        switch (state)
         {
             default:
             case GameState.WaitingToStart:
@@ -54,7 +56,7 @@ public class GameManager : MonoBehaviour
                 countdownToStartTimer -= Time.deltaTime;
                 if (countdownToStartTimer < 0)
                 {
-                    gameState = GameState.GamePlaying;
+                    state = GameState.GamePlaying;
                     gamePlayingTimer = gamePlayingTimerMax;
                 }
                 break;
@@ -62,7 +64,7 @@ public class GameManager : MonoBehaviour
                 gamePlayingTimer -= Time.deltaTime;
                 if (gamePlayingTimer < 0f)
                 {
-                    gameState = GameState.GameOver;
+                    state = GameState.GameOver;
                 }
                 break;
             case GameState.GameOver:
@@ -70,10 +72,14 @@ public class GameManager : MonoBehaviour
         }
     }
 
-
     private void GameManager_OnGamePaused(object sender, System.EventArgs e)
     {
         TogglePause();
+    }
+
+    public bool isGamePlaying()
+    {
+        return state == GameState.GamePlaying;
     }
 
     public void TogglePause()
@@ -88,9 +94,14 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            Time.timeScale += 1f;
+            Time.timeScale = 1f;
             OnGameUnpaused?.Invoke(this, EventArgs.Empty);
             CameraManager.instance.GetMouseAim().ToggleMouseInteraction();
         }
+    }
+
+    public void ApplyVolumeProfile(VolumeProfile volumeProfile)
+    {
+        globalVolume.GetComponent<Volume>().profile = volumeProfile;
     }
 }
