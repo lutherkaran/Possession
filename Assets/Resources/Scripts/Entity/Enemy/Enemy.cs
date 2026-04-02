@@ -16,8 +16,8 @@ public class Enemy : Entity, IPossessable, IDamageable
 
     [Header("Pathfinding")]
     [SerializeField] public EnemyPath enemyPath;
-    [SerializeField] public Vector3 LastKnownPos { get; set; }
-    [SerializeField] public NavMeshAgent Agent { get; private set; }
+    [SerializeField] public Vector3 LastKnownPos;
+    [SerializeField] public NavMeshAgent Agent;
 
     // Serialized Fields
     [Header("Sight Values")]
