@@ -12,6 +12,7 @@ public class AttackState : BaseState
     public AttackState(IStateContext _stateContext) : base(_stateContext)
     {
         stateContext = _stateContext;
+        enemy = stateContext as Enemy;
         settings = new StateSettings(stateContext, this, StateSettings.animationStates.isAttacking, Vector3.zero, 150f);
     }
 
@@ -27,7 +28,7 @@ public class AttackState : BaseState
 
     protected override void PerformState()
     {
-        if (stateContext.CanSeePlayer())
+        if (stateContext.CanSeePossessedPlayer())
         {
             enemy.transform.LookAt(enemy.GetTargetPlayerTransform());
 

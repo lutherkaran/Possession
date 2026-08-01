@@ -16,8 +16,10 @@ public class StateMachine : MonoBehaviour
     [Header("State Machine")]
     [SerializeField] private string currentState;
 
-    public void Initialise(IStateContext _stateContext, Dictionary<Type, BaseState> _availableStates)
+    public void  Initialise(IStateContext _stateContext, Dictionary<Type, BaseState> _availableStates)
     {
+        availableStates = _availableStates;
+
         if (_stateContext == null)
         {
             Debug.LogError("Statemachine requires a component implementation" + stateContext);
@@ -25,24 +27,9 @@ public class StateMachine : MonoBehaviour
         else
         {
             stateContext = _stateContext;
-            //enemy.OnDamaged += Enemy_OnDamaged;
             ChangeState(new IdleState(stateContext));
         }
     }
-
-    //private void Enemy_OnDamaged(object sender, IDamageable.OnDamagedEventArgs e)
-    //{
-    //    if (enemy.GetHealth() > 30 && enemy.GetHealth() < 50)
-    //    {
-    //        ChangeState(new FleeState(enemy));
-    //    }
-
-    //    else if (enemy.GetHealth() < 30)
-    //    {
-    //        ChangeState(new HealState(enemy));
-    //    }
-    //}
-
     public void Refresh(float deltaTime)
     {
         if (currentActiveState != null)

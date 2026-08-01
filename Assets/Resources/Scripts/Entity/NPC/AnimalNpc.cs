@@ -124,7 +124,7 @@ public abstract class AnimalNpc : Npc, IStateContext
         animalNpcController.Reset();
     }
 
-    bool IStateContext.CanSeePlayer() => false;
+    bool IStateContext.CanSeePossessedPlayer() => false;
 
     public Transform GetTransform() => transform;
 
@@ -134,5 +134,10 @@ public abstract class AnimalNpc : Npc, IStateContext
     public EntityAnimation GetAnimationEntity()
     {
         return entityAnimation;
+    }
+
+    public bool CanSeePossessedAnimal()
+    {
+        return false;
     }
 }

@@ -21,7 +21,7 @@ public class IdleState : BaseState
 
     protected override void PerformState()
     {
-        if (stateContext.CanSeePlayer())
+        if (stateContext.CanSeePossessedPlayer())
             stateMachine.ChangeState(new AttackState(stateContext));
         else
         {

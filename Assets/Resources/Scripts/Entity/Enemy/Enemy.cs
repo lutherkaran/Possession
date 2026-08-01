@@ -158,29 +158,27 @@ public class Enemy : Entity, IPossessable, IDamageable, IStateContext
 
     public Transform GetTransform() => transform;
 
-    public virtual bool CanSeePlayer()
+    public bool CanSeePossessedAnimal()
     {
-        player = PlayerManager.instance.GetPlayer().transform;
+        Transform target = PossessionManager.instance.GetActiveTransform();
+        if (target == null || target == PlayerManager.instance.GetPlayer().transform) return false; // player isn't possessing an animal right now
+        return HasSightTo(target, 1f, enemySO.bodyFieldOfView);
+    }
 
-        if (Vector3.Distance(transform.position, player.position) < enemySO.sightDistance)
-        {
-            Vector3 targetDirection = player.position - transform.position;
-            float angleToPlayer = Vector3.Angle(targetDirection, transform.forward);
-            if (angleToPlayer >= -enemySO.fieldOfView && angleToPlayer <= enemySO.fieldOfView)
-            {
-                Ray ray = new Ray(transform.position + (Vector3.up * enemySO.eyeHeight), targetDirection);
-                if (Physics.Raycast(ray, out RaycastHit hitInfo, enemySO.sightDistance, enemySO.targetLayerMask))
-                {
-                    targetTransform = hitInfo.transform;
-                    targetsLastPosition = targetTransform.position;
-                    Vector3.RotateTowards(transform.forward, targetDirection.normalized, 1, 2);
-                    Debug.DrawRay(ray.origin, ray.direction * enemySO.sightDistance, Color.red);
-                    return true;
-                }
-            }
-        }
+    public bool CanSeePossessedPlayer()
+    {
+        Transform body = PlayerManager.instance.GetPlayer().transform;
+        if (PossessionManager.instance.GetActiveTransform() == body) return false; // player is currently the human -- no "abandoned" body to spot
+        return HasSightTo(body, 1f, enemySO.bodyFieldOfView);
+    }
 
-        return false;
+    private bool HasSightTo(Transform target, float radius, float fov)
+    {
+        if (Vector3.Distance(transform.position, target.position) > radius) return false;
+        float angle = Vector3.Angle(target.position - transform.position, transform.forward);
+        if (angle > fov) return false;
+        Ray ray = new Ray(transform.position + Vector3.up * enemySO.eyeHeight, (target.position - transform.position));
+        return Physics.Raycast(ray, out RaycastHit hit, radius, enemySO.targetLayerMask) && hit.transform == target;
     }
 
     public virtual void ApplySettings(StateSettings _settings)

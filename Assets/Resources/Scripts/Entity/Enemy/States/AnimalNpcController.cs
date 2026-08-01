@@ -29,7 +29,7 @@ public class AnimalNpcController
 
         else if (stateSettings.currentActiveState is FleeState)
         { 
-            animal.GetNavMeshAgent().velocity *= 2f;
+            animal.GetNavMeshAgent().speed *= 2f;
             animal.GetNavMeshAgent().isStopped = false;
         }
 

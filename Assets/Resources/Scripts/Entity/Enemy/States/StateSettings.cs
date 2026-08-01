@@ -27,6 +27,6 @@ public class StateSettings
         currentActiveState = _baseState;
         animStates = _boolState;
         desiredVelocity = _desiredVelocity;
-        fieldOfView = fieldOfView;
+        fieldOfView = _fieldOfView;
     }
 }

@@ -18,7 +18,7 @@ public class EnemyController
             enemy.GetEnemyAgent().velocity = stateSettings.desiredVelocity;
             enemy.GetAnimator().ResetBlend();
 
-            enemy.GetEnemySO().fieldOfView = stateSettings.fieldOfView;
+            enemy.GetEnemySO().bodyFieldOfView = stateSettings.fieldOfView;
             enemy.GetEnemyAgent().isStopped = stateSettings.animStates == StateSettings.animationStates.isIdle;
         }
         else if (stateSettings.currentActiveState is PatrolState)
@@ -31,7 +31,7 @@ public class EnemyController
 
             enemy.GetEnemyAgent().velocity = enemy.defaultVelocity;
             enemy.GetEnemyAgent().SetDestination(enemyPath.GetRandomPathPosition());
-            enemy.GetEnemySO().fieldOfView = stateSettings.fieldOfView;
+            enemy.GetEnemySO().bodyFieldOfView = stateSettings.fieldOfView;
         }
         else if (stateSettings.currentActiveState is AttackState)
         {
@@ -44,7 +44,7 @@ public class EnemyController
             enemy.GetAnimator().RunBlend();
             enemy.GetEnemyAgent().SetDestination(enemy.targetsLastPosition);
             enemy.GetEnemyAgent().velocity = enemy.defaultVelocity * 4f;
-            enemy.GetEnemySO().fieldOfView = stateSettings.fieldOfView;
+            enemy.GetEnemySO().bodyFieldOfView = stateSettings.fieldOfView;
         }
         else if (stateSettings.currentActiveState is PossessedState)
         {

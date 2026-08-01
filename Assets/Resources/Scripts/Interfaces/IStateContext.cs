@@ -6,7 +6,8 @@ public interface IStateContext
     public EntityAnimation GetAnimationEntity();
 
     public abstract bool IsSafe();
-    public abstract bool CanSeePlayer();
+    public abstract bool CanSeePossessedPlayer();
+    public abstract bool CanSeePossessedAnimal();
 
     public abstract void ResetChanges();
     public abstract void ApplySettings(StateSettings _settings);

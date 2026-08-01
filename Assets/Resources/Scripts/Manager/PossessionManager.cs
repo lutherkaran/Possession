@@ -59,6 +59,11 @@ public class PossessionManager : IManagable
         currentPossession = null;
     }
 
+    public Transform GetActiveTransform()
+    {
+        return currentlyPossessed?.GetPossessedEntity().transform;
+    }
+
     public Possession GetCurrentPossession() => currentPossession;
 
     public IPossessable GetCurrentPossessable() => currentlyPossessed;
@@ -82,5 +87,4 @@ public class PossessionManager : IManagable
     {
         Instance = null;
     }
-
 }
