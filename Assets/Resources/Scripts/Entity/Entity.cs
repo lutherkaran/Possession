@@ -23,12 +23,6 @@ public abstract class Entity : MonoBehaviour
         sprinting = !sprinting;
     }
 
-    // Called from InputManager.PhysicsRefresh (FixedUpdate) for whichever entity is currently
-    // possessed. Movement is relative to the entity's CURRENT facing (transform.forward/right) --
-    // matching the existing design where MouseAim.HandleLook rotates the possessed entity's own
-    // transform directly via mouse X. Using raw world-space input here (as an earlier pass did)
-    // desyncs movement from what mouse-look is showing on screen -- this restores the original
-    // Space.Self relationship, now going through the Rigidbody so collisions are respected.
     public virtual void MoveWhenPossessed(Vector2 input)
     {
         Vector3 localMoveDir = new Vector3(input.x, 0, input.y).normalized;
@@ -37,16 +31,21 @@ public abstract class Entity : MonoBehaviour
 
         if (rb != null && !rb.isKinematic)
         {
-            // MovePosition on a non-kinematic Rigidbody still gets full collision response
-            // (this is Unity's documented way to script-drive a dynamic Rigidbody), unlike
-            // setting linearVelocity directly, which doesn't interact as cleanly with rotation
-            // being driven separately (by mouse look) on the same transform.
             rb.MovePosition(rb.position + moveDir * currentSpeed * Time.fixedDeltaTime);
+
+            // Only cancel velocity when there's no input, to stop lingering post-collision
+            // drift once the player lets go of movement. Doing this unconditionally on every
+            // FixedUpdate (even while actively moving) was fighting MovePosition's own physics
+            // step every single frame -- that's what caused the visible vibration while moving,
+            // especially noticeable strafing (no forward momentum to mask it).
+            if (localMoveDir.sqrMagnitude < 0.0001f)
+            {
+                Vector3 v = rb.linearVelocity;
+                rb.linearVelocity = new Vector3(0f, v.y, 0f);
+            }
         }
         else
         {
-            // Kinematic (e.g. an NPC not currently possessed, or missing Rigidbody) -- keep
-            // the exact original behaviour.
             transform.Translate(localMoveDir * currentSpeed * Time.fixedDeltaTime, Space.Self);
         }
     }

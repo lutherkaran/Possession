@@ -43,11 +43,11 @@ public class InputManager : IManagable
 
     }
 
-    // Physics-timed movement application for whichever entity is currently possessed --
-    // Player, animal, or (rarely) an Enemy. Previously this only moved PlayerController and
-    // PossessedState.PerformState separately re-applied movement in Update, which double-drove
-    // the player's Rigidbody every frame. Now there is exactly one place movement is applied,
-    // and it always runs at a fixed timestep.
+    // Physics-timed movement AND rotation for whichever entity is currently possessed.
+    // Both MovePosition (movement) and MoveRotation (yaw, via MouseAim.ProcessEntityYaw) now
+    // run here, on the same fixed clock -- previously yaw was applied from LateUpdate while
+    // movement was applied from FixedUpdate, and mixing Rigidbody-API calls across two
+    // different update frequencies caused visible jitter.
     public void PhysicsRefresh(float fixedDeltaTime)
     {
         moveDir = playerInput.OnFoot.Movement.ReadValue<Vector2>().normalized;
@@ -56,8 +56,12 @@ public class InputManager : IManagable
         if (possessable == null) return;
 
         possessable.GetPossessedEntity().MoveWhenPossessed(moveDir);
+
+        float mouseX = playerInput.OnFoot.Look.ReadValue<Vector2>().x;
+        CameraManager.instance.GetMouseAim().ProcessEntityYaw(mouseX, fixedDeltaTime);
     }
 
+    // Camera pitch + target-locker refresh only now -- see MouseAim.ProcessLook.
     public void LateRefresh(float deltaTime)
     {
         CameraManager.instance.GetMouseAim().ProcessLook(playerInput.OnFoot.Look.ReadValue<Vector2>(), deltaTime);

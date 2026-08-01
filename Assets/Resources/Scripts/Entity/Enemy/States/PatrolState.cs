@@ -18,9 +18,6 @@ public class PatrolState : BaseState
 
     protected override void PerformState()
     {
-        // Previously a patrolling guard never checked for either threat until it happened to
-        // stop and re-enter IdleState -- meaning a guard actively walking its route was
-        // effectively blind. Both checks now run every frame here too.
         if (stateContext.CanSeePossessedPlayer())
         {
             stateMachine.ChangeState(new AttackState(stateContext));
@@ -50,7 +47,15 @@ public class PatrolState : BaseState
 
     protected void PatrolCycle()
     {
-        if (stateContext.GetNavMeshAgent().remainingDistance <= stateContext.GetNavMeshAgent().stoppingDistance)
+        var agent = stateContext.GetNavMeshAgent();
+
+        // An animal that was just possessed/depossessed can momentarily be re-enabled off the
+        // baked NavMesh surface (Rigidbody-driven movement during possession isn't constrained
+        // to the NavMesh). Reading remainingDistance/stoppingDistance on an agent that isn't
+        // actually placed on the mesh throws every frame -- guard it and let it re-settle.
+        if (agent == null || !agent.isOnNavMesh) return;
+
+        if (agent.remainingDistance <= agent.stoppingDistance)
         {
             stateMachine.ChangeState(new IdleState(stateContext));
         }

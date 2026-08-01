@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.AI;
 
 public class AnimalNpcController
 {
@@ -39,10 +40,6 @@ public class AnimalNpcController
             animal.GetNavMeshAgent().enabled = false;
             animal.GetNavMeshAgent().velocity = Vector3.zero;
 
-            // The Rigidbody stays kinematic while the NavMeshAgent drives movement (so it
-            // doesn't fight the agent's direct position writes). Only while actually possessed
-            // and player-driven via MovePosition does it need to be a real dynamic body so
-            // wall/obstacle collisions are respected.
             if (animal.GetRigidBody() != null)
                 animal.GetRigidBody().isKinematic = false;
         }
@@ -60,21 +57,36 @@ public class AnimalNpcController
         }
         else if (stateSettings.currentActiveState is FleeState)
         {
-            // Was never undoing the *2 speed boost applied in RunAI -- every flee would
-            // permanently double the animal's speed again (compounding: 2x, 4x, 8x...).
             animal.GetNavMeshAgent().speed /= 2f;
             animal.GetNavMeshAgent().isStopped = false;
         }
 
         else if (stateSettings.currentActiveState is PossessedState)
         {
-            animal.GetNavMeshAgent().enabled = true;
-            animal.GetNavMeshAgent().isStopped = false;
-
-            // Back to kinematic before handing control back to the NavMeshAgent.
             if (animal.GetRigidBody() != null)
                 animal.GetRigidBody().isKinematic = true;
 
+            var agent = animal.GetNavMeshAgent();
+            agent.enabled = true;
+
+            // While possessed, Rigidbody-driven movement isn't constrained to the baked
+            // NavMesh, so the animal can end up standing somewhere the mesh doesn't cover.
+            // Re-enabling the agent doesn't automatically reattach it to the mesh in that case
+            // (isOnNavMesh stays false and every subsequent agent call throws) -- Warp finds
+            // the nearest valid point and properly re-registers the agent on it.
+            if (!agent.isOnNavMesh)
+            {
+                if (NavMesh.SamplePosition(animal.transform.position, out NavMeshHit hit, 10f, NavMesh.AllAreas))
+                {
+                    agent.Warp(hit.position);
+                }
+                else
+                {
+                    Debug.LogWarning($"{animal.name}: could not find a NavMesh within 10m after depossession -- agent may stay disabled-feeling until it does.");
+                }
+            }
+
+            agent.isStopped = false;
             animal.GetStateMachine().ChangeState(animal.GetStateMachine().lastActiveState);
         }
     }
