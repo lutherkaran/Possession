@@ -43,15 +43,19 @@ public class InputManager : IManagable
 
     }
 
+    // Physics-timed movement application for whichever entity is currently possessed --
+    // Player, animal, or (rarely) an Enemy. Previously this only moved PlayerController and
+    // PossessedState.PerformState separately re-applied movement in Update, which double-drove
+    // the player's Rigidbody every frame. Now there is exactly one place movement is applied,
+    // and it always runs at a fixed timestep.
     public void PhysicsRefresh(float fixedDeltaTime)
     {
         moveDir = playerInput.OnFoot.Movement.ReadValue<Vector2>().normalized;
-        var entity = PossessionManager.instance.GetCurrentPossessable().GetPossessedEntity();
 
-        if (entity is PlayerController)
-        {
-            entity.MoveWhenPossessed(moveDir);
-        }
+        var possessable = PossessionManager.instance.GetCurrentPossessable();
+        if (possessable == null) return;
+
+        possessable.GetPossessedEntity().MoveWhenPossessed(moveDir);
     }
 
     public void LateRefresh(float deltaTime)

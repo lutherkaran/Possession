@@ -17,8 +17,6 @@ public class EnemyController
             enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Idle, stateSettings.animStates == StateSettings.animationStates.isIdle);
             enemy.GetEnemyAgent().velocity = stateSettings.desiredVelocity;
             enemy.GetAnimator().ResetBlend();
-
-            enemy.GetEnemySO().bodyFieldOfView = stateSettings.fieldOfView;
             enemy.GetEnemyAgent().isStopped = stateSettings.animStates == StateSettings.animationStates.isIdle;
         }
         else if (stateSettings.currentActiveState is PatrolState)
@@ -31,11 +29,17 @@ public class EnemyController
 
             enemy.GetEnemyAgent().velocity = enemy.defaultVelocity;
             enemy.GetEnemyAgent().SetDestination(enemyPath.GetRandomPathPosition());
-            enemy.GetEnemySO().bodyFieldOfView = stateSettings.fieldOfView;
         }
         else if (stateSettings.currentActiveState is AttackState)
         {
             enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Attacking, stateSettings.animStates == StateSettings.animationStates.isAttacking);
+            enemy.GetAnimator().AlertBlend();
+        }
+        else if (stateSettings.currentActiveState is SuspicionState)
+        {
+            // Reuses the Attacking/alert blend for now -- swap for a dedicated "suspicious" animation
+            // state when art has one; functionally this is a distinct, lower-stakes threat.
+            enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Attacking, stateSettings.animStates == StateSettings.animationStates.isRunning);
             enemy.GetAnimator().AlertBlend();
         }
         else if (stateSettings.currentActiveState is SearchState)
@@ -44,13 +48,16 @@ public class EnemyController
             enemy.GetAnimator().RunBlend();
             enemy.GetEnemyAgent().SetDestination(enemy.targetsLastPosition);
             enemy.GetEnemyAgent().velocity = enemy.defaultVelocity * 4f;
-            enemy.GetEnemySO().bodyFieldOfView = stateSettings.fieldOfView;
         }
         else if (stateSettings.currentActiveState is PossessedState)
         {
             enemy.GetEnemyAgent().velocity = UnityEngine.Vector3.zero;
             enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Possessed, stateSettings.animStates == StateSettings.animationStates.isPossessed);
             enemy.GetEnemyAgent().isStopped = true;
+            enemy.GetEnemyAgent().enabled = false; // hand full control to the Rigidbody while possessed
+
+            if (enemy.GetRigidBody() != null)
+                enemy.GetRigidBody().isKinematic = false;
         }
     }
 
@@ -69,6 +76,11 @@ public class EnemyController
             enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Attacking, false);
             enemy.GetEnemyAgent().velocity = enemy.defaultVelocity;
         }
+        else if (stateSettings.currentActiveState is SuspicionState)
+        {
+            enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Attacking, false);
+            enemy.GetEnemyAgent().velocity = enemy.defaultVelocity;
+        }
         else if (stateSettings.currentActiveState is SearchState)
         {
             enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Searching, false);
@@ -78,7 +90,11 @@ public class EnemyController
         {
             enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Possessed, false);
             enemy.GetAnimator().WalkBlend();
+
+            if (enemy.GetRigidBody() != null)
+                enemy.GetRigidBody().isKinematic = true;
+
+            enemy.GetEnemyAgent().enabled = true;
         }
     }
 }
-

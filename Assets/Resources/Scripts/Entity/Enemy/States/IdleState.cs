@@ -22,7 +22,13 @@ public class IdleState : BaseState
     protected override void PerformState()
     {
         if (stateContext.CanSeePossessedPlayer())
+        {
             stateMachine.ChangeState(new AttackState(stateContext));
+        }
+        else if (stateContext.CanSeePossessedAnimal())
+        {
+            stateMachine.ChangeState(new SuspicionState(stateContext));
+        }
         else
         {
             if (stateContext.IsSafe())

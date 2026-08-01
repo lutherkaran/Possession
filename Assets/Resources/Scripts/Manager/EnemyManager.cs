@@ -106,4 +106,16 @@ public class EnemyManager : IManagable
             enemy.Refresh(deltaTime);
         }
     }
+
+    // Called by a guard's AttackState once its reaction window expires -- broadcasts the
+    // abandoned body's last known position to every other guard so they converge (SearchState)
+    // instead of only the one guard who actually saw it.
+    public void AlertAllGuards(Vector3 lastKnownPosition, Enemy source)
+    {
+        foreach (Enemy enemyGuard in enemies)
+        {
+            if (enemyGuard == source) continue;
+            enemyGuard.ReceiveAlert(lastKnownPosition);
+        }
+    }
 }

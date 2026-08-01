@@ -523,6 +523,7 @@ GameObject:
   - component: {fileID: 6814030415206713647}
   - component: {fileID: 6719135856900906613}
   - component: {fileID: 3427426404355915389}
+  - component: {fileID: 8368528003163720510}
   m_Layer: 8
   m_Name: DeerNpc
   m_TagString: Npc
@@ -562,6 +563,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: GameAssembly::Deer
   entitySO: {fileID: 11400000, guid: b2dd17416d621c0499f92fd0aec1580e, type: 2}
   cameraAttachPoint: {fileID: 7942068626607721710}
+  targetLockerPoint: {fileID: 0}
   entityAnimation: {fileID: 0}
   animal: 0
   gem: {fileID: 0}
@@ -590,6 +592,33 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 1
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!54 &8368528003163720510
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4019073034159484152}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 80
+  m_CollisionDetection: 0
 --- !u!1 &4408595193113643915
 GameObject:
   m_ObjectHideFlags: 0
@@ -1059,6 +1088,8 @@ SkinnedMeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -1080,9 +1111,11 @@ SkinnedMeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   serializedVersion: 2
   m_Quality: 0
   m_UpdateWhenOffscreen: 0

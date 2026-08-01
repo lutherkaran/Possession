@@ -32,15 +32,15 @@ public class SearchState : BaseState
             if (stateContext.CanSeePossessedPlayer())
             {
                 stateMachine.ChangeState(new AttackState(stateContext));
+                return;
             }
 
             if (stateContext.GetNavMeshAgent().remainingDistance <= stateContext.GetNavMeshAgent().stoppingDistance)
             {
-                stateMachine.Waiting(new IdleState(stateContext), 3);
                 FindAnotherDestinationNearby();
+                stateMachine.Waiting(new IdleState(stateContext), 3);
             }
         }
-
         else
         {
             stateMachine.ChangeState(new PatrolState(stateContext));
@@ -49,15 +49,20 @@ public class SearchState : BaseState
 
     protected override void ExitState()
     {
-        enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Searching, false);
-        enemy.StopAllCoroutines();
+        if (enemy != null)
+        {
+            enemy.GetAnimator().SetAnimations(EnemyAnimator.AnimationStates.Searching, false);
+            enemy.StopAllCoroutines();
+        }
         searchTimer = 0;
     }
 
+    // Was previously summing the guard's own position with the player's world position
+    // (nonsensical -- could point anywhere off the map). Now searches near the actual last
+    // known sighting instead.
     private void FindAnotherDestinationNearby()
     {
-        stateMachine.ChangeState(new SearchState(stateContext));
-        // It should be player's last position not the current possition.
-        stateContext.GetNavMeshAgent().SetDestination(stateContext.GetTransform().position + PlayerManager.instance.GetPlayer().transform.position + (Random.insideUnitSphere * 20f));
+        Vector3 lastKnown = enemy != null ? enemy.targetsLastPosition : stateContext.GetTransform().position;
+        stateContext.GetNavMeshAgent().SetDestination(lastKnown + (Random.insideUnitSphere * 10f));
     }
 }

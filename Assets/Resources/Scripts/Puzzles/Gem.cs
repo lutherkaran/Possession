@@ -7,9 +7,18 @@ public class Gem : MonoBehaviour, IPuzzleObject
 
     public static event EventHandler onPuzzlePieceCollected;
 
-    private void Start()
+    // Registration moved from Start() (add-only, never removed) to OnEnable/OnDisable so the
+    // static dictionary doesn't accumulate stale/destroyed keys across scene reloads or repeated
+    // play sessions -- Hide() below disables the object, which now cleanly unregisters it too.
+    private void OnEnable()
     {
-        DoorPuzzle.puzzleDictionary.Add(this, gemsSO.animal);
+        if (gemsSO != null && !DoorPuzzle.puzzleDictionary.ContainsKey(this))
+            DoorPuzzle.puzzleDictionary.Add(this, gemsSO.animal);
+    }
+
+    private void OnDisable()
+    {
+        DoorPuzzle.puzzleDictionary.Remove(this);
     }
 
     public void HasPuzzleObject()

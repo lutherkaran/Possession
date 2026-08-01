@@ -54,6 +54,7 @@ public class PossessionManager : IManagable
     {
         var toDepossess = depossessable.GetPossessedEntity().gameObject;
         currentlyPossessed.Depossessing(toDepossess);
+        depossessable.GetPossessedEntity().StopPhysicsMovement(); // avoid leftover Rigidbody drift after depossession
 
         currentlyPossessed = null;
         currentPossession = null;

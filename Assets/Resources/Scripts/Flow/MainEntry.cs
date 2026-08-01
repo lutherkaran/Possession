@@ -22,7 +22,8 @@ public class MainEntry : MonoBehaviour
                 PlayerManager.instance,
                 NpcManager.instance,
                 InputManager.instance,
-                PossessionManager.instance
+                PossessionManager.instance,
+                AlertManager.instance
             };
 
             gameFlow = new GameFlow(managers);

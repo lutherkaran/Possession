@@ -41,7 +41,7 @@ public class Enemy : Entity, IPossessable, IDamageable, IStateContext
 
         enemyAgent = GetComponent<NavMeshAgent>();
         stateMachine = GetComponent<StateMachine>();
-        //rb = GetComponent<Rigidbody>();
+        rb = GetComponent<Rigidbody>();
 
         enemyAI = new EnemyController(this);
         defaultVelocity = enemyAgent.velocity;
@@ -74,6 +74,7 @@ public class Enemy : Entity, IPossessable, IDamageable, IStateContext
             {typeof(PatrolState), new PatrolState(this) },
             {typeof(AttackState), new AttackState(this) },
             {typeof(SearchState), new SearchState(this) },
+            {typeof(SuspicionState), new SuspicionState(this) },
             {typeof(PossessedState), new PossessedState(this) },
         };
 
@@ -158,27 +159,45 @@ public class Enemy : Entity, IPossessable, IDamageable, IStateContext
 
     public Transform GetTransform() => transform;
 
+    // Dual-risk detection: two independent checks per frame, each feeding a different
+    // state branch (SuspicionState for the animal, AttackState for the abandoned body).
     public bool CanSeePossessedAnimal()
     {
         Transform target = PossessionManager.instance.GetActiveTransform();
         if (target == null || target == PlayerManager.instance.GetPlayer().transform) return false; // player isn't possessing an animal right now
-        return HasSightTo(target, 1f, enemySO.bodyFieldOfView);
+        return HasSightTo(target, enemySO.sightDistance, enemySO.animalFieldOfView);
     }
 
     public bool CanSeePossessedPlayer()
     {
         Transform body = PlayerManager.instance.GetPlayer().transform;
         if (PossessionManager.instance.GetActiveTransform() == body) return false; // player is currently the human -- no "abandoned" body to spot
-        return HasSightTo(body, 1f, enemySO.bodyFieldOfView);
+
+        bool seen = HasSightTo(body, enemySO.sightDistance, enemySO.bodyFieldOfView);
+        if (seen)
+        {
+            // AttackState/SearchState read these -- keep them updated whenever the body is actually seen.
+            targetTransform = body;
+            targetsLastPosition = body.position;
+        }
+        return seen;
     }
 
-    private bool HasSightTo(Transform target, float radius, float fov)
+    private bool HasSightTo(Transform target, float sightDistance, float fov)
     {
-        if (Vector3.Distance(transform.position, target.position) > radius) return false;
+        if (Vector3.Distance(transform.position, target.position) > sightDistance) return false;
         float angle = Vector3.Angle(target.position - transform.position, transform.forward);
         if (angle > fov) return false;
         Ray ray = new Ray(transform.position + Vector3.up * enemySO.eyeHeight, (target.position - transform.position));
-        return Physics.Raycast(ray, out RaycastHit hit, radius, enemySO.targetLayerMask) && hit.transform == target;
+        return Physics.Raycast(ray, out RaycastHit hit, sightDistance, enemySO.targetLayerMask) && hit.transform == target;
+    }
+
+    // Called by EnemyManager when another guard's AttackState escalates -- forces this guard
+    // to converge on the last known position of the abandoned body.
+    public void ReceiveAlert(Vector3 lastKnownPosition)
+    {
+        targetsLastPosition = lastKnownPosition;
+        stateMachine.ChangeState(new SearchState(this));
     }
 
     public virtual void ApplySettings(StateSettings _settings)

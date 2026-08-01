@@ -24,7 +24,7 @@ public class FleeState : BaseState
     {
         if (stateContext.IsSafe())
         {
-            stateMachine.ChangeState(stateMachine.lastActiveState);
+            stateMachine.ChangeState(stateMachine.lastActiveState ?? new IdleState(stateContext));
         }
         else
             Flee();
@@ -57,8 +57,13 @@ public class FleeState : BaseState
         lastFleeTarget = targetPos;
     }
 
+    // Was keyed to PlayerManager.GetPlayer() (the abandoned human body's fixed position) even
+    // when the actual threat is whatever is currently possessed -- an animal fleeing capture
+    // should run from the guard/possessed threat, not from wherever the player's body is parked.
     private Vector3 CalculateFleeDirection()
     {
-        return ((stateContext.GetTransform().position - PlayerManager.instance.GetPlayer().transform.position)).normalized;
+        Transform threat = PossessionManager.instance.GetActiveTransform();
+        if (threat == null) return stateContext.GetTransform().forward;
+        return (stateContext.GetTransform().position - threat.position).normalized;
     }
 }

@@ -23,6 +23,9 @@ public abstract class AnimalNpc : Npc, IStateContext
 
     [SerializeField] private Transform[] pathPoints;
 
+    private bool isCaged = false;
+    private readonly float cageDuration = 3f;
+
     public override void Initialize()
     {
         base.Initialize();
@@ -84,15 +87,40 @@ public abstract class AnimalNpc : Npc, IStateContext
     public override void Depossessing(GameObject go)
     {
         base.Depossessing(go);
-        animalStateMachine.ChangeState(animalStateMachine.lastActiveState);
+        animalStateMachine.ChangeState(animalStateMachine.lastActiveState ?? new IdleState(this));
         possessedByPlayer = null;
+    }
+
+    // Called by SuspicionState when a guard captures this animal while it's possessed.
+    // Low-stakes consequence: the animal pauses ('caged') for a few seconds, then returns to
+    // patrolling. Swap for a real cage animation/anchor point per level as art needs it.
+    public void OnCaptured()
+    {
+        if (isCaged) return;
+        isCaged = true;
+
+        if (animalAgent != null) animalAgent.enabled = false;
+        animalStateMachine.ChangeState(new IdleState(this));
+
+        Invoke(nameof(ReleaseFromCage), cageDuration);
+    }
+
+    private void ReleaseFromCage()
+    {
+        isCaged = false;
+        if (animalAgent != null) animalAgent.enabled = true;
+        animalStateMachine.ChangeState(new PatrolState(this));
     }
 
     private void OnTriggerEnter(Collider other)
     {
         puzzleObject = other.transform.GetComponent<IPuzzleObject>();
+        if (puzzleObject == null) return; // not every trigger collider in the level is a gem
 
-        if (DoorPuzzle.puzzleDictionary[puzzleObject] == gem.GetGemSO().animal)
+        if (!DoorPuzzle.puzzleDictionary.TryGetValue(puzzleObject, out animalType requiredAnimal))
+            return; // unregistered/stale puzzle object -- avoid the KeyNotFoundException crash
+
+        if (requiredAnimal == gem.GetGemSO().animal)
         {
             puzzleObject.Collected();
         }

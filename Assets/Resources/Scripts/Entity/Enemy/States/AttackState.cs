@@ -1,13 +1,21 @@
 using UnityEngine;
 
+// High-stakes threat: a guard has spotted the *abandoned human body*. Gives the player a short
+// reaction window to break line of sight before escalating to a full alert (other guards called
+// in, danger meter starts climbing via AlertManager -- reaching max ends the game).
 public class AttackState : BaseState
 {
     private Enemy enemy;
-
     private StateSettings settings;
 
-    private float moveTimer;
+    private float reactionTimer;
+    private readonly float reactionWindow = 2.5f; // time to break line of sight after being spotted
+    private bool hasAlertedOthers;
+
     private float losePlayerTimer;
+    private readonly float losePlayerGrace = 3f;
+
+    private float moveTimer;
 
     public AttackState(IStateContext _stateContext) : base(_stateContext)
     {
@@ -19,6 +27,12 @@ public class AttackState : BaseState
     protected override void EnterState()
     {
         stateContext.ApplySettings(settings);
+        reactionTimer = 0f;
+        losePlayerTimer = 0f;
+        hasAlertedOthers = false;
+
+        if (enemy != null)
+            AlertManager.instance?.ReportBodySpotted(enemy.transform.position);
     }
 
     protected override void ExitState()
@@ -28,24 +42,37 @@ public class AttackState : BaseState
 
     protected override void PerformState()
     {
+        if (enemy == null) return;
+
         if (stateContext.CanSeePossessedPlayer())
         {
+            losePlayerTimer = 0f;
             enemy.transform.LookAt(enemy.GetTargetPlayerTransform());
 
-            // lock the aim towards the player.
             MoveRandomlyInCirle();
-        }
 
+            reactionTimer += Time.deltaTime;
+
+            if (!hasAlertedOthers && reactionTimer >= reactionWindow)
+            {
+                hasAlertedOthers = true;
+                EnemyManager.instance.AlertAllGuards(enemy.GetTargetPlayerTransform().position, enemy);
+                AlertManager.instance?.EscalateAlert();
+            }
+
+            if (hasAlertedOthers)
+            {
+                AlertManager.instance?.RaiseDanger(Time.deltaTime * 0.15f);
+            }
+        }
         else
         {
             losePlayerTimer += Time.deltaTime;
 
-            if (losePlayerTimer > 3)
+            if (losePlayerTimer > losePlayerGrace)
             {
-                // Calls all the enemies to current position or sorrounds
-                // Then Alert them
-                //stateMachine.ChangeState(new SearchState(enemy));
-                losePlayerTimer = 0;
+                AlertManager.instance?.ReportBodyLost();
+                stateMachine.ChangeState(new SearchState(stateContext));
             }
         }
     }
@@ -60,7 +87,4 @@ public class AttackState : BaseState
             moveTimer = 0;
         }
     }
-
-    // Move towards the player position, aim towards him, and alert other enemies or call them there.
-    // if Enemy lost player then he starts searching, then he also alert and calls other enemies.
 }

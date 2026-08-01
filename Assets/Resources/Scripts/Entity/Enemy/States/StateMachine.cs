@@ -16,7 +16,7 @@ public class StateMachine : MonoBehaviour
     [Header("State Machine")]
     [SerializeField] private string currentState;
 
-    public void  Initialise(IStateContext _stateContext, Dictionary<Type, BaseState> _availableStates)
+    public void Initialise(IStateContext _stateContext, Dictionary<Type, BaseState> _availableStates)
     {
         availableStates = _availableStates;
 
@@ -30,6 +30,7 @@ public class StateMachine : MonoBehaviour
             ChangeState(new IdleState(stateContext));
         }
     }
+
     public void Refresh(float deltaTime)
     {
         if (currentActiveState != null)
@@ -40,6 +41,8 @@ public class StateMachine : MonoBehaviour
 
     public void ChangeState(BaseState newState)
     {
+        if (newState == null) return; // guards against callers passing a null lastActiveState, etc.
+
         if (currentActiveState != null && currentActiveState.GetType() == newState.GetType())
         {
             return;
@@ -47,7 +50,10 @@ public class StateMachine : MonoBehaviour
 
         if (currentActiveState != null)
         {
-            if (currentActiveState != new PossessedState(stateContext))
+            // Was `currentActiveState != new PossessedState(stateContext)` -- comparing against a
+            // freshly allocated object is always true by reference, so lastActiveState was never
+            // actually protected from being set to a PossessedState. Fixed to a proper type check.
+            if (!(currentActiveState is PossessedState))
             {
                 lastActiveState = currentActiveState;
             }
@@ -80,5 +86,3 @@ public class StateMachine : MonoBehaviour
         }
     }
 }
-
-

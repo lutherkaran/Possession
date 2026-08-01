@@ -18,6 +18,21 @@ public class PatrolState : BaseState
 
     protected override void PerformState()
     {
+        // Previously a patrolling guard never checked for either threat until it happened to
+        // stop and re-enter IdleState -- meaning a guard actively walking its route was
+        // effectively blind. Both checks now run every frame here too.
+        if (stateContext.CanSeePossessedPlayer())
+        {
+            stateMachine.ChangeState(new AttackState(stateContext));
+            return;
+        }
+
+        if (stateContext.CanSeePossessedAnimal())
+        {
+            stateMachine.ChangeState(new SuspicionState(stateContext));
+            return;
+        }
+
         if (stateContext.IsSafe())
         {
             PatrolCycle();

@@ -178,6 +178,8 @@ SkinnedMeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -199,9 +201,11 @@ SkinnedMeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   serializedVersion: 2
   m_Quality: 0
   m_UpdateWhenOffscreen: 0
@@ -790,6 +794,7 @@ GameObject:
   - component: {fileID: 1796255035789600764}
   - component: {fileID: 543366639244814509}
   - component: {fileID: 600511559797657855}
+  - component: {fileID: 81381077601501883}
   m_Layer: 8
   m_Name: PenguinNpc
   m_TagString: Npc
@@ -829,6 +834,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: GameAssembly::Penguin
   entitySO: {fileID: 11400000, guid: b2dd17416d621c0499f92fd0aec1580e, type: 2}
   cameraAttachPoint: {fileID: 8100008266221926739}
+  targetLockerPoint: {fileID: 0}
   entityAnimation: {fileID: 0}
   animal: 0
   gem: {fileID: 0}
@@ -859,6 +865,33 @@ CapsuleCollider:
   m_Height: 1.5
   m_Direction: 1
   m_Center: {x: 0, y: 0.5, z: -0.1}
+--- !u!54 &81381077601501883
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7903941490115520840}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 80
+  m_CollisionDetection: 0
 --- !u!1 &8256317433656910335
 GameObject:
   m_ObjectHideFlags: 0

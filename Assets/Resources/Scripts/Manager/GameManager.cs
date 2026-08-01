@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
 
     public event EventHandler OnGamePaused;
     public event EventHandler OnGameUnpaused;
+    public event EventHandler OnGameOver;
 
     [SerializeField] private Volume globalVolume;
 
@@ -98,6 +99,17 @@ public class GameManager : MonoBehaviour
             OnGameUnpaused?.Invoke(this, EventArgs.Empty);
             CameraManager.instance.GetMouseAim().ToggleMouseInteraction();
         }
+    }
+
+    // Called by AlertManager once the danger meter maxes out from a sustained body-alert.
+    public void TriggerGameOver()
+    {
+        if (state == GameState.GameOver) return;
+
+        state = GameState.GameOver;
+        OnGameOver?.Invoke(this, EventArgs.Empty);
+        // TODO(design/UI): show the game-over screen here (which guard/last-known-position
+        // caused it, a restart prompt, etc). Left as an event so UI can own presentation.
     }
 
     public void ApplyVolumeProfile(VolumeProfile volumeProfile)

@@ -15,13 +15,13 @@ public class PossessedState : BaseState
     {
         base.EnterState();
         stateContext.ApplySettings(stateSettings);
-        //Debug.Log($"last active state was {stateMachine.lastActiveState}");
     }
 
-    protected override void PerformState() 
+    // Movement itself is applied by InputManager.PhysicsRefresh at a fixed timestep now
+    // (Rigidbody-driven). This just drives the animator off the same input each frame.
+    protected override void PerformState()
     {
         Vector2 moveDir = InputManager.instance.GetMoveDirection();
-        PossessionManager.instance.GetCurrentPossessable().GetPossessedEntity().MoveWhenPossessed(moveDir);
         float actualSpeed = moveDir.magnitude;
         stateContext.GetAnimationEntity().SetSpeed(actualSpeed);
     }

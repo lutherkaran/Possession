@@ -8,7 +8,7 @@ public class Npc : Entity, IPossessable
 
     public virtual void Initialize()
     {
-        //rb = GetComponent<Rigidbody>();
+        rb = GetComponent<Rigidbody>();
     }
 
     public virtual void PostInitialize()
