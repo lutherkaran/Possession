@@ -51,10 +51,20 @@ public class Chicken : AnimalNpc
 
     public override bool IsSafe()
     {
-        if (Vector3.Distance(transform.position, PlayerManager.instance.GetPlayer().transform.position) >= safeDistance)
-            return true;
-        else
-            return false;
+        foreach (var entity in EntityManager.instance.GetEntities())
+        {
+            if (entity is not Chicken)
+            {
+                if (Vector3.Distance(transform.position, entity.GetTransform().position) >= safeDistance)
+
+                    return false;
+            }
+            else
+            {
+                return true;
+            }   
+        }
+        return false;
     }
 
     public override EntityAnimation GetEntityAnimation() => entityAnimation;

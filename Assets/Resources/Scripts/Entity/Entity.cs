@@ -23,6 +23,8 @@ public abstract class Entity : MonoBehaviour
         sprinting = !sprinting;
     }
 
+    public bool IsSprinting() => sprinting;
+
     public virtual void MoveWhenPossessed(Vector2 input)
     {
         Vector3 localMoveDir = new Vector3(input.x, 0, input.y).normalized;
@@ -33,11 +35,6 @@ public abstract class Entity : MonoBehaviour
         {
             rb.MovePosition(rb.position + moveDir * currentSpeed * Time.fixedDeltaTime);
 
-            // Only cancel velocity when there's no input, to stop lingering post-collision
-            // drift once the player lets go of movement. Doing this unconditionally on every
-            // FixedUpdate (even while actively moving) was fighting MovePosition's own physics
-            // step every single frame -- that's what caused the visible vibration while moving,
-            // especially noticeable strafing (no forward momentum to mask it).
             if (localMoveDir.sqrMagnitude < 0.0001f)
             {
                 Vector3 v = rb.linearVelocity;
@@ -65,4 +62,6 @@ public abstract class Entity : MonoBehaviour
 
     public abstract float GetEntityPossessionTimerMax();
     public abstract float GetPossessionCooldownTimerMax();
+
+    public Transform GetTransform() { return this.transform; }
 }

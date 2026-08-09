@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyAnimator : MonoBehaviour
+public class EnemyAnimator
 {
     public enum AnimationStates
     {
@@ -21,6 +21,12 @@ public class EnemyAnimator : MonoBehaviour
 
     private Dictionary<AnimationStates, string> animationStatesDictionary;
 
+    public EnemyAnimator(Enemy _enemy)
+    {
+        enemy = _enemy;
+        enemyAnimator = enemy.GetComponentInChildren<Animator>();
+        InitializingAnimationStatesDictionary();
+    }
 
     private void InitializingAnimationStatesDictionary()
     {
@@ -34,14 +40,6 @@ public class EnemyAnimator : MonoBehaviour
         { AnimationStates.Fleeing, IS_FLEEING },
         { AnimationStates.Possessed, IS_POSSESSED }
      };
-    }
-
-    private void Awake()
-    {
-        enemyAnimator = GetComponent<Animator>();
-        enemy = GetComponentInParent<Enemy>();
-
-        InitializingAnimationStatesDictionary();
     }
 
     public void SetAnimations(AnimationStates state, bool value)

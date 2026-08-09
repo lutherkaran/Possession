@@ -1,3 +1,4 @@
+using PlasticGui.WorkspaceWindow;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -63,5 +64,9 @@ public class EntityManager : IManagable
         {
             entity.transform.SetParent(entityManagerTransform);
         }
+    }
+    public List<Entity> GetEntities()
+    {
+        return entityList;
     }
 }

@@ -16,12 +16,12 @@ public class Enemy : Entity, IPossessable, IDamageable, IStateContext
         public Vector3 _direction;
     }
 
-    [SerializeField] private EnemyAnimator enemyAnimator;
     [SerializeField] private HealthUI healthUI;
     [SerializeField] private CameraSceneVolumeProfileSO enemyVolumeProfileSO; // using the default for now.
     [SerializeField] private Transform gunBarrel;
     [SerializeField] private EnemySO enemySO;
 
+    private EnemyAnimator enemyAnimator;
     private NavMeshAgent enemyAgent;
     private StateMachine stateMachine;
     private EnemyController enemyAI;
@@ -44,12 +44,13 @@ public class Enemy : Entity, IPossessable, IDamageable, IStateContext
         rb = GetComponent<Rigidbody>();
 
         enemyAI = new EnemyController(this);
+        enemyAnimator = new EnemyAnimator(this);
+
         defaultVelocity = enemyAgent.velocity;
     }
 
     public void PostInitialize()
     {
-        enemyAnimator = GetComponentInChildren<EnemyAnimator>();
         healthUI = GetComponentInChildren<HealthUI>();
 
         PossessionManager.instance.OnPossessed += OnEnemyPossessed;

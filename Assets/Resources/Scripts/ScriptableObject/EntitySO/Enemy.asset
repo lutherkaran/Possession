@@ -19,3 +19,7 @@ MonoBehaviour:
     m_Bits: 256
   speed: 2
   maxSpeed: 5
+  rotationSpeed: 540
+  cameraHeightAndDistance: {x: 5, y: -5}
+  cameraAngle: 0
+  cameraFOV: 60

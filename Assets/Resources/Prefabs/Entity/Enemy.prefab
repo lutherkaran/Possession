@@ -675,8 +675,7 @@ MonoBehaviour:
   entitySO: {fileID: 11400000, guid: 05a436233ce47274e8b12d2549868ea4, type: 2}
   cameraAttachPoint: {fileID: 2507531698593563178}
   targetLockerPoint: {fileID: 3702135959854899315}
-  entityAnimation: {fileID: 0}
-  enemyAnimator: {fileID: 1844821719531932094}
+  entityAnimation: {fileID: 2900441529976526072}
   healthUI: {fileID: 520791666268907717}
   enemyVolumeProfileSO: {fileID: 11400000, guid: ddd33e8a5688afc49ba352ac8c209488,
     type: 2}
@@ -2491,7 +2490,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9214926834266491931}
   - component: {fileID: 8989774017728209360}
-  - component: {fileID: 1844821719531932094}
+  - component: {fileID: 2900441529976526072}
   m_Layer: 0
   m_Name: EnemyVisual
   m_TagString: Untagged
@@ -2538,7 +2537,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &1844821719531932094
+--- !u!114 &2900441529976526072
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2547,9 +2546,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 8406583943806785185}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0a1ef5fcda36844a911cecea6746a77, type: 3}
+  m_Script: {fileID: 11500000, guid: 29584567751143f4581bdb27b8e8ea17, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: GameAssembly::EntityAnimation
+  entity: {fileID: 5219655988053613314}
+  entityAnimator: {fileID: 8989774017728209360}
 --- !u!1 &8521648654129321406
 GameObject:
   m_ObjectHideFlags: 0
@@ -2777,7 +2778,7 @@ Transform:
   m_GameObject: {fileID: 8884500235069122534}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 5, z: -1}
+  m_LocalPosition: {x: 0, y: 5, z: -5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
