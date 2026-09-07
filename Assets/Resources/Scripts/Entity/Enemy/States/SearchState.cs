@@ -13,6 +13,7 @@ public class SearchState : BaseState
         this.stateContext = stateContext;
         if (this.stateContext is Enemy enemy)
             this.enemy = enemy;
+        stateType = StateType.Search;
     }
 
     protected override void EnterState()
@@ -29,19 +30,19 @@ public class SearchState : BaseState
         {
             if (stateContext.CanSeePossessedPlayer())
             {
-                stateMachine.ChangeState(stateMachine.GetAvailableStates()[typeof(AttackState)]);
+                stateMachine.ChangeState(stateMachine.GetAvailableStates()[BaseState.StateType.Attack]);
                 return;
             }
 
             if (stateContext.GetNavMeshAgent().remainingDistance <= stateContext.GetNavMeshAgent().stoppingDistance)
             {
                 FindAnotherDestinationNearby();
-                stateMachine.Waiting(stateMachine.GetAvailableStates()[typeof(IdleState)], 3);
+                stateMachine.Waiting(stateMachine.GetAvailableStates()[BaseState.StateType.Idle], 3);
             }
         }
         else
         {
-            stateMachine.ChangeState(stateMachine.GetAvailableStates()[typeof(PatrolState)]);
+            stateMachine.ChangeState(stateMachine.GetAvailableStates()[BaseState.StateType.Patrol]);
         }
     }
 

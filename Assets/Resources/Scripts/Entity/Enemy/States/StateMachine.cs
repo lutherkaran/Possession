@@ -10,30 +10,21 @@ public class StateMachine : MonoBehaviour
     private StateSettings currentStateSettings;
     private IStateContext stateContext;
 
-    private Dictionary<Type, BaseState> availableStates;
+    private Dictionary<Enum, BaseState> availableStates;
 
     private float waitTimer = 0;
 
     [Header("State Machine")]
     [SerializeField] private string currentState;
 
-    public void Initialise(IStateContext stateContext, Dictionary<Type, BaseState> availableStates)
+    public void Initialise(IStateContext stateContext, Dictionary<Enum, BaseState> availableStates)
     {
-        if (stateContext == null)
-        {
-            Debug.LogError("StateMachine requires a valid IStateContext.");
-            return;
-        }
-
         this.stateContext = stateContext;
         this.availableStates = availableStates;
 
-        // Constructed with real starting values up front -- no need to pass a placeholder and
-        // patch it after ChangeState runs, since StateSettings no longer needs to know which
-        // BaseState it belongs to (that's StateMachine.currentActiveState's job, and only its job).
         currentStateSettings = new StateSettings(StateSettings.animationStates.isIdle, Vector3.zero, 0f);
 
-        ChangeState(availableStates[typeof(IdleState)]);
+        ChangeState(availableStates[BaseState.StateType.Idle]);
     }
 
     public void Refresh(float deltaTime)
@@ -78,5 +69,5 @@ public class StateMachine : MonoBehaviour
     }
 
     public StateSettings GetCurrentStateSettings() => currentStateSettings;
-    public Dictionary<Type, BaseState> GetAvailableStates() => availableStates;
+    public Dictionary<Enum, BaseState> GetAvailableStates() => availableStates;
 }

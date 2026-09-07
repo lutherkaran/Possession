@@ -8,6 +8,7 @@ public class IdleState : BaseState
     public IdleState(IStateContext stateContext) : base(stateContext)
     {
         this.stateContext = stateContext;
+        stateType = StateType.Idle;
     }
 
     protected override void EnterState()
@@ -22,21 +23,21 @@ public class IdleState : BaseState
     {
         if (stateContext.CanSeePossessedPlayer())
         {
-            stateMachine.ChangeState(stateMachine.GetAvailableStates()[typeof(AttackState)]);
+            stateMachine.ChangeState(stateMachine.GetAvailableStates()[BaseState.StateType.Attack]);
         }
         else if (stateContext.CanSeePossessedAnimal())
         {
-            stateMachine.ChangeState(stateMachine.GetAvailableStates()[typeof(SuspicionState)]);
+            stateMachine.ChangeState(stateMachine.GetAvailableStates()[BaseState.StateType.Suspicion]);
         }
         else
         {
             if (stateContext.IsSafe())
             {
-                stateMachine.Waiting(stateMachine.GetAvailableStates()[typeof(PatrolState)], duration);
+                stateMachine.Waiting(stateMachine.GetAvailableStates()[BaseState.StateType.Patrol], duration);
             }
             else
             {
-                stateMachine.ChangeState(stateMachine.GetAvailableStates()[typeof(FleeState)]);
+                stateMachine.ChangeState(stateMachine.GetAvailableStates()[BaseState.StateType.Flee]);
             }
         }
     }

@@ -30,7 +30,7 @@ public class Enemy : Entity, IPossessable, IDamageable, IStateContext
     public Vector3 targetsLastPosition { get; private set; }
     public Vector3 shootDirection { get; private set; }
 
-    private Dictionary<Type, BaseState> statesDictionary;
+    private Dictionary<Enum, BaseState> statesDictionary;
 
     private Transform targetTransform;
     private Transform player;
@@ -69,14 +69,14 @@ public class Enemy : Entity, IPossessable, IDamageable, IStateContext
 
     private void InitializeStatesDictionary()
     {
-        statesDictionary = new Dictionary<Type, BaseState>()
+        statesDictionary = new Dictionary<Enum, BaseState>()
         {
-            {typeof(IdleState), new IdleState(this) },
-            {typeof(PatrolState), new PatrolState(this) },
-            {typeof(AttackState), new AttackState(this) },
-            {typeof(SearchState), new SearchState(this) },
-            {typeof(SuspicionState), new SuspicionState(this) },
-            {typeof(PossessedState), new PossessedState(this) },
+            {BaseState.StateType.Idle, new IdleState(this) },
+            {BaseState.StateType.Patrol, new PatrolState(this) },
+            {BaseState.StateType.Attack, new AttackState(this) },
+            {BaseState.StateType.Search, new SearchState(this) },
+            {BaseState.StateType.Suspicion, new SuspicionState(this) },
+            {BaseState.StateType.Possessed, new PossessedState(this) },
         };
 
         stateMachine.Initialise(this, statesDictionary);

@@ -16,7 +16,7 @@ public abstract class AnimalNpc : Npc, IStateContext
     [SerializeField] protected EntityAnimation animalAnimation;
 
     protected NavMeshAgent animalAgent;
-    protected Dictionary<Type, BaseState> animalStates;
+    protected Dictionary<Enum, BaseState> animalStates;
     protected StateMachine animalStateMachine;
 
     protected AnimalNpcController animalNpcController;
@@ -42,12 +42,12 @@ public abstract class AnimalNpc : Npc, IStateContext
 
     private void InitializeAnimalStateDictionary()
     {
-        animalStates = new Dictionary<Type, BaseState>()
+        animalStates = new Dictionary<Enum, BaseState>()
         {
-            { typeof(IdleState), new IdleState(this) },
-            { typeof(PatrolState), new PatrolState(this) },
-            { typeof(PossessedState), new PossessedState(this) },
-            { typeof(FleeState), new FleeState(this) },
+            { BaseState.StateType.Idle, new IdleState(this) },
+            { BaseState.StateType.Patrol, new PatrolState(this) },
+            { BaseState.StateType.Possessed, new PossessedState(this) },
+            { BaseState.StateType.Flee, new FleeState(this) },
         };
 
         animalStateMachine.Initialise(this, animalStates);

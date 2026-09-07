@@ -4,15 +4,25 @@ using UnityEngine;
 
 public abstract class BaseState
 {
-    public StateMachine stateMachine;
+    public enum StateType
+    {
+        Idle,
+        Patrol,
+        Attack,
+        Search,
+        Suspicion,
+        Possessed,
+        Flee
+    }
+    public StateType stateType;
 
-    public Dictionary<Type, BaseState> GetAvailableStates() { return availableStates; }
+    public StateMachine stateMachine;
 
     protected GameObject gameObject;
     protected EnemyAnimator animator;
     protected IStateContext stateContext;
-    protected Dictionary<Type, BaseState> availableStates;
-    
+    protected Dictionary<Enum, BaseState> availableStates;
+
     protected BaseState(IStateContext _stateContext)
     {
         stateContext = _stateContext;
@@ -29,7 +39,7 @@ public abstract class BaseState
         animator = _animator;
     }
 
-    protected BaseState(GameObject _gameObject, EnemyAnimator _animator, Dictionary<Type, BaseState> _availableStates)
+    protected BaseState(GameObject _gameObject, EnemyAnimator _animator, Dictionary<Enum, BaseState> _availableStates)
     {
         gameObject = _gameObject;
         animator = _animator;

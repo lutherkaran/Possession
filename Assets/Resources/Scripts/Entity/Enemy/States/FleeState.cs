@@ -9,6 +9,7 @@ public class FleeState : BaseState
     public FleeState(IStateContext stateContext) : base(stateContext)
     {
         this.stateContext = stateContext;
+        stateType = StateType.Flee;
     }
 
     protected override void EnterState()
@@ -21,7 +22,7 @@ public class FleeState : BaseState
     {
         if (stateContext.IsSafe())
         {
-            stateMachine.ChangeState(stateMachine.lastActiveState ?? stateMachine.GetAvailableStates()[typeof(IdleState)]);
+            stateMachine.ChangeState(stateMachine.lastActiveState ?? stateMachine.GetAvailableStates()[BaseState.StateType.Idle]);
         }
         else
             Flee();

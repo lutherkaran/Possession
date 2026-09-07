@@ -7,6 +7,7 @@ public class PatrolState : BaseState
     public PatrolState(IStateContext stateContext) : base(stateContext)
     {
         this.stateContext = stateContext;
+        stateType = StateType.Patrol;
     }
 
     protected override void EnterState()
@@ -19,13 +20,13 @@ public class PatrolState : BaseState
     {
         if (stateContext.CanSeePossessedPlayer())
         {
-            stateMachine.ChangeState(stateMachine.GetAvailableStates()[typeof(AttackState)]);
+            stateMachine.ChangeState(stateMachine.GetAvailableStates()[BaseState.StateType.Attack]);
             return;
         }
 
         if (stateContext.CanSeePossessedAnimal())
         {
-            stateMachine.ChangeState(stateMachine.GetAvailableStates()[typeof(SuspicionState)]);
+            stateMachine.ChangeState(stateMachine.GetAvailableStates()[BaseState.StateType.Suspicion]);
             return;
         }
 
@@ -35,7 +36,7 @@ public class PatrolState : BaseState
         }
         else
         {
-            stateMachine.ChangeState(stateMachine.GetAvailableStates()[typeof(FleeState)]);
+            stateMachine.ChangeState(stateMachine.GetAvailableStates()[BaseState.StateType.Flee]);
         }
     }
 
@@ -52,7 +53,7 @@ public class PatrolState : BaseState
 
         if (agent.remainingDistance <= agent.stoppingDistance)
         {
-            stateMachine.ChangeState(stateMachine.GetAvailableStates()[typeof(IdleState)]);
+            stateMachine.ChangeState(stateMachine.GetAvailableStates()[BaseState.StateType.Idle]);
         }
     }
 }

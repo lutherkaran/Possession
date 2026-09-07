@@ -22,6 +22,7 @@ public class AttackState : BaseState
     {
         this.stateContext = stateContext;
         enemy = stateContext as Enemy;
+        stateType = StateType.Attack;
     }
 
     protected override void EnterState()
@@ -73,7 +74,7 @@ public class AttackState : BaseState
             if (losePlayerTimer > losePlayerGrace)
             {
                 AlertManager.instance?.ReportBodyLost();
-                stateMachine.ChangeState(stateMachine.GetAvailableStates()[typeof(SearchState)]);
+                stateMachine.ChangeState(stateMachine.GetAvailableStates()[BaseState.StateType.Search]);
             }
         }
     }

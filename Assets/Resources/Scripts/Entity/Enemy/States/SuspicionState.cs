@@ -54,7 +54,7 @@ public class SuspicionState : BaseState
             loseTargetTimer += Time.deltaTime;
             if (loseTargetTimer >= loseTargetGrace)
             {
-                stateMachine.ChangeState(stateMachine.GetAvailableStates()[typeof(IdleState)]);
+                stateMachine.ChangeState(stateMachine.GetAvailableStates()[BaseState.StateType.Idle]);
             }
         }
     }
@@ -76,6 +76,6 @@ public class SuspicionState : BaseState
             animalNpc.OnCaptured();
         }
 
-        stateMachine.ChangeState(stateMachine.GetAvailableStates()[typeof(IdleState)]);
+        stateMachine.ChangeState(stateMachine.GetAvailableStates()[BaseState.StateType.Idle]);
     }
 }
