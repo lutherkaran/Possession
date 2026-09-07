@@ -3,38 +3,36 @@ using UnityEngine.AI;
 
 public class AnimalNpcController
 {
-    private AnimalNpc animal;
-    private StateSettings stateSettings;
+    private readonly AnimalNpc animal;
 
-    public AnimalNpcController(AnimalNpc _animal)
+    public AnimalNpcController(AnimalNpc animal)
     {
-        animal = _animal;
+        this.animal = animal;
     }
 
-    public void RunAI(StateSettings _stateSettings)
+    // Reads state identity from the StateMachine directly -- see EnemyAnimationController for
+    // why this is no longer read off StateSettings.
+    public void RunAI(StateSettings stateSettings)
     {
-        stateSettings = _stateSettings;
+        var activeState = animal.GetStateMachine().currentActiveState;
 
-        if (stateSettings.currentActiveState is IdleState)
+        if (activeState is IdleState)
         {
             animal.GetNavMeshAgent().velocity = Vector3.zero;
             animal.GetNavMeshAgent().isStopped = true;
         }
-
-        else if (stateSettings.currentActiveState is PatrolState)
+        else if (activeState is PatrolState)
         {
             animal.GetNavMeshAgent().SetDestination(animal.FindTargetLocation());
             animal.GetNavMeshAgent().velocity = default;
             animal.GetNavMeshAgent().isStopped = false;
         }
-
-        else if (stateSettings.currentActiveState is FleeState)
+        else if (activeState is FleeState)
         {
             animal.GetNavMeshAgent().speed *= 2f;
             animal.GetNavMeshAgent().isStopped = false;
         }
-
-        else if (stateSettings.currentActiveState is PossessedState)
+        else if (activeState is PossessedState)
         {
             animal.GetNavMeshAgent().isStopped = true;
             animal.GetNavMeshAgent().enabled = false;
@@ -47,21 +45,22 @@ public class AnimalNpcController
 
     public void Reset()
     {
-        if (stateSettings.currentActiveState is IdleState)
+        var activeState = animal.GetStateMachine().currentActiveState;
+
+        if (activeState is IdleState)
         {
             animal.GetNavMeshAgent().isStopped = false;
         }
-        else if (stateSettings.currentActiveState is PatrolState)
+        else if (activeState is PatrolState)
         {
             animal.GetNavMeshAgent().isStopped = false;
         }
-        else if (stateSettings.currentActiveState is FleeState)
+        else if (activeState is FleeState)
         {
             animal.GetNavMeshAgent().speed /= 2f;
             animal.GetNavMeshAgent().isStopped = false;
         }
-
-        else if (stateSettings.currentActiveState is PossessedState)
+        else if (activeState is PossessedState)
         {
             if (animal.GetRigidBody() != null)
                 animal.GetRigidBody().isKinematic = true;
@@ -69,11 +68,6 @@ public class AnimalNpcController
             var agent = animal.GetNavMeshAgent();
             agent.enabled = true;
 
-            // While possessed, Rigidbody-driven movement isn't constrained to the baked
-            // NavMesh, so the animal can end up standing somewhere the mesh doesn't cover.
-            // Re-enabling the agent doesn't automatically reattach it to the mesh in that case
-            // (isOnNavMesh stays false and every subsequent agent call throws) -- Warp finds
-            // the nearest valid point and properly re-registers the agent on it.
             if (!agent.isOnNavMesh)
             {
                 if (NavMesh.SamplePosition(animal.transform.position, out NavMeshHit hit, 10f, NavMesh.AllAreas))

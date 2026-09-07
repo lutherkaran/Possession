@@ -5,6 +5,7 @@ public class FleeState : BaseState
 {
     private readonly float fleeDistance = 4f;
     private new readonly IStateContext stateContext;
+
     public FleeState(IStateContext stateContext) : base(stateContext)
     {
         this.stateContext = stateContext;
@@ -12,7 +13,7 @@ public class FleeState : BaseState
 
     protected override void EnterState()
     {
-        stateMachine.GetCurrentStateSettings().UpdateSettings(this.stateContext, this, StateSettings.animationStates.isRunning, Vector3.zero, 180f);
+        stateMachine.GetCurrentStateSettings().UpdateSettings(StateSettings.animationStates.isRunning, Vector3.zero, 180f);
         stateContext.ApplySettings(stateMachine.GetCurrentStateSettings());
     }
 
@@ -36,12 +37,7 @@ public class FleeState : BaseState
         Vector3 fleeDir = CalculateFleeDirection();
         if (fleeDir == Vector3.zero) fleeDir = stateContext.GetTransform().forward;
 
-        Vector3 randomOffset = new Vector3(
-            Random.Range(-8f, 8f),
-            0f,                      // no random Y
-            Random.Range(-8f, 8f)
-        );
-
+        Vector3 randomOffset = new Vector3(Random.Range(-8f, 8f), 0f, Random.Range(-8f, 8f));
         Vector3 targetPos = stateContext.GetTransform().position + fleeDir * fleeDistance + randomOffset;
 
         if (NavMesh.SamplePosition(targetPos, out NavMeshHit hit, 10f, NavMesh.AllAreas))
@@ -52,9 +48,6 @@ public class FleeState : BaseState
         stateContext.GetNavMeshAgent().SetDestination(targetPos);
     }
 
-    // Was keyed to PlayerManager.GetPlayer() (the abandoned human body's fixed position) even
-    // when the actual threat is whatever is currently possessed -- an animal fleeing capture
-    // should run from the guard/possessed threat, not from wherever the player's body is parked.
     private Vector3 CalculateFleeDirection()
     {
         Transform threat = PossessionManager.instance.GetActiveTransform();

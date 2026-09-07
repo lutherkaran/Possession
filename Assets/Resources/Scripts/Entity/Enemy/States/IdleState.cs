@@ -12,7 +12,7 @@ public class IdleState : BaseState
 
     protected override void EnterState()
     {
-        stateMachine.GetCurrentStateSettings().UpdateSettings(this.stateContext, this, StateSettings.animationStates.isIdle, Vector3.zero, 90f);
+        stateMachine.GetCurrentStateSettings().UpdateSettings(StateSettings.animationStates.isIdle, Vector3.zero, 90f);
         stateContext.ApplySettings(stateMachine.GetCurrentStateSettings());
 
         duration = Random.Range(4f, 10f);

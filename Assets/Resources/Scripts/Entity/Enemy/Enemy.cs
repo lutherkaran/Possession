@@ -138,6 +138,8 @@ public class Enemy : Entity, IPossessable, IDamageable, IStateContext
 
     public EnemySO GetEnemySO() => enemySO;
 
+    public StateMachine GetStateMachine() => stateMachine;
+
     public void PhysicsRefresh(float fixedDeltaTime)
     {
 
@@ -177,7 +179,6 @@ public class Enemy : Entity, IPossessable, IDamageable, IStateContext
         bool seen = HasSightTo(body, enemySO.sightDistance, enemySO.bodyFieldOfView);
         if (seen)
         {
-            // AttackState/SearchState read these -- keep them updated whenever the body is actually seen.
             targetTransform = body;
             targetsLastPosition = body.position;
         }
@@ -193,8 +194,6 @@ public class Enemy : Entity, IPossessable, IDamageable, IStateContext
         return Physics.Raycast(ray, out RaycastHit hit, sightDistance, enemySO.targetLayerMask) && hit.transform == target;
     }
 
-    // Called by EnemyManager when another guard's AttackState escalates -- forces this guard
-    // to converge on the last known position of the abandoned body.
     public void ReceiveAlert(Vector3 lastKnownPosition)
     {
         targetsLastPosition = lastKnownPosition;

@@ -25,6 +25,7 @@ public class EnemyAnimator
     {
         enemy = _enemy;
         enemyAnimator = enemy.GetComponentInChildren<Animator>();
+
         InitializingAnimationStatesDictionary();
     }
 
@@ -63,6 +64,7 @@ public class EnemyAnimator
 
     public void RunBlend()
     {
+
         enemyAnimator.SetFloat("Blend", 2f);
         enemyAnimator.SetLayerWeight(1, 0f);
     }
@@ -83,8 +85,5 @@ public class EnemyAnimator
     {
         enemyAnimator.SetFloat("Blend", value);
         enemyAnimator.SetLayerWeight(1, 0f);
-
     }
-
-    public Animator GetAnimator() => enemyAnimator;
 }

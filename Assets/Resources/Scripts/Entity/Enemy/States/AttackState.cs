@@ -8,7 +8,7 @@ public class AttackState : BaseState
     private readonly Enemy enemy;
 
     private float reactionTimer;
-    private readonly float reactionWindow = 2.5f; // time to break line of sight after being spotted
+    private readonly float reactionWindow = 2.5f;
     private bool hasAlertedOthers;
 
     private float losePlayerTimer;
@@ -26,7 +26,7 @@ public class AttackState : BaseState
 
     protected override void EnterState()
     {
-        stateMachine.GetCurrentStateSettings().UpdateSettings(stateContext, this, StateSettings.animationStates.isAttacking, Vector3.zero, 150f);
+        stateMachine.GetCurrentStateSettings().UpdateSettings(StateSettings.animationStates.isAttacking, Vector3.zero, 150f);
         stateContext.ApplySettings(stateMachine.GetCurrentStateSettings());
         reactionTimer = 0f;
         losePlayerTimer = 0f;
@@ -73,7 +73,7 @@ public class AttackState : BaseState
             if (losePlayerTimer > losePlayerGrace)
             {
                 AlertManager.instance?.ReportBodyLost();
-                stateMachine.ChangeState(new SearchState(stateContext));
+                stateMachine.ChangeState(stateMachine.GetAvailableStates()[typeof(SearchState)]);
             }
         }
     }

@@ -2,13 +2,8 @@ using UnityEngine;
 
 public class StateSettings
 {
-    public IStateContext stateContext;
-
-    public BaseState currentActiveState;
-
-    public float fieldOfView { get; set; }
-
-    public Vector3 desiredVelocity = Vector3.zero;
+    private float fieldOfView;
+    public Vector3 desiredVelocity { get; private set; }
 
     public enum animationStates
     {
@@ -21,18 +16,16 @@ public class StateSettings
 
     public animationStates animStates;
 
-    public StateSettings(IStateContext _stateContext, BaseState _baseState, animationStates _boolState, Vector3 _desiredVelocity, float _fieldOfView)
+    public StateSettings(animationStates animStates, Vector3 desiredVelocity, float fieldOfView)
     {
-        stateContext = _stateContext;
-        currentActiveState = _baseState;
-        animStates = _boolState;
-        desiredVelocity = _desiredVelocity;
-        fieldOfView = _fieldOfView;
+        this.animStates = animStates;
+        this.desiredVelocity = desiredVelocity;
+        this.fieldOfView = fieldOfView;
     }
 
-    public void UpdateSettings(IStateContext stateContext, BaseState attackState, animationStates _boolState, Vector3 _desiredVelocity, float _fieldOfView)
+    public void UpdateSettings(animationStates _animStates, Vector3 _desiredVelocity, float _fieldOfView)
     {
-        animStates = _boolState;
+        animStates = _animStates;
         desiredVelocity = _desiredVelocity;
         fieldOfView = _fieldOfView;
     }

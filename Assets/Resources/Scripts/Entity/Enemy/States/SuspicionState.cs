@@ -1,17 +1,14 @@
 using UnityEngine;
 
-// Low-stakes threat: a guard notices the player's *currently possessed animal* behaving
-// unusually and moves to cage/capture it. Distinct from AttackState (the abandoned-body
-// threat), which is the high-stakes, game-over-capable branch.
 public class SuspicionState : BaseState
 {
     private readonly Enemy enemy;
 
     private float reactionTimer;
-    private readonly float reactionWindow = 2.5f; // grace period before capture -- break line of sight to escape
+    private readonly float reactionWindow = 2.5f;
 
     private float loseTargetTimer;
-    private readonly float loseTargetGrace = 1.5f; // forgiveness if the animal briefly ducks out of view
+    private readonly float loseTargetGrace = 1.5f;
 
     private readonly float captureRadius = 1.5f;
 
@@ -25,7 +22,7 @@ public class SuspicionState : BaseState
 
     protected override void EnterState()
     {
-        stateMachine.GetCurrentStateSettings().UpdateSettings(this.stateContext, this, StateSettings.animationStates.isRunning, Vector3.zero, 150f);
+        stateMachine.GetCurrentStateSettings().UpdateSettings(StateSettings.animationStates.isRunning, Vector3.zero, 150f);
         stateContext.ApplySettings(stateMachine.GetCurrentStateSettings());
         reactionTimer = 0f;
         loseTargetTimer = 0f;
@@ -57,7 +54,6 @@ public class SuspicionState : BaseState
             loseTargetTimer += Time.deltaTime;
             if (loseTargetTimer >= loseTargetGrace)
             {
-                // Animal broke line of sight in time -- guard gives up and resumes normal duty.
                 stateMachine.ChangeState(stateMachine.GetAvailableStates()[typeof(IdleState)]);
             }
         }

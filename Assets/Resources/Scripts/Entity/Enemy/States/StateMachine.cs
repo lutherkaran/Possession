@@ -19,19 +19,21 @@ public class StateMachine : MonoBehaviour
 
     public void Initialise(IStateContext stateContext, Dictionary<Type, BaseState> availableStates)
     {
+        if (stateContext == null)
+        {
+            Debug.LogError("StateMachine requires a valid IStateContext.");
+            return;
+        }
+
         this.stateContext = stateContext;
         this.availableStates = availableStates;
 
-        if (stateContext == null)
-        {
-            Debug.LogError("Statemachine requires a component implementation" + this.stateContext);
-        }
-        else
-        {
-            this.stateContext = stateContext;
-            ChangeState(availableStates[typeof(IdleState)]);
-            currentStateSettings = new StateSettings(stateContext, currentActiveState, StateSettings.animationStates.isIdle, Vector3.zero, 0);
-        }
+        // Constructed with real starting values up front -- no need to pass a placeholder and
+        // patch it after ChangeState runs, since StateSettings no longer needs to know which
+        // BaseState it belongs to (that's StateMachine.currentActiveState's job, and only its job).
+        currentStateSettings = new StateSettings(StateSettings.animationStates.isIdle, Vector3.zero, 0f);
+
+        ChangeState(availableStates[typeof(IdleState)]);
     }
 
     public void Refresh(float deltaTime)
@@ -44,7 +46,7 @@ public class StateMachine : MonoBehaviour
 
     public void ChangeState(BaseState newState)
     {
-        if (newState == null) return; // guards against callers passing a null lastActiveState, etc.
+        if (newState == null) return;
 
         if (currentActiveState != null && currentActiveState.GetType() == newState.GetType())
         {
@@ -53,29 +55,15 @@ public class StateMachine : MonoBehaviour
 
         if (currentActiveState != null)
         {
-            // Was `currentActiveState != new PossessedState(stateContext)` -- comparing against a
-            // freshly allocated object is always true by reference, so lastActiveState was never
-            // actually protected from being set to a PossessedState. Fixed to a proper type check.
-            if (!(currentActiveState is PossessedState))
-            {
-                lastActiveState = currentActiveState;
-            }
-            else
-            {
-                lastActiveState = null;
-            }
-
+            lastActiveState = currentActiveState is PossessedState ? null : currentActiveState;
             currentActiveState.Exit();
         }
 
         currentActiveState = newState;
 
-        if (currentActiveState != null)
-        {
-            currentActiveState.stateMachine = this;
-            currentActiveState.Enter();
-            currentState = currentActiveState?.ToString() ?? "None";
-        }
+        currentActiveState.stateMachine = this;
+        currentActiveState.Enter();
+        currentState = currentActiveState.ToString();
     }
 
     public void Waiting(BaseState newState, float duration)

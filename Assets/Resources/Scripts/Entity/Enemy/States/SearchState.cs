@@ -17,7 +17,7 @@ public class SearchState : BaseState
 
     protected override void EnterState()
     {
-        stateMachine.GetCurrentStateSettings().UpdateSettings(this.stateContext, this, StateSettings.animationStates.isRunning, Vector3.zero, 180f);
+        stateMachine.GetCurrentStateSettings().UpdateSettings(StateSettings.animationStates.isRunning, Vector3.zero, 180f);
         stateContext.ApplySettings(stateMachine.GetCurrentStateSettings());
     }
 
@@ -55,9 +55,6 @@ public class SearchState : BaseState
         searchTimer = 0;
     }
 
-    // Was previously summing the guard's own position with the player's world position
-    // (nonsensical -- could point anywhere off the map). Now searches near the actual last
-    // known sighting instead.
     private void FindAnotherDestinationNearby()
     {
         Vector3 lastKnown = enemy != null ? enemy.targetsLastPosition : stateContext.GetTransform().position;

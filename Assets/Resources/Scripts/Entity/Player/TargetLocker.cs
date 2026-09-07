@@ -25,10 +25,6 @@ public class TargetLocker
     public void Refresh()
     {
         Transform best = FindBestTargetInView();
-
-        // Was comparing against currentActiveIndicator.transform (a different object entirely,
-        // so this was always true and re-locked every single frame regardless of whether the
-        // target actually changed). Now compares against the actual currently locked target.
         if (best != currentLockedTarget)
         {
             SetLockedTarget(best);
@@ -53,7 +49,9 @@ public class TargetLocker
 
     private Transform FindBestTargetInView()
     {
-        Transform currentTransform = PossessionManager.instance.GetCurrentPossessable().GetPossessedEntity().transform;
+        IPossessable currentPossessable = PossessionManager.instance.GetCurrentPossessable();
+
+        Transform currentTransform = currentPossessable.GetPossessedEntity().transform;
         Transform myCameraTransform = CameraManager.instance.myCamera.transform;
         Transform best = null;
 
