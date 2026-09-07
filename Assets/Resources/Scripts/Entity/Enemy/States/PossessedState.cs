@@ -2,19 +2,18 @@ using UnityEngine;
 
 public class PossessedState : BaseState
 {
-    private StateSettings stateSettings;
+    private new readonly IStateContext stateContext;
 
-    public PossessedState(IStateContext _stateContext) : base(_stateContext)
+    public PossessedState(IStateContext stateContext) : base(stateContext)
     {
-        stateContext = _stateContext;
-
-        stateSettings = new StateSettings(stateContext, this, StateSettings.animationStates.isPossessed, Vector3.zero, 0);
+        this.stateContext = stateContext;
     }
 
     protected override void EnterState()
     {
         base.EnterState();
-        stateContext.ApplySettings(stateSettings);
+        stateMachine.GetCurrentStateSettings().UpdateSettings(this.stateContext, this, StateSettings.animationStates.isPossessed, Vector3.zero, 0);
+        stateContext.ApplySettings(stateMachine.GetCurrentStateSettings());
     }
 
     // Movement itself is applied by InputManager.PhysicsRefresh at a fixed timestep (Rigidbody-

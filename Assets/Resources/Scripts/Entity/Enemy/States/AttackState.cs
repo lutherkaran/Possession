@@ -5,8 +5,7 @@ using UnityEngine;
 // in, danger meter starts climbing via AlertManager -- reaching max ends the game).
 public class AttackState : BaseState
 {
-    private Enemy enemy;
-    private StateSettings settings;
+    private readonly Enemy enemy;
 
     private float reactionTimer;
     private readonly float reactionWindow = 2.5f; // time to break line of sight after being spotted
@@ -17,16 +16,18 @@ public class AttackState : BaseState
 
     private float moveTimer;
 
-    public AttackState(IStateContext _stateContext) : base(_stateContext)
+    private new readonly IStateContext stateContext;
+
+    public AttackState(IStateContext stateContext) : base(stateContext)
     {
-        stateContext = _stateContext;
+        this.stateContext = stateContext;
         enemy = stateContext as Enemy;
-        settings = new StateSettings(stateContext, this, StateSettings.animationStates.isAttacking, Vector3.zero, 150f);
     }
 
     protected override void EnterState()
     {
-        stateContext.ApplySettings(settings);
+        stateMachine.GetCurrentStateSettings().UpdateSettings(stateContext, this, StateSettings.animationStates.isAttacking, Vector3.zero, 150f);
+        stateContext.ApplySettings(stateMachine.GetCurrentStateSettings());
         reactionTimer = 0f;
         losePlayerTimer = 0f;
         hasAlertedOthers = false;

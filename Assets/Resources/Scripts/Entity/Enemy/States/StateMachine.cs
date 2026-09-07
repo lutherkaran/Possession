@@ -7,6 +7,7 @@ public class StateMachine : MonoBehaviour
     public BaseState currentActiveState;
     public BaseState lastActiveState;
 
+    private StateSettings currentStateSettings;
     private IStateContext stateContext;
 
     private Dictionary<Type, BaseState> availableStates;
@@ -16,18 +17,20 @@ public class StateMachine : MonoBehaviour
     [Header("State Machine")]
     [SerializeField] private string currentState;
 
-    public void Initialise(IStateContext _stateContext, Dictionary<Type, BaseState> _availableStates)
+    public void Initialise(IStateContext stateContext, Dictionary<Type, BaseState> availableStates)
     {
-        availableStates = _availableStates;
+        this.stateContext = stateContext;
+        this.availableStates = availableStates;
 
-        if (_stateContext == null)
+        if (stateContext == null)
         {
-            Debug.LogError("Statemachine requires a component implementation" + stateContext);
+            Debug.LogError("Statemachine requires a component implementation" + this.stateContext);
         }
         else
         {
-            stateContext = _stateContext;
-            ChangeState(new IdleState(stateContext));
+            this.stateContext = stateContext;
+            ChangeState(availableStates[typeof(IdleState)]);
+            currentStateSettings = new StateSettings(stateContext, currentActiveState, StateSettings.animationStates.isIdle, Vector3.zero, 0);
         }
     }
 
@@ -85,4 +88,7 @@ public class StateMachine : MonoBehaviour
             waitTimer = 0;
         }
     }
+
+    public StateSettings GetCurrentStateSettings() => currentStateSettings;
+    public Dictionary<Type, BaseState> GetAvailableStates() => availableStates;
 }

@@ -5,8 +5,7 @@ using UnityEngine;
 // threat), which is the high-stakes, game-over-capable branch.
 public class SuspicionState : BaseState
 {
-    private Enemy enemy;
-    private readonly StateSettings settings;
+    private readonly Enemy enemy;
 
     private float reactionTimer;
     private readonly float reactionWindow = 2.5f; // grace period before capture -- break line of sight to escape
@@ -16,16 +15,18 @@ public class SuspicionState : BaseState
 
     private readonly float captureRadius = 1.5f;
 
-    public SuspicionState(IStateContext _stateContext) : base(_stateContext)
+    private new readonly IStateContext stateContext;
+
+    public SuspicionState(IStateContext stateContext) : base(stateContext)
     {
-        stateContext = _stateContext;
-        enemy = stateContext as Enemy;
-        settings = new StateSettings(stateContext, this, StateSettings.animationStates.isRunning, Vector3.zero, 150f);
+        this.stateContext = stateContext;
+        enemy = this.stateContext as Enemy;
     }
 
     protected override void EnterState()
     {
-        stateContext.ApplySettings(settings);
+        stateMachine.GetCurrentStateSettings().UpdateSettings(this.stateContext, this, StateSettings.animationStates.isRunning, Vector3.zero, 150f);
+        stateContext.ApplySettings(stateMachine.GetCurrentStateSettings());
         reactionTimer = 0f;
         loseTargetTimer = 0f;
     }
@@ -57,7 +58,7 @@ public class SuspicionState : BaseState
             if (loseTargetTimer >= loseTargetGrace)
             {
                 // Animal broke line of sight in time -- guard gives up and resumes normal duty.
-                stateMachine.ChangeState(new IdleState(stateContext));
+                stateMachine.ChangeState(stateMachine.GetAvailableStates()[typeof(IdleState)]);
             }
         }
     }
@@ -79,6 +80,6 @@ public class SuspicionState : BaseState
             animalNpc.OnCaptured();
         }
 
-        stateMachine.ChangeState(new IdleState(stateContext));
+        stateMachine.ChangeState(stateMachine.GetAvailableStates()[typeof(IdleState)]);
     }
 }

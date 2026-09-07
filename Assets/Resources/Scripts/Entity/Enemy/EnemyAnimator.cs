@@ -42,7 +42,7 @@ public class EnemyAnimator
      };
     }
 
-    public void SetAnimations(AnimationStates state, bool value)
+    public void SetAnimations(AnimationStates state, bool value = false)
     {
         if (animationStatesDictionary.TryGetValue(state, out string param))
         {

@@ -29,4 +29,11 @@ public class StateSettings
         desiredVelocity = _desiredVelocity;
         fieldOfView = _fieldOfView;
     }
+
+    public void UpdateSettings(IStateContext stateContext, BaseState attackState, animationStates _boolState, Vector3 _desiredVelocity, float _fieldOfView)
+    {
+        animStates = _boolState;
+        desiredVelocity = _desiredVelocity;
+        fieldOfView = _fieldOfView;
+    }
 }

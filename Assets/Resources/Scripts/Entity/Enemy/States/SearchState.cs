@@ -2,25 +2,23 @@ using UnityEngine;
 
 public class SearchState : BaseState
 {
-    private Enemy enemy;
+    private readonly Enemy enemy;
+    private new readonly IStateContext stateContext;
 
     private float maxSearchDuration = 20f;
     private float searchTimer;
 
-    private readonly StateSettings stateSettings;
-
-    public SearchState(IStateContext _stateContext) : base(_stateContext)
+    public SearchState(IStateContext stateContext) : base(stateContext)
     {
-        stateContext = _stateContext;
-        stateSettings = new StateSettings(stateContext, this, StateSettings.animationStates.isRunning, Vector3.zero, 180);
-
-        if (stateContext is Enemy enemy)
+        this.stateContext = stateContext;
+        if (this.stateContext is Enemy enemy)
             this.enemy = enemy;
     }
 
     protected override void EnterState()
     {
-        stateContext.ApplySettings(stateSettings);
+        stateMachine.GetCurrentStateSettings().UpdateSettings(this.stateContext, this, StateSettings.animationStates.isRunning, Vector3.zero, 180f);
+        stateContext.ApplySettings(stateMachine.GetCurrentStateSettings());
     }
 
     protected override void PerformState()
@@ -31,19 +29,19 @@ public class SearchState : BaseState
         {
             if (stateContext.CanSeePossessedPlayer())
             {
-                stateMachine.ChangeState(new AttackState(stateContext));
+                stateMachine.ChangeState(stateMachine.GetAvailableStates()[typeof(AttackState)]);
                 return;
             }
 
             if (stateContext.GetNavMeshAgent().remainingDistance <= stateContext.GetNavMeshAgent().stoppingDistance)
             {
                 FindAnotherDestinationNearby();
-                stateMachine.Waiting(new IdleState(stateContext), 3);
+                stateMachine.Waiting(stateMachine.GetAvailableStates()[typeof(IdleState)], 3);
             }
         }
         else
         {
-            stateMachine.ChangeState(new PatrolState(stateContext));
+            stateMachine.ChangeState(stateMachine.GetAvailableStates()[typeof(PatrolState)]);
         }
     }
 

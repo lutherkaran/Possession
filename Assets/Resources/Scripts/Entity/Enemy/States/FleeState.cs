@@ -3,28 +3,24 @@ using UnityEngine.AI;
 
 public class FleeState : BaseState
 {
-    private readonly StateSettings settings;
-
-    private Vector3 lastFleeTarget;
-    private float fleeDistance = 4f;
-
-    public FleeState(IStateContext _stateContext) : base(_stateContext)
+    private readonly float fleeDistance = 4f;
+    private new readonly IStateContext stateContext;
+    public FleeState(IStateContext stateContext) : base(stateContext)
     {
-        stateContext = _stateContext;
-
-        settings = new StateSettings(stateContext, this, StateSettings.animationStates.isRunning, Vector3.zero, 180f);
+        this.stateContext = stateContext;
     }
 
     protected override void EnterState()
     {
-        stateContext.ApplySettings(settings);
+        stateMachine.GetCurrentStateSettings().UpdateSettings(this.stateContext, this, StateSettings.animationStates.isRunning, Vector3.zero, 180f);
+        stateContext.ApplySettings(stateMachine.GetCurrentStateSettings());
     }
 
     protected override void PerformState()
     {
         if (stateContext.IsSafe())
         {
-            stateMachine.ChangeState(stateMachine.lastActiveState ?? new IdleState(stateContext));
+            stateMachine.ChangeState(stateMachine.lastActiveState ?? stateMachine.GetAvailableStates()[typeof(IdleState)]);
         }
         else
             Flee();
@@ -54,7 +50,6 @@ public class FleeState : BaseState
         }
 
         stateContext.GetNavMeshAgent().SetDestination(targetPos);
-        lastFleeTarget = targetPos;
     }
 
     // Was keyed to PlayerManager.GetPlayer() (the abandoned human body's fixed position) even

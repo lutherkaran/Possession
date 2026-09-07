@@ -2,31 +2,30 @@ using UnityEngine;
 
 public class PatrolState : BaseState
 {
-    private readonly StateSettings settings;
+    private new readonly IStateContext stateContext;
 
-    public PatrolState(IStateContext _stateContext) : base(_stateContext)
+    public PatrolState(IStateContext stateContext) : base(stateContext)
     {
-        stateContext = _stateContext;
-
-        settings = new StateSettings(stateContext, this, StateSettings.animationStates.isWalking, Vector3.one, 150f);
+        this.stateContext = stateContext;
     }
 
     protected override void EnterState()
     {
-        stateContext.ApplySettings(settings);
+        stateMachine.GetCurrentStateSettings().UpdateSettings(this.stateContext, this, StateSettings.animationStates.isWalking, Vector3.one, 150f);
+        stateContext.ApplySettings(stateMachine.GetCurrentStateSettings());
     }
 
     protected override void PerformState()
     {
         if (stateContext.CanSeePossessedPlayer())
         {
-            stateMachine.ChangeState(new AttackState(stateContext));
+            stateMachine.ChangeState(stateMachine.GetAvailableStates()[typeof(AttackState)]);
             return;
         }
 
         if (stateContext.CanSeePossessedAnimal())
         {
-            stateMachine.ChangeState(new SuspicionState(stateContext));
+            stateMachine.ChangeState(stateMachine.GetAvailableStates()[typeof(SuspicionState)]);
             return;
         }
 
@@ -36,7 +35,7 @@ public class PatrolState : BaseState
         }
         else
         {
-            stateMachine.ChangeState(new FleeState(stateContext));
+            stateMachine.ChangeState(stateMachine.GetAvailableStates()[typeof(FleeState)]);
         }
     }
 
@@ -57,7 +56,7 @@ public class PatrolState : BaseState
 
         if (agent.remainingDistance <= agent.stoppingDistance)
         {
-            stateMachine.ChangeState(new IdleState(stateContext));
+            stateMachine.ChangeState(stateMachine.GetAvailableStates()[typeof(IdleState)]);
         }
     }
 }

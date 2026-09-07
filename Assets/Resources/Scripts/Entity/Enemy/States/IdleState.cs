@@ -3,18 +3,17 @@ using UnityEngine;
 public class IdleState : BaseState
 {
     private float duration = 0;
+    private new readonly IStateContext stateContext;
 
-    private readonly StateSettings settings;
-
-    public IdleState(IStateContext _stateContext) : base(_stateContext)
+    public IdleState(IStateContext stateContext) : base(stateContext)
     {
-        stateContext = _stateContext;
-        settings = new StateSettings(stateContext, this, StateSettings.animationStates.isIdle, Vector3.zero, 90f);
+        this.stateContext = stateContext;
     }
 
     protected override void EnterState()
     {
-        stateContext.ApplySettings(settings);
+        stateMachine.GetCurrentStateSettings().UpdateSettings(this.stateContext, this, StateSettings.animationStates.isIdle, Vector3.zero, 90f);
+        stateContext.ApplySettings(stateMachine.GetCurrentStateSettings());
 
         duration = Random.Range(4f, 10f);
     }
@@ -23,21 +22,21 @@ public class IdleState : BaseState
     {
         if (stateContext.CanSeePossessedPlayer())
         {
-            stateMachine.ChangeState(new AttackState(stateContext));
+            stateMachine.ChangeState(stateMachine.GetAvailableStates()[typeof(AttackState)]);
         }
         else if (stateContext.CanSeePossessedAnimal())
         {
-            stateMachine.ChangeState(new SuspicionState(stateContext));
+            stateMachine.ChangeState(stateMachine.GetAvailableStates()[typeof(SuspicionState)]);
         }
         else
         {
             if (stateContext.IsSafe())
             {
-                stateMachine.Waiting(new PatrolState(stateContext), duration);
+                stateMachine.Waiting(stateMachine.GetAvailableStates()[typeof(PatrolState)], duration);
             }
             else
             {
-                stateMachine.ChangeState(new FleeState(stateContext));
+                stateMachine.ChangeState(stateMachine.GetAvailableStates()[typeof(FleeState)]);
             }
         }
     }

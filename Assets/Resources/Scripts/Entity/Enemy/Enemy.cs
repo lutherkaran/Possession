@@ -24,7 +24,7 @@ public class Enemy : Entity, IPossessable, IDamageable, IStateContext
     private EnemyAnimator enemyAnimator;
     private NavMeshAgent enemyAgent;
     private StateMachine stateMachine;
-    private EnemyController enemyAI;
+    private EnemyAnimationController enemyAI;
 
     public Vector3 defaultVelocity { get; private set; }
     public Vector3 targetsLastPosition { get; private set; }
@@ -43,7 +43,7 @@ public class Enemy : Entity, IPossessable, IDamageable, IStateContext
         stateMachine = GetComponent<StateMachine>();
         rb = GetComponent<Rigidbody>();
 
-        enemyAI = new EnemyController(this);
+        enemyAI = new EnemyAnimationController(this);
         enemyAnimator = new EnemyAnimator(this);
 
         defaultVelocity = enemyAgent.velocity;
@@ -201,9 +201,9 @@ public class Enemy : Entity, IPossessable, IDamageable, IStateContext
         stateMachine.ChangeState(new SearchState(this));
     }
 
-    public virtual void ApplySettings(StateSettings _settings)
+    public virtual void ApplySettings(StateSettings settings)
     {
-        enemyAI.RunAI(_settings);
+        enemyAI.RunAI(settings);
     }
 
     public virtual void ResetChanges()
